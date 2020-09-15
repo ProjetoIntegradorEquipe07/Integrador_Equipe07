@@ -1,7 +1,7 @@
 /*Criação do Banco*/
-CREATE DATABASE pastelaria_db_grupo01;
+CREATE DATABASE pastelaria_db_equipe07_Integrador;
 
-USE pastelaria_db_grupo01;
+USE pastelaria_db_equipe07_Integrador;
 
 CREATE TABLE tb_cliente (
    id_cliente int auto_increment,
