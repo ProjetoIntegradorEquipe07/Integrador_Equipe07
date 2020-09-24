@@ -10,7 +10,7 @@
 
 #### Dentro da pasta do projeto faça os seguintes comandos antes de começar a desenvolver:
 
-`Scripts/activate`<br>
+`Scripts\activate`<br>
 `SET FLASK_ENV='development'`<br>
 `SET FLASK_DEBUG=1`<br>
 `python -m flask run`
