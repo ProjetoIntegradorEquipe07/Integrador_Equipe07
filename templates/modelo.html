@@ -1,9 +1,12 @@
+{% block head %}
 <head>
     <meta charset="utf=8">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.5.2-dist/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-5.14.0-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/modelo.css') }}">
+    <title>{% block title %}{% endblock %} - Pastelaria do Zé</title>
 </head>
+{% endblock %}
 <body>
     <div class="sidebar-container" style="background-color:#bc7272;">
         <div class="sidebar-logo" style="background-color: white; text-align: center;">
@@ -13,7 +16,7 @@
         <ul class="sidebar-navigation" >
           <li class="header">Principal</li>
           <li>
-            <a href="#">
+            <a href="{{ url_for('home.home') }}">
               <i class="fa fa-home" aria-hidden="true"></i> Home
             </a>
           </li>
