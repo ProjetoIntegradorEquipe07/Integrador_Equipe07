@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.5.2-dist/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-5.14.0-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/modelo.css') }}">
+    {% block style %}{% endblock %}
     <title>{% block title %}{% endblock %} - Pastelaria do Zé</title>
 </head>
 {% endblock %}
@@ -29,7 +30,7 @@
           </li>
           <li class="header">Administrador</li>
           <li>
-            <a href="#">
+            <a href="{{ url_for('cliente.formListaClientes') }}">
               <i class="fa fa-users" aria-hidden="true"></i> Clientes
             </a>
           </li>
@@ -64,8 +65,8 @@
       
       <div class="content-container">
       
-        <div class="container-fluid">
-      
+        <div class="container-fluid col-12">
+          
             {% block content %}{% endblock %}
       
         </div>
@@ -74,4 +75,5 @@
 
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
+    {% block js %}{% endblock %}
 </body>
