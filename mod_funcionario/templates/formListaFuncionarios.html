@@ -1,0 +1,36 @@
+{% extends 'modelo.html' %}
+{%  block style%}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{%  block title %}Funcionários{% endblock %}
+
+{% block content %}
+
+<a href="{{ url_for('funcionario.formFuncionario') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Funcionário</i></button></a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Matrícula</th>
+            <th>Grupo</th>
+            <th class="text-center">Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Zé</td>
+            <td>11111111</td>
+            <td>Admin</td>
+            <td>
+                <div class="text-center">
+                    <a href="#">Editar</a>
+                    <a href="#">Excluir</a>
+                </div>  
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}
