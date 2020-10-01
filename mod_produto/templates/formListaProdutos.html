@@ -1,0 +1,38 @@
+{% extends 'modelo.html' %}
+{%  block style%}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{%  block title %}Produtos{% endblock %}
+
+{% block content %}
+
+<a href="{{ url_for('produto.formProduto') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Produto</i></button></a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Valor Unitário</th>
+            <th>Imagem</th>
+            <th class="text-center">Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Pastel de Carne</td>
+            <td>Pastel de Carne</td>
+            <td>5,00</td>
+            <td>'''''''''''''''</td>
+            <td>
+                <div class="text-center">
+                    <a href="#">Editar</a>
+                    <a href="#">Excluir</a>
+                </div>  
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}
