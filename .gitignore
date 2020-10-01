@@ -65,6 +65,12 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 __pycache__/
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+.idea
+.vscode
 
 # Scrapy stuff:
 .scrapy
