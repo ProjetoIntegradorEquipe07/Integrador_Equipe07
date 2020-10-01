@@ -1,0 +1,76 @@
+{% extends 'modelo.html' %}
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+
+    <h2>Cadastro novo cliente</h2>
+    <form>
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" class="form-control col-5" required>
+        </div>
+        <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" name="cpf" class="form-control col-5" required>
+        </div>
+        <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input type="tel" name="telefone" class="form-control col-5" required>
+        </div>
+        <p>Tipo cliente: </p>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="fiado" id="fiadoSim" value="1">
+            <label class="form-check-label" for="fiadoSim">
+              Fiado
+            </label>
+        </div>
+        <div class="form-check form-check-inline mb-2">
+            <input class="form-check-input" type="radio" name="fiado" id="fiadoNao" value="0" checked>
+            <label class="form-check-label" for="fiadoNao">
+              Não fiado
+            </label>
+        </div>
+        <div class="form-group" id="diaFiado">
+            <label for="diaFiado">Dia pagamento:</label>
+            <input type="number" min="1" max="31" name="diaFiado" class="form-control col-5">
+        </div>
+        <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" class="form-control col-5" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmaSenha">Confirmar Senha:</label>
+            <input type="password" id="confirmaSenha" name="confirmaSenha" class="form-control col-5" required>           
+        </div>
+        <div class="alert alert-danger" id="mensagemSenha" role="alert"></div> 
+        <button type="submit" id="botaoSubmit" class="btn btn-success">Enviar</button>
+    </form>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{{ url_for('static', filename='js/verificaSenha.js') }}"></script>
+<script>
+    $('#diaFiado').hide();
+    $('#mensagemSenha').html('').hide();
+    
+    // Verifica se o cliente é fiador ou não
+    $('.form-check-input').change(function(){
+
+        
+        if($('#fiadoSim').is(':checked')){
+
+            $('#diaFiado').show();// Se for aparece o input para por o dia do pagamento
+        }
+        else{
+            $('#diaFiado').hide();
+        }
+    })
+
+    
+    
+</script>
+
+{% endblock %}
