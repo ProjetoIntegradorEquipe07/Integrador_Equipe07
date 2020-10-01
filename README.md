@@ -7,17 +7,16 @@
 
 **Modelagem Banco de Dados:**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href='./Engenharia_de_Software/Modelagem_Banco/Modelo_Conceitual.jpg'>Modelo Conceitual</a>
-
-[Modelo Conceitual](./Engenharia_de_Software/Modelagem_Banco/Modelo_Conceitual.jpg)
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href='./Engenharia_de_Software/Modelagem_Banco/Modelo_Logico.jpg'>Modelo Lógico</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Modelo Conceitual](./Engenharia_de_Software/Modelagem_Banco/Modelo_Conceitual.jpg)
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href='./Engenharia_de_Software/Modelagem_Banco/Modelo_Fisico.sql'>Modelo Físico</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Modelo Lógico](./Engenharia_de_Software/Modelagem_Banco/Modelo_Logico.jpg)
 
-**<a href='./Engenharia_de_Software/Levantamento_de_Requisitos.docx'>Levantamento de Requisitos</a>**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Modelo Físico](./Engenharia_de_Software/Modelagem_Banco/Modelo_Fisico.sql)
+
+**[Levantamento de Requisitos](./Engenharia_de_Software/Levantamento_de_Requisitos.docx)**
 
 
 <p>Para baixar o repositório faça o comando abaixo no prompt de comando:</p> 
