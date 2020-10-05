@@ -1,10 +1,19 @@
+header{
+
+  width: 150px;
+  padding: 5 5 5 5;
+  text-align: center;
+  float: right;  
+  
+}
+
 .sidebar-container {
   position: fixed;
   width: 220px;
   height: 100%;
   left: 0;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;  
   background: #da0707;
   color: #fff;
 }
