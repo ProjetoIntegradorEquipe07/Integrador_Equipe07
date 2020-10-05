@@ -8,4 +8,11 @@ def login():
 
 @bp_login.route("/login", methods=['POST'])
 def validaLogin():
-    pass
+    _nome = request.form['usuario']
+    _senha = request.form['senha']
+
+    if _nome == 'admin' and _senha == 'admin':
+        return redirect(url_for('home.home'))
+
+    else:
+        return redirect(url_for('login.login', falhaLogin=1))

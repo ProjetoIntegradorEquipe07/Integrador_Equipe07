@@ -6,17 +6,7 @@
 <body>
     <div id="login">
         <div class="container">            
-            <img src="{{ url_for('static', filename='imgs/logo.png') }}">
-            {% if(request.args.get('falhaSessao') == '1'): %}
-                <div class="alert alert-danger">
-                    Falha na Sessão! Faça o Login!
-                </div>
-            {% endif %}
-            {% if(request.args.get('falhaLogin') == '1'): %}
-                <div class="alert alert-danger">
-                    Usuário ou senha incorretos!
-                </div>
-            {% endif %}         
+            <img src="{{ url_for('static', filename='imgs/logo.png') }}">                 
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">                        
@@ -31,7 +21,16 @@
                                 <input type="password" name="senha" id="senha" class="form-control" required>
                                 
                             </div>
-                            
+                            {% if(request.args.get('falhaSessao') == '1'): %}
+                                <div class="alert alert-danger">
+                                    Falha na Sessão! Faça o Login!
+                                </div>
+                            {% endif %}
+                            {% if(request.args.get('falhaLogin') == '1'): %}
+                                <div class="alert alert-danger">
+                                    Usuário ou senha incorretos!
+                                </div>
+                            {% endif %}    
                             <div class="form-group">                                
                                 <button type="submit" class="btn btn-success" style="width: 100%;">Entrar</button>
                             </div>                            
