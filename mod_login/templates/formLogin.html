@@ -1,0 +1,46 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'bootstrap-4.5.2-dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'styles/login.css') }}">    
+    <title>Login</title>
+</head>
+<body>
+    <div id="login">
+        <div class="container">            
+            <img src="{{ url_for('static', filename='imgs/logo.png') }}">                 
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">                        
+                        <form id="login-form" class="form" action="{{url_for('login.validaLogin')}}" method="post">
+                            <h3 class="text-center text-info texto">Login</h3>
+                            <div class="form-group">
+                                <label for="usuario" class="text-info" style="color: white;">Usuário:</label><br>
+                                <input type="text" name="usuario" id="usuario" class="form-control" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label for="senha" class="text-info">Senha:</label><br>
+                                <input type="password" name="senha" id="senha" class="form-control" required>
+                                
+                            </div>
+                            {% if(request.args.get('falhaSessao') == '1'): %}
+                                <div class="alert alert-danger">
+                                    Falha na Sessão! Faça o Login!
+                                </div>
+                            {% endif %}
+                            {% if(request.args.get('falhaLogin') == '1'): %}
+                                <div class="alert alert-danger">
+                                    Usuário ou senha incorretos!
+                                </div>
+                            {% endif %}    
+                            <div class="form-group">                                
+                                <button type="submit" class="btn btn-success" style="width: 100%;">Entrar</button>
+                            </div>                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.min.js') }}"></script>
+    
+</body>
