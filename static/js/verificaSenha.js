@@ -16,5 +16,5 @@ $('#mensagemSenha').html('').hide();
 
     $('#confirmaSenha').keyup(function(){
 
-        verificaSenha()
+        verificaSenha();
     })
