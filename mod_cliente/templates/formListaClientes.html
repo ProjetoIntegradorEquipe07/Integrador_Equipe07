@@ -13,14 +13,22 @@
             <th>#</th>
             <th>Nome</th>
             <th>Telefone</th>
+            <th>Fiado</th>
             <th class="text-center">Opções</th>
         </tr>
     </thead>
     <tbody>
+        {% if clientes: %}
+        {% for cliente in clientes: %}
         <tr>
-            <td>1</td>
-            <td>Fulano</td>
-            <td>11111111</td>
+            <td>{{ cliente[0] }}</td>
+            <td>{{cliente[1]}}</td>
+            <td>{{cliente[2]}}</td>
+            {% if cliente[3] == 0: %}
+            <td>Não</td>
+            {% else: %}
+            <td>Sim</td>
+            {% endif %}
             <td>
                 <div class="text-center">
                     <a href="#">Editar</a>
@@ -28,6 +36,10 @@
                 </div>  
             </td>
         </tr>
+        {% endfor %}
+        {% else: %}
+        <tr>Nenhum registro encontrado</tr>
+        {% endif %}
     </tbody>
 </table>
 

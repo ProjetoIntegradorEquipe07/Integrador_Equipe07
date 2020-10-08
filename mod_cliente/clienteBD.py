@@ -15,12 +15,14 @@ class Cliente():
             banco = Banco()
 
             c = banco.conexao.cursor()
-            c.execute('SELECT id_cliente, nome, telefone FROM tb_clientes')
+            c.execute('SELECT id_cliente, nome, telefone, compra_fiado FROM tb_cliente')
 
             result = c.fetchall()
             c.close()
 
+            
             return result
+           
 
         except:
-            return 'Erro ao conectar no banco!'
+            return 'Erro ao buscar clientes!'

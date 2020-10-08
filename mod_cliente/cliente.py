@@ -9,10 +9,16 @@ bp_cliente = Blueprint('cliente', __name__, url_prefix='/cliente', template_fold
 @validaSessao
 def formListaClientes():
     cliente = Cliente()
-    cliente.selectAll()
-    return render_template('formListaClientes.html')
+    _clientes = cliente.selectAll()
+    return render_template('formListaClientes.html', clientes = _clientes)
 
 @bp_cliente.route("/formCliente")
 @validaSessao
 def formCliente():
     return render_template('formCliente.html')
+
+@bp_cliente.route("/formEditCliente")
+@validaSessao
+def formEditCliente():
+    return render_template('formCliente.html')
+
