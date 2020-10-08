@@ -11,6 +11,7 @@ header{
   position: fixed;
   width: 220px;
   height: 100%;
+  margin-bottom: 20px;  
   left: 0;
   overflow-x: hidden;
   overflow-y: hidden;  
@@ -27,6 +28,7 @@ header{
   font-size: 20px;
   background-color: #FFFFFF;
   vertical-align: middle;
+  margin-bottom: -20px;
   
 }
 

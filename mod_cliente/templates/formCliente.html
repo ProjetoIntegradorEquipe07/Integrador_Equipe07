@@ -2,45 +2,65 @@
 {% block title %}Clientes{% endblock %}
 
 {% block content %}
-
+    {% if cliente.id_cliente == 0 %}
     <h2>Cadastro novo cliente</h2>
-    <form>
+    <form action="{{ url_for('cliente.addCliente') }}" method="POST">
+    {% else: %}
+    <h2>Editar cliente</h2>
+    <form action="{{ url_for('cliente.editCliente') }}" method="POST">
+    {% endif %}
+        <input type="hidden" value="{{ cliente.id_cliente }}" name="id_cliente">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" class="form-control col-5" required>
+            <input type="text" value="{{ cliente.nome }}" maxlength="200" name="nome" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="cpf">CPF:</label>
-            <input type="text" name="cpf" class="form-control col-5" required>
+            <input type="text" value="{{ cliente.cpf }}" minlength="11" maxlength="11" name="cpf" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="telefone">Telefone:</label>
-            <input type="tel" name="telefone" class="form-control col-5" required>
+            <input type="tel" value="{{ cliente.telefone }}" name="telefone" minlength="11" maxlength="11" class="form-control col-5" required>
         </div>
         <p>Tipo cliente: </p>
+        {% if cliente.compra_fiado == 1: %}
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="fiado" id="fiadoSim" value="1">
+            <input class="form-check-input" type="radio" name="compra_fiado" id="fiadoSim" value="1" checked>
             <label class="form-check-label" for="fiadoSim">
               Fiado
             </label>
         </div>
         <div class="form-check form-check-inline mb-2">
-            <input class="form-check-input" type="radio" name="fiado" id="fiadoNao" value="0" checked>
+            <input class="form-check-input" type="radio" name="compra_fiado" id="fiadoNao" value="0">
             <label class="form-check-label" for="fiadoNao">
               Não fiado
             </label>
         </div>
+        {% else: %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="compra_fiado" id="fiadoSim" value="1">
+            <label class="form-check-label" for="fiadoSim">
+              Fiado
+            </label>
+        </div>
+        <div class="form-check form-check-inline mb-2">
+            <input class="form-check-input" type="radio" name="compra_fiado" id="fiadoNao" value="0" checked>
+            <label class="form-check-label" for="fiadoNao">
+              Não fiado
+            </label>
+        </div>
+        {% endif %}
         <div class="form-group" id="diaFiado">
             <label for="diaFiado">Dia pagamento:</label>
-            <input type="number" min="1" max="31" name="diaFiado" class="form-control col-5">
+            <input type="number" value="{{ cliente.dia_fiado }}" min="1" max="31" name="dia_fiado" id="dia_fiadoInput" class="form-control col-5">
         </div>
         <div class="form-group">
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" class="form-control col-5" required>
+            <input type="password" value="{{ cliente.senha }}" id="senha"  name="senha" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="confirmaSenha">Confirmar Senha:</label>
-            <input type="password" id="confirmaSenha" name="confirmaSenha" class="form-control col-5" required>           
+            <input type="password" value="{{ cliente.senha }}" id="confirmaSenha" name="confirmaSenha" class="form-control col-5" required>           
         </div>
         <div class="alert alert-danger" id="mensagemSenha" role="alert"></div> 
         <button type="submit" id="botaoSubmit" class="btn btn-success">Enviar</button>
@@ -53,7 +73,8 @@
 
 <script src="{{ url_for('static', filename='js/verificaSenha.js') }}"></script>
 <script>
-    $('#diaFiado').hide();
+    if($('#fiadoNao').is(':checked')) {$('#diaFiado').hide();}
+    $('#dia_fiadoInput').attr('required', false)
     $('#mensagemSenha').html('').hide();
     
     // Verifica se o cliente é fiador ou não
@@ -62,12 +83,15 @@
         
         if($('#fiadoSim').is(':checked')){
 
-            $('#diaFiado').show();// Se for aparece o input para por o dia do pagamento
+            $('#diaFiado').show()// Se for aparece o input para por o dia do pagamento
+            $('#dia_fiadoInput').attr('required', true)
         }
         else{
             $('#diaFiado').hide();
+            $('#dia_fiadoInput').attr('required', false)
         }
     })
+
 
     
     
