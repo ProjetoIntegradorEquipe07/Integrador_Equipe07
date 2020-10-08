@@ -5,3 +5,8 @@ thead {
 thead tr th{    
     color: white;
 }
+
+form button{
+    width: 40px;
+}
+

@@ -12,7 +12,7 @@
             <th>Nome</th>
             <th>Telefone</th>
             <th>Fiado</th>
-            <th class="text-center">Opções</th>
+            <th>Opções</th>
         </tr>
     </thead>
     <tbody>
@@ -27,17 +27,17 @@
             {% else: %}
             <td>Sim</td>
             {% endif %}
-            <td>
+            <td>   
                 <div class="text-center">
-                    <form action="{{ url_for('cliente.formEditCliente') }}" method="POST">
+                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('cliente.formEditCliente') }}" method="POST">
                         <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
-                        <button type="submit" class="btn btn-warning">Editar</button>
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                     </form>
                     <form action="{{ url_for('cliente.deleteCliente') }}" method="POST">
                         <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
-                        <button type="submit" class="btn btn-danger">Excluir</button>
+                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                     </form>
-                </div>  
+                </div>             
             </td>
         </tr>
         {% endfor %}
