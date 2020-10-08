@@ -3,31 +3,47 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
 {% endblock %}
 {%  block title %}Clientes{% endblock %}
-
 {% block content %}
-
 <a href="{{ url_for('cliente.formCliente') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Cliente</i></button></a>
 <table class="table table-striped">
-    <thead>
+    <thead>    
         <tr>
             <th>#</th>
             <th>Nome</th>
             <th>Telefone</th>
-            <th class="text-center">Opções</th>
+            <th>Fiado</th>
+            <th>Opções</th>
         </tr>
     </thead>
     <tbody>
+        {% if clientes: %}
+        {% for cliente in clientes: %}
         <tr>
-            <td>1</td>
-            <td>Fulano</td>
-            <td>11111111</td>
-            <td>
+            <td>{{ cliente[0] }}</td>
+            <td>{{cliente[1]}}</td>
+            <td>{{cliente[2]}}</td>
+            {% if cliente[3] == 0: %}
+            <td>Não</td>
+            {% else: %}
+            <td>Sim</td>
+            {% endif %}
+            <td>   
                 <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
-                </div>  
+                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('cliente.formEditCliente') }}" method="POST">
+                        <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form action="{{ url_for('cliente.deleteCliente') }}" method="POST">
+                        <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
+                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </div>             
             </td>
         </tr>
+        {% endfor %}
+        {% else: %}
+        <tr>Nenhum registro encontrado</tr>
+        {% endif %}
     </tbody>
 </table>
 
