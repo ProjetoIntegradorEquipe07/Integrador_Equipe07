@@ -56,3 +56,13 @@ def editCliente():
     cliente.update()
 
     return redirect(url_for('cliente.formListaClientes'))
+
+@bp_cliente.route("/deleteCliente", methods=['POST'])
+@validaSessao
+def deleteCliente():
+    cliente = Cliente()
+    cliente.id_cliente = request.form['id_cliente']
+
+    cliente.delete()
+
+    return redirect(url_for('cliente.formListaClientes'))

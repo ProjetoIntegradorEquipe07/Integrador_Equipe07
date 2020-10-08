@@ -33,6 +33,10 @@
                         <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
                         <button type="submit" class="btn btn-warning">Editar</button>
                     </form>
+                    <form action="{{ url_for('cliente.deleteCliente') }}" method="POST">
+                        <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
                 </div>  
             </td>
         </tr>

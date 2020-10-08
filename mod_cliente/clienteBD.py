@@ -79,3 +79,17 @@ class Cliente():
 
         except:
             return 'Erro ao editar cliente!'
+
+    def delete(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('DELETE FROM tb_cliente WHERE id_cliente = %s',(self.id_cliente))
+            banco.conexao.commit()
+            c.close()
+
+            return 'Cliente excluido com sucesso'
+        
+        except:
+            return 'Erro ao tentar excluir cliente'
