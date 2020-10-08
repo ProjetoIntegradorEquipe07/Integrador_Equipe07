@@ -26,3 +26,41 @@ class Cliente():
 
         except:
             return 'Erro ao buscar clientes!'
+
+    def selectOne(self):
+        try:
+            banco = Banco()
+
+            c=banco.conexao.cursor()
+
+            c.execute('SELECT id_cliente, nome,cpf, telefone, compra_fiado, senha, dia_fiado FROM tb_cliente WHERE id_cliente = %s ', (self.id_cliente))
+
+            for linha in c:
+                self.id_cliente = linha[0]
+                self.nome = linha[1]
+                self.cpf = linha[2]
+                self.telefone = linha[3]
+                self.compra_fiado = linha[4]
+                self.senha = linha[5]
+                self.dia_fiado = linha[6]
+
+            c.close()
+
+            return 'Busca feita com sucesso!'
+
+        except:
+            return 'Erro ao buscar cliente!'
+                
+    def insert(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('INSERT INTO tb_cliente(nome,cpf,telefone,compra_fiado,senha,dia_fiado) VALUES(%s,%s,%s,%s,%s,%s)',(self.nome, self.cpf, self.telefone, self.compra_fiado, self.senha,self.dia_fiado))
+            banco.conexao.commit()
+
+            c.close()
+
+            return 'Cliente cadastrado com sucesso!'
+        except:
+            return 'Erro ao cadastrar cliente!'

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 
 from mod_login.login import validaSessao
 from mod_cliente.clienteBD import Cliente
@@ -15,10 +15,27 @@ def formListaClientes():
 @bp_cliente.route("/formCliente")
 @validaSessao
 def formCliente():
-    return render_template('formCliente.html')
+    cliente = Cliente()
+    return render_template('formCliente.html', cliente=cliente)
 
 @bp_cliente.route("/formEditCliente")
 @validaSessao
 def formEditCliente():
-    return render_template('formCliente.html')
+    cliente = Cliente()
+    cliente.selectOne()
+    return render_template('formCliente.html', cliente=cliente)
 
+@bp_cliente.route("/addCliente", methods=['POST'])
+@validaSessao
+def addCliente():
+    _nome = request.form['nome']
+    _cpf = request.form['cpf']
+    _telefone = request.form['telefone']
+    _compra_fiado = request.form['compra_fiado']
+    _senha = request.form['senha']
+    _dia_fiado = request.form['dia_fiado']
+
+    cliente = Cliente(0,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
+    cliente.insert()
+
+    return redirect(url_for('cliente.formListaClientes'))

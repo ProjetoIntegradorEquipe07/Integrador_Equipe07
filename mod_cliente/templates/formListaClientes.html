@@ -3,9 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
 {% endblock %}
 {%  block title %}Clientes{% endblock %}
-
 {% block content %}
-
 <a href="{{ url_for('cliente.formCliente') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Cliente</i></button></a>
 <table class="table table-striped">
     <thead>
