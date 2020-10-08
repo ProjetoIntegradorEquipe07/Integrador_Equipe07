@@ -29,8 +29,10 @@
             {% endif %}
             <td>
                 <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
+                    <form action="{{ url_for('cliente.formEditCliente') }}" method="POST">
+                        <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
+                        <button type="submit" class="btn btn-warning">Editar</button>
+                    </form>
                 </div>  
             </td>
         </tr>

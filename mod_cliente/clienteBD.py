@@ -64,3 +64,18 @@ class Cliente():
             return 'Cliente cadastrado com sucesso!'
         except:
             return 'Erro ao cadastrar cliente!'
+
+    def update(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,senha=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado,self.senha, self.dia_fiado, self.id_cliente))
+            banco.conexao.commit()
+
+            c.close()
+
+            return 'Cliente editado com sucesso!'
+
+        except:
+            return 'Erro ao editar cliente!'

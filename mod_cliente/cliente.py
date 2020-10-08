@@ -18,10 +18,11 @@ def formCliente():
     cliente = Cliente()
     return render_template('formCliente.html', cliente=cliente)
 
-@bp_cliente.route("/formEditCliente")
+@bp_cliente.route("/formEditCliente", methods=['POST'])
 @validaSessao
 def formEditCliente():
     cliente = Cliente()
+    cliente.id_cliente = request.form['id_cliente']
     cliente.selectOne()
     return render_template('formCliente.html', cliente=cliente)
 
@@ -37,5 +38,21 @@ def addCliente():
 
     cliente = Cliente(0,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
     cliente.insert()
+
+    return redirect(url_for('cliente.formListaClientes'))
+
+@bp_cliente.route("/editCliente", methods=['POST'])
+@validaSessao
+def editCliente():
+    _id_cliente = request.form['id_cliente']
+    _nome = request.form['nome']
+    _cpf = request.form['cpf']
+    _telefone = request.form['telefone']
+    _compra_fiado = request.form['compra_fiado']
+    _senha = request.form['senha']
+    _dia_fiado = request.form['dia_fiado']
+
+    cliente = Cliente(_id_cliente,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
+    cliente.update()
 
     return redirect(url_for('cliente.formListaClientes'))
