@@ -28,11 +28,17 @@
             {% else: %}
             <td>Admin</td>
             {% endif %}
-            <td>
+            <td>   
                 <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
-                </div>  
+                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST">
+                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form name="excluiUsuario">
+                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </div>             
             </td>
         </tr>
         {% endfor %}
