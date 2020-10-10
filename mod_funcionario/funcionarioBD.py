@@ -60,7 +60,8 @@ class Funcionario():
             return 'Funcionário cadastrado com sucesso!'
 
         except Exception as e:
-            raise Exception('Erro ao cadastrar funcionário', str(e))
+            
+            raise Exception('Erro ao cadastrar funcionario!', str(e))
     
     def update(self):
         try:

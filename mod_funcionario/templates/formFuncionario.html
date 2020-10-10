@@ -4,15 +4,23 @@
 {% block content %}
 
     <h2>Cadastro novo Funcionário</h2>
-    <form>
+    <form id="addFuncionario">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" class="form-control col-5" required>
+            <input type="text" id="nome" name="nome" class="form-control col-5" required>
         </div>
         <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" minlength="11" maxlength="11" class="form-control col-5" required>
+        </div> 
+        <div class="form-group">
             <label for="matricula">Matrícula:</label>
-            <input type="text" name="matricula" class="form-control col-5" required>
-        </div>       
+            <input type="text" id="matricula" name="matricula" minlength="10" maxlength="10" class="form-control col-5" required>
+        </div>
+        <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input type="text" id="telefone" name="telefone" minlength="11" maxlength="11" class="form-control col-5" required>
+        </div>         
         <p>Tipo Funcionário: </p>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="grupo" id="admin" value="1">
@@ -44,5 +52,55 @@
 {% block js %}
 
 <script src="{{ url_for('static', filename='js/verificaSenha.js') }}"></script>
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    $('#addFuncionario').submit(function(e){
+
+        e.preventDefault();
+
+        let grupo = 2;
+
+        if($('#admin').is(':checked')){
+
+            grupo = 1;
+
+        }
+
+        $.post($SCRIPT_ROOT + "{{ url_for('funcionario.addFuncionario') }}",{
+
+            nome:$('#nome').val(),
+            cpf:$('#cpf').val(),
+            telefone:$('#telefone').val(),
+            senha:$('#senha').val(),
+            matricula:$('#matricula').val(),
+            grupo:grupo
+        }, function(data){
+
+            if(!data.erro){
+                swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionarios') }}");
+                        } 
+                    });
+                
+
+            }
+            else{
+                swal("", data.mensagem, "error");
+                console.log(data.mensagem_exception)
+            }
+        })
+    })
+</script>
 
 {% endblock %}
