@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 
 from mod_login.login import validaSessao
 from mod_cliente.clienteBD import Cliente
@@ -29,17 +29,22 @@ def formEditCliente():
 @bp_cliente.route("/addCliente", methods=['POST'])
 @validaSessao
 def addCliente():
-    _nome = request.form['nome']
-    _cpf = request.form['cpf']
-    _telefone = request.form['telefone']
-    _compra_fiado = request.form['compra_fiado']
-    _senha = request.form['senha']
-    _dia_fiado = request.form['dia_fiado']
+    _mensagem = ""
+    try:
+        _nome = request.form['nome']
+        _cpf = request.form['cpf']
+        _telefone = request.form['telefone']
+        _compra_fiado = request.form['compra_fiado']
+        _senha = request.form['senha']
+        _dia_fiado = request.form['dia_fiado']
 
-    cliente = Cliente(0,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
-    cliente.insert()
+        cliente = Cliente(0,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
+        _mensagem = cliente.insert()
 
-    return redirect(url_for('cliente.formListaClientes'))
+        return jsonify(erro = False, mensagem = _mensagem)
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
 
 @bp_cliente.route("/editCliente", methods=['POST'])
 @validaSessao
