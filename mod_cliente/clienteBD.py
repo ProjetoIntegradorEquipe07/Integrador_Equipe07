@@ -24,8 +24,9 @@ class Cliente():
             return result
            
 
-        except:
-            return 'Erro ao buscar clientes!'
+        except Exception as e:
+            return str(e)
+           
 
     def selectOne(self):
         try:
@@ -62,8 +63,8 @@ class Cliente():
             c.close()
 
             return 'Cliente cadastrado com sucesso!'
-        except:
-            return 'Erro ao cadastrar cliente!'
+        except Exception as e:
+            raise Exception('Erro ao cadastrar cliente!', str(e))
 
     def update(self):
         try:
@@ -77,8 +78,9 @@ class Cliente():
 
             return 'Cliente editado com sucesso!'
 
-        except:
-            return 'Erro ao editar cliente!'
+        except Exception as e:
+            raise Exception('Erro ao editar cliente!', str(e))
+             
 
     def delete(self):
         try:
@@ -91,5 +93,6 @@ class Cliente():
 
             return 'Cliente excluido com sucesso'
         
-        except:
-            return 'Erro ao tentar excluir cliente'
+        except Exception as e:
+            raise Exception('Erro ao tentar excluir cliente', str(e))
+            

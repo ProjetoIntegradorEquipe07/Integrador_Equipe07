@@ -33,7 +33,7 @@
                         <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
                         <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                     </form>
-                    <form action="{{ url_for('cliente.deleteCliente') }}" method="POST">
+                    <form name="excluiUsuario">
                         <input type="hidden" name="id_cliente" value="{{ cliente[0] }}">
                         <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                     </form>
@@ -47,4 +47,62 @@
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block js %}
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $("form[name='excluiUsuario']").submit(function(e){        
+        e.preventDefault();
+
+        swal({
+            title: "",
+            text: "Deseja realmente excluir o cliente?",
+            type: "warning",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Sim",
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            closeOnConfirm: false
+            },
+            function(){
+                
+                deletaCliente($(e.target)[0][0].value);// Retorna o valor que está no id do cliente escolhido);
+        });
+        
+})
+
+    function deletaCliente(idCliente){
+
+        $.post($SCRIPT_ROOT + "{{ url_for('cliente.deleteCliente') }}",{id_cliente:idCliente},
+        
+        
+        function(data){
+
+            if(!data.erro){
+
+                swal({
+                        title: "",
+                        text: data.mensagem,
+                        type: "success",                    
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",                    
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.replace($SCRIPT_ROOT + "{{ url_for('cliente.formListaClientes') }}");
+                            } 
+                        });
+                }
+                else{
+                    swal("",data.mensagem,"error");
+                    console.log(data.mensagem_exception);
+                }
+            }       
+        
+        );
+    }
+</script>
 {% endblock %}
