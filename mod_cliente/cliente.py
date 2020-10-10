@@ -49,25 +49,35 @@ def addCliente():
 @bp_cliente.route("/editCliente", methods=['POST'])
 @validaSessao
 def editCliente():
-    _id_cliente = request.form['id_cliente']
-    _nome = request.form['nome']
-    _cpf = request.form['cpf']
-    _telefone = request.form['telefone']
-    _compra_fiado = request.form['compra_fiado']
-    _senha = request.form['senha']
-    _dia_fiado = request.form['dia_fiado']
+    _mensagem = ""
+    try:
+        _id_cliente = request.form['id_cliente']
+        _nome = request.form['nome']
+        _cpf = request.form['cpf']
+        _telefone = request.form['telefone']
+        _compra_fiado = request.form['compra_fiado']
+        _senha = request.form['senha']
+        _dia_fiado = request.form['dia_fiado']
 
-    cliente = Cliente(_id_cliente,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
-    cliente.update()
+        cliente = Cliente(_id_cliente,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
+        _mensagem = cliente.update()
 
-    return redirect(url_for('cliente.formListaClientes'))
+        return jsonify(erro = False, mensagem  = _mensagem)
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
 
 @bp_cliente.route("/deleteCliente", methods=['POST'])
 @validaSessao
 def deleteCliente():
-    cliente = Cliente()
-    cliente.id_cliente = request.form['id_cliente']
+    _mensagem = ""
+    try:
+        cliente = Cliente()
+        cliente.id_cliente = request.form['id_cliente']
 
-    cliente.delete()
+        _mensagem = cliente.delete()
 
-    return redirect(url_for('cliente.formListaClientes'))
+        return jsonify(erro = False, mensagem = _mensagem)
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)

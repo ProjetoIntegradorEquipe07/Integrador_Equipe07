@@ -78,8 +78,9 @@ class Cliente():
 
             return 'Cliente editado com sucesso!'
 
-        except:
-            return 'Erro ao editar cliente!'
+        except Exception as e:
+            raise Exception('Erro ao editar cliente!', str(e))
+             
 
     def delete(self):
         try:
@@ -92,5 +93,6 @@ class Cliente():
 
             return 'Cliente excluido com sucesso'
         
-        except:
-            return 'Erro ao tentar excluir cliente'
+        except Exception as e:
+            raise Exception('Erro ao tentar excluir cliente', str(e))
+            
