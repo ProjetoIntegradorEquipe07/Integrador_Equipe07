@@ -7,7 +7,7 @@
     <form id="addCliente">
     {% else: %}
     <h2>Editar cliente</h2>
-    <form action="{{ url_for('cliente.editCliente') }}" method="POST">
+    <form id="editCliente">
     {% endif %}
         <input type="hidden" id="id_cliente" value="{{ cliente.id_cliente }}" name="id_cliente">
         <div class="form-group">
@@ -139,6 +139,56 @@
             }
             
         })
+    })
+
+    $('#editCliente').submit(function(e){
+
+        e.preventDefault();
+        let compra_fiado = 0;
+
+        if($('#fiadoSim').is(':checked')){
+
+            compra_fiado = 1;
+        }
+
+        $.post($SCRIPT_ROOT + "{{ url_for('cliente.editCliente') }}", {
+
+            id_cliente: $('#id_cliente').val(),
+            nome: $('#nome').val(),
+            cpf: $('#cpf').val(),
+            telefone: $('#telefone').val(),
+            compra_fiado: compra_fiado,
+            senha: $('#senha').val(),
+            dia_fiado: $('#dia_fiado').val()
+
+            }, function(data){            
+
+                if(!data.erro){
+                swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('cliente.formListaClientes') }}");
+                        } 
+                    });
+    
+
+                }
+                else{
+                    swal("", data.mensagem, "error");
+                    console.log(data.mensagem_exception)
+                }
+
+})
+
+
     })
 
 
