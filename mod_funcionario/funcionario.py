@@ -69,3 +69,18 @@ def editFuncionario():
     except Exception as e:
         _mensagem_erro, _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
+
+@bp_funcionario.route("/deleteFuncionario", methods = ['POST'])
+@validaSessao
+def deleteFuncionario():
+    _mensagem = ""
+    try:        
+        _funcionario = Funcionario()
+        _funcionario.id_funcionario = request.form['id_funcionario']
+        _mensagem = _funcionario.delete()
+
+        return jsonify(erro = False, mensagem = _mensagem)
+
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)

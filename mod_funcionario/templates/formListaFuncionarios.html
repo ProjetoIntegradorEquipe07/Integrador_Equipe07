@@ -46,3 +46,61 @@
 </table>
 
 {% endblock %}
+
+{% block js %}
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $("form[name='excluiUsuario']").submit(function(e){        
+        e.preventDefault();
+
+        swal({
+            title: "",
+            text: "Deseja realmente excluir o funcionário?",
+            type: "warning",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Sim",
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            closeOnConfirm: false
+            },
+            function(){
+                
+                deletaFuncionario($(e.target)[0][0].value);// Retorna o valor que está no id do cliente escolhido);
+        });
+        
+})
+
+    function deletaFuncionario(idFuncionario){
+
+    $.post($SCRIPT_ROOT + "{{ url_for('funcionario.deleteFuncionario') }}",{id_funcionario:idFuncionario},
+
+
+    function(data){
+
+        if(!data.erro){
+
+            swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionarios') }}");
+                        } 
+                    });
+            }
+            else{
+                swal("",data.mensagem,"error");
+                console.log(data.mensagem_exception);
+            }
+        }       
+
+    );
+    }
+</script>
+{% endblock %}
