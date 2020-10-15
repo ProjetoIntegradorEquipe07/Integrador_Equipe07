@@ -105,7 +105,7 @@ class Funcionario():
 
             result = c.fetchall()
             if len(result) > 0:
-                for linha in c:
+                for linha in result:                    
                     self.id_funcionario = linha[0]
                     self.nome = linha[1]
                     self.grupo = linha[2]

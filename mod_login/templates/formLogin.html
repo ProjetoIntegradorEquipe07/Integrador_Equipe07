@@ -1,6 +1,7 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static',filename = 'bootstrap-4.5.2-dist/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename = 'styles/login.css') }}">    
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'sweet-alert/sweetalert.css') }}">    
     <title>Login</title>
 </head>
 <body>
@@ -10,7 +11,7 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">                        
-                        <form id="login-form" class="form" action="{{url_for('login.validaLogin')}}" method="post">
+                        <form id="login-form" class="form">
                             <h3 class="text-center text-info texto">Login</h3>
                             <div class="form-group">
                                 <label for="cpf" class="text-info" style="color: white;">Usuário:</label><br>
@@ -42,5 +43,50 @@
     </div>
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
+    <script>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $('#login-form').submit(function(e){
+
+            e.preventDefault();
+
+            $.post($SCRIPT_ROOT + "{{ url_for('login.validaLogin') }}", {
+
+                cpf:$('#cpf').val(),
+                senha: $('#senha').val()
+            }, function(data){
+
+                if(data.erro_ex){
+
+                    swal('Erro ao tentar validar login!','','error');
+                    console.log(data.mensagem_exception)
+
+                }
+
+                else if(!data.erro){
+
+                    swal({
+
+                        title:`Bem vindo ${data.nome}!`,
+                        imageUrl:"{{ url_for('static', filename='imgs/pastel_mascote.png') }}",
+                        confirmButtonClass:'btn btn-primary',
+                        confirmButtonText:'OK',
+                        imageSize:'200x200'
+                    }, function(){
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('home.home') }}");
+                    })
+
+                }
+                else{
+                    swal('Usuário ou senha incorretos!','','error');
+                    $('#cpf').val("");
+                    $('#senha').val("");
+                }
+            })
+
+
+        })
+    </script>
+
     
 </body>
