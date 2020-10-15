@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from functools import wraps
 
-from mod_funcionario import funcionarioBD
+from mod_funcionario.funcionarioBD import Funcionario
 from funcoes import Funcoes
 
 bp_login = Blueprint('login', __name__, url_prefix="/", template_folder='templates')
@@ -31,12 +31,22 @@ def logout():
 
 @bp_login.route("/login", methods=['POST'])
 def validaLogin():
-    _nome = request.form['usuario']
-    _senha = request.form['senha']
+    _cpf = request.form['cpf']
+    _senha = Funcoes.criptografaSenha(request.form['senha'])
+    
 
-    if _nome == 'admin' and _senha == 'admin':
+    funcionario = Funcionario()
+
+    funcionario.cpf = _cpf
+    funcionario.senha = _senha
+
+    
+
+    if funcionario.selectLogin():
+        
         session.clear()
-        session['usuario'] = _nome
+        session['usuario'] = funcionario.nome
+        session['grupo'] = funcionario.grupo
         return redirect(url_for('home.home'))
 
     else:

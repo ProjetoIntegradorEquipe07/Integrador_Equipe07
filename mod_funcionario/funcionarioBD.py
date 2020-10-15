@@ -94,5 +94,32 @@ class Funcionario():
         except Exception as e:
             raise Exception('Erro ao excluir funcionário', str(e))
 
+    
+    def selectLogin(self):
+        try:
+            banco = Banco()
 
+            c = banco.conexao.cursor()
 
+            c.execute('SELECT id_funcionario, nome, grupo FROM tb_funcionario WHERE cpf=%s and senha=%s', (self.cpf, self.senha))
+
+            result = c.fetchall()
+            if len(result) > 0:
+                for linha in c:
+                    self.id_funcionario = linha[0]
+                    self.nome = linha[1]
+                    self.grupo = linha[2]
+                c.close()
+                return True
+
+            else:
+                c.close()
+                return False
+
+            
+            
+
+        except Exception as e:
+            raise Exception('Erro ao tentar validar login!', str(e))
+
+    
