@@ -20,6 +20,16 @@ def validaSessao(f):
     #retorna o resultado do if acima
     return decorated_function
 
+def validaGrupo(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session['grupo'] != 1:
+            return redirect(url_for('home.home'))
+        else:
+            return f(*args, **kwargs)
+
+    return decorated_function
+
 @bp_login.route("/")
 def login():
     return render_template('formLogin.html')

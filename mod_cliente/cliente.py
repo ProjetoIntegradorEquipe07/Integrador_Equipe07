@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 
-from mod_login.login import validaSessao
+from mod_login.login import validaSessao, validaGrupo
 from mod_cliente.clienteBD import Cliente
 from funcoes import Funcoes
 
@@ -8,6 +8,7 @@ bp_cliente = Blueprint('cliente', __name__, url_prefix='/cliente', template_fold
 
 @bp_cliente.route("/")
 @validaSessao
+@validaGrupo
 def formListaClientes():
     cliente = Cliente()
     _clientes = cliente.selectAll()
@@ -15,12 +16,14 @@ def formListaClientes():
 
 @bp_cliente.route("/formCliente")
 @validaSessao
+@validaGrupo
 def formCliente():
     cliente = Cliente()
     return render_template('formCliente.html', cliente=cliente)
 
 @bp_cliente.route("/formEditCliente", methods=['POST'])
 @validaSessao
+@validaGrupo
 def formEditCliente():
     cliente = Cliente()
     cliente.id_cliente = request.form['id_cliente']
@@ -29,6 +32,7 @@ def formEditCliente():
 
 @bp_cliente.route("/addCliente", methods=['POST'])
 @validaSessao
+@validaGrupo
 def addCliente():
     _mensagem = ""
     try:
@@ -49,6 +53,7 @@ def addCliente():
 
 @bp_cliente.route("/editCliente", methods=['POST'])
 @validaSessao
+@validaGrupo
 def editCliente():
     _mensagem = ""
     try:
@@ -70,6 +75,7 @@ def editCliente():
 
 @bp_cliente.route("/deleteCliente", methods=['POST'])
 @validaSessao
+@validaGrupo
 def deleteCliente():
     _mensagem = ""
     try:
