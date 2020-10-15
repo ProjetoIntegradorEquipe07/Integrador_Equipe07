@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 
 from mod_login.login import validaSessao
 from mod_cliente.clienteBD import Cliente
+from funcoes import Funcoes
 
 bp_cliente = Blueprint('cliente', __name__, url_prefix='/cliente', template_folder='templates')
 
@@ -35,7 +36,7 @@ def addCliente():
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
         _compra_fiado = request.form['compra_fiado']
-        _senha = request.form['senha']
+        _senha = Funcoes.criptografaSenha(request.form['senha'])
         _dia_fiado = request.form['dia_fiado']
 
         cliente = Cliente(0,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)
@@ -56,7 +57,7 @@ def editCliente():
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
         _compra_fiado = request.form['compra_fiado']
-        _senha = request.form['senha']
+        _senha = Funcoes.criptografaSenha(request.form['senha'])
         _dia_fiado = request.form['dia_fiado']
 
         cliente = Cliente(_id_cliente,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)

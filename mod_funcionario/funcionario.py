@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, jsonify
 
+
 from mod_login.login import validaSessao
 from mod_funcionario.funcionarioBD import Funcionario
+from funcoes import Funcoes
 
 bp_funcionario = Blueprint('funcionario', __name__, url_prefix="/funcionario", template_folder="templates")
 
@@ -26,7 +28,7 @@ def addFuncionario():
         _nome = request.form['nome']
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
-        _senha = request.form['senha']
+        _senha = Funcoes.criptografaSenha(request.form['senha'])
         _matricula = request.form['matricula']
         _grupo = request.form['grupo']
 
@@ -57,7 +59,7 @@ def editFuncionario():
         _nome = request.form['nome']
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
-        _senha = request.form['senha']
+        _senha = Funcoes.criptografaSenha(request.form['senha'])
         _matricula = request.form['matricula']
         _grupo = request.form['grupo']
 
