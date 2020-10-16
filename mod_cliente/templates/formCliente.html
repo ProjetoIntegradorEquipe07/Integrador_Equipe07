@@ -17,6 +17,8 @@
         <div class="form-group">
             <label for="cpf">CPF:</label>
             <input type="text" placeholder="000.000.000-00" id="cpf" value="{{ cliente.cpf }}" minlength="11" maxlength="11" name="cpf" class="form-control col-5" required>
+            <div class="valid-feedback">CPF válido!</div>
+            <div class="invalid-feedback">CPF já existe no banco de dados!</div>
         </div>
         <div class="form-group">
             <label for="telefone">Telefone:</label>
@@ -209,7 +211,8 @@
     
     $(document).ready(function(){
 
-        colocaMascaras();
+        colocaMascaras();        
+        validaSeInputExiste('#cpf','validaCPF');
     })
 </script>
 

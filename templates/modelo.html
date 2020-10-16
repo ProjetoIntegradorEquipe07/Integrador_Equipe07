@@ -86,6 +86,36 @@
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>
+    <script>
+      function validaSeInputExiste(seletor,funcao){
+        $(seletor).keyup(function(e){
+        
+            $.post($SCRIPT_ROOT +`${funcao}`,{
+        
+                valor:e.target.value
+            }, function(data){
+        
+                if(data.erro){
+                    swal(data.mensagem,'','error');
+                    console.log(data.mensagem_exception)
+                }
+                else if(data.input_existe){
+                    
+                    $(seletor).addClass('is-invalid').removeClass('is-valid');
+                    $('#botaoSubmit').attr('disabled', true);
+                }
+                else{
+                    if($(seletor).val().length >= 10){
+        
+                        $(seletor).addClass('is-valid').removeClass('is-invalid');
+                        $('#botaoSubmit').attr('disabled', false);
+                    }
+                }
+            })
+        })
+
+    }
+    </script>
      
     {% block js %}{% endblock %}
 </body>

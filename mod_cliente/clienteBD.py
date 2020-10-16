@@ -95,3 +95,16 @@ class Cliente():
         except Exception as e:
             raise Exception('Erro ao tentar excluir cliente', str(e))
             
+    def validaCPFExistente(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_cliente FROM tb_cliente WHERE cpf=%s', (self.cpf))
+
+            result = c.fetchall()
+            c.close()
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao tentar validar CPF', str(e))

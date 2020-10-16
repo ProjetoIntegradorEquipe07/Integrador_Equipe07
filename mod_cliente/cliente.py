@@ -79,12 +79,30 @@ def editCliente():
 def deleteCliente():
     _mensagem = ""
     try:
-        cliente = Cliente()
-        cliente.id_cliente = request.form['id_cliente']
+        _cliente = Cliente()
+        _cliente.id_cliente = request.form['id_cliente']
 
-        _mensagem = cliente.delete()
+        _mensagem = _cliente.delete()
 
         return jsonify(erro = False, mensagem = _mensagem)
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
+
+@bp_cliente.route('/validaCPF', methods=['POST'])
+@validaSessao
+@validaGrupo
+def validaCPF():
+    try:
+        _cliente = Cliente()
+        _cliente.cpf = request.form['valor'].replace('.','').replace('-','')
+
+        result = _cliente.validaCPFExistente()
+        if len(result) > 0:
+            return jsonify(input_existe = True)
+        else:
+            return jsonify(input_existe = False)
+
     except Exception as e:
         _mensagem_erro, _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
