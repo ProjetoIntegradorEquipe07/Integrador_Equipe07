@@ -122,4 +122,17 @@ class Funcionario():
         except Exception as e:
             raise Exception('Erro ao tentar validar login!', str(e))
 
-    
+    def validaMatriculaExistente(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_funcionario FROM tb_funcionario WHERE matricula=%s',(self.matricula))
+
+            result = c.fetchall()
+
+            c.close()
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao tentar validar matricula', str(e))

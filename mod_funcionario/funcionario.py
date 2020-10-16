@@ -92,3 +92,22 @@ def deleteFuncionario():
     except Exception as e:
         _mensagem_erro, _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
+
+@bp_funcionario.route('/validaMatricula', methods = ['POST'])
+@validaSessao
+@validaGrupo
+def validaMatricula():
+    try:
+        _funcionario = Funcionario()
+        _funcionario.matricula = request.form['valor']
+
+        result = _funcionario.validaMatriculaExistente()
+
+        if len(result) > 0:
+            return jsonify(input_existe = True)
+        else:
+            return jsonify(input_existe = False)
+
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
