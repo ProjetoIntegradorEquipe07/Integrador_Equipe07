@@ -111,3 +111,22 @@ def validaMatricula():
     except Exception as e:
         _mensagem_erro, _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
+
+@bp_funcionario.route('/validaCPF', methods=['POST'])
+@validaSessao
+@validaGrupo
+def validaCPF():
+    try:
+        _funcionario = Funcionario()
+        _funcionario.cpf = request.form['valor']
+
+        result = _funcionario.validaCPFExistente()
+
+        if len(result) > 0:
+                return jsonify(input_existe = True)
+        else:
+            return jsonify(input_existe = False)
+
+    except Exception as e:
+        _mensagem_erro, _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem_erro, mensagem_exception = _mensagem_exception)
