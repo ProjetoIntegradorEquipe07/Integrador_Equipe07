@@ -6,7 +6,7 @@ USE pastelaria_db_equipe07_Integrador;
 CREATE TABLE tb_cliente (
    id_cliente int auto_increment,
    nome varchar(100) not null,
-   cpf char(11) not null,
+   cpf char(11) not null unique,
    telefone char(11) not null,  
    compra_fiado tinyint,
 	 senha varchar(200),
@@ -17,10 +17,10 @@ CREATE TABLE tb_cliente (
 CREATE TABLE tb_funcionario (
    id_funcionario int auto_increment,
    nome varchar(100) not null,
-	 cpf char(11) not null,
+	 cpf char(11) not null unique,
 	 telefone char(11)not null,
    senha varchar(200) not null,
-   matricula char(10) not null,
+   matricula char(10) not null unique,
    grupo tinyint,
    primary key (id_funcionario)
 );

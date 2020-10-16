@@ -101,7 +101,7 @@ class Funcionario():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_funcionario, nome, grupo FROM tb_funcionario WHERE cpf=%s and senha=%s', (self.cpf, self.senha))
+            c.execute('SELECT id_funcionario, nome, grupo FROM tb_funcionario WHERE nome=%s and senha=%s', (self.nome, self.senha))
 
             result = c.fetchall()
             if len(result) > 0:

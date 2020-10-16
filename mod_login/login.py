@@ -41,13 +41,13 @@ def logout():
 
 @bp_login.route("/login", methods=['POST'])
 def validaLogin():
-    _cpf = request.form['cpf']
+    _nome = request.form['usuario']
     _senha = Funcoes.criptografaSenha(request.form['senha'])
     
 
     funcionario = Funcionario()
 
-    funcionario.cpf = _cpf
+    funcionario.nome = _nome
     funcionario.senha = _senha
 
     

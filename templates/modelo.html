@@ -12,6 +12,7 @@
 <body>
   <header>
     {{session['usuario']}}
+  
 
     <a href="{{ url_for('login.logout') }}">Sair</a>
   </header>
@@ -83,6 +84,7 @@
 
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
-    <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>   
+    <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>   
     {% block js %}{% endblock %}
 </body>

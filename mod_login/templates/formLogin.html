@@ -14,8 +14,8 @@
                         <form id="login-form" class="form">
                             <h3 class="text-center text-info texto">Login</h3>
                             <div class="form-group">
-                                <label for="cpf" class="text-info" style="color: white;">Usuário:</label><br>
-                                <input type="text" name="cpf" id="cpf" maxlength="11" class="form-control" required autofocus>
+                                <label for="usuario" class="text-info" style="color: white;">Usuário:</label><br>
+                                <input type="text" placeholder="Digite o nome" name="usuario" id="usuario" class="form-control" required autofocus>
                             </div>
                             <div class="form-group">
                                 <label for="senha" class="text-info">Senha:</label><br>
@@ -44,15 +44,16 @@
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>
     <script>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         $('#login-form').submit(function(e){
 
             e.preventDefault();
-
+           
             $.post($SCRIPT_ROOT + "{{ url_for('login.validaLogin') }}", {
 
-                cpf:$('#cpf').val(),
+                usuario:$('#usuario').val(),
                 senha: $('#senha').val()
             }, function(data){
 
@@ -79,13 +80,15 @@
                 }
                 else{
                     swal('Usuário ou senha incorretos!','','error');
-                    $('#cpf').val("");
+                    $('#usuario').val("");
                     $('#senha').val("");
                 }
             })
 
 
         })
+        
+        
     </script>
 
     
