@@ -29,16 +29,15 @@ class Funcionario():
             banco = Banco()
 
             c = banco.conexao.cursor()
-            c.execute('SELECT id_funcionario, nome, cpf, telefone, senha, matricula, grupo FROM tb_funcionario where id_funcionario = %s',(self.id_funcionario))
+            c.execute('SELECT id_funcionario, nome, cpf, telefone, matricula, grupo FROM tb_funcionario where id_funcionario = %s',(self.id_funcionario))
 
             for linha in c:
                 self.id_funcionario = linha[0]
                 self.nome = linha[1]
                 self.cpf = linha[2]
-                self.telefone = linha[3]
-                self.senha = linha[4]
-                self.matricula = linha[5]
-                self.grupo = linha[6]
+                self.telefone = linha[3]                
+                self.matricula = linha[4]
+                self.grupo = linha[5]
 
             c.close()
 
@@ -69,7 +68,7 @@ class Funcionario():
 
             c = banco.conexao.cursor()
 
-            c.execute('UPDATE tb_funcionario SET nome=%s,cpf=%s,telefone=%s,senha=%s,matricula=%s,grupo=%s WHERE id_funcionario=%s',(self.nome,self.cpf,self.telefone,self.senha,self.matricula,self.grupo,self.id_funcionario))
+            c.execute('UPDATE tb_funcionario SET nome=%s,cpf=%s,telefone=%s,matricula=%s,grupo=%s WHERE id_funcionario=%s',(self.nome,self.cpf,self.telefone,self.matricula,self.grupo,self.id_funcionario))
             banco.conexao.commit()
             c.close()
 

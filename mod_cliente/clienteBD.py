@@ -34,16 +34,15 @@ class Cliente():
 
             c=banco.conexao.cursor()
 
-            c.execute('SELECT id_cliente, nome,cpf, telefone, compra_fiado, senha, dia_fiado FROM tb_cliente WHERE id_cliente = %s ', (self.id_cliente))
+            c.execute('SELECT id_cliente, nome,cpf, telefone, compra_fiado, dia_fiado FROM tb_cliente WHERE id_cliente = %s ', (self.id_cliente))
 
             for linha in c:
                 self.id_cliente = linha[0]
                 self.nome = linha[1]
                 self.cpf = linha[2]
                 self.telefone = linha[3]
-                self.compra_fiado = linha[4]
-                self.senha = linha[5]
-                self.dia_fiado = linha[6]
+                self.compra_fiado = linha[4]                
+                self.dia_fiado = linha[5]
 
             c.close()
 
@@ -71,7 +70,7 @@ class Cliente():
             banco = Banco()
             c = banco.conexao.cursor()
 
-            c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,senha=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado,self.senha, self.dia_fiado, self.id_cliente))
+            c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado, self.dia_fiado, self.id_cliente))
             banco.conexao.commit()
 
             c.close()

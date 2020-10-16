@@ -62,7 +62,7 @@ def editCliente():
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
         _compra_fiado = request.form['compra_fiado']
-        _senha = Funcoes.criptografaSenha(request.form['senha'])
+        _senha = ""
         _dia_fiado = request.form['dia_fiado']
 
         cliente = Cliente(_id_cliente,_nome,_cpf,_telefone,_compra_fiado,_senha,_dia_fiado)

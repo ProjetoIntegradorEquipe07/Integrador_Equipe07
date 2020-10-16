@@ -64,7 +64,7 @@ def editFuncionario():
         _nome = request.form['nome']
         _cpf = request.form['cpf']
         _telefone = request.form['telefone']
-        _senha = Funcoes.criptografaSenha(request.form['senha'])
+        _senha = ""
         _matricula = request.form['matricula']
         _grupo = request.form['grupo']
 

@@ -54,6 +54,7 @@
             <label for="diaFiado">Dia pagamento:</label>
             <input type="number" id="dia_fiado" value="{{ cliente.dia_fiado }}" min="1" max="31" name="dia_fiado" id="dia_fiadoInput" class="form-control col-5">
         </div>
+        {% if cliente.id_cliente == 0: %}
         <div class="form-group">
             <label for="senha">Senha:</label>
             <input type="password" id="senha" value="{{ cliente.senha }}" id="senha"  name="senha" class="form-control col-5" required>
@@ -62,6 +63,7 @@
             <label for="confirmaSenha">Confirmar Senha:</label>
             <input type="password" value="{{ cliente.senha }}" id="confirmaSenha" name="confirmaSenha" class="form-control col-5" required>           
         </div>
+        {% endif %}
         <div class="alert alert-danger" id="mensagemSenha" role="alert"></div> 
         <button type="submit" id="botaoSubmit" class="btn btn-success">Enviar</button>
     </form>
