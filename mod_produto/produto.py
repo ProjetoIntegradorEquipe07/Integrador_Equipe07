@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, jsonify
 
 from mod_login.login import validaSessao
+from mod_produto.produtoBD import Produtos
 
 bp_produto = Blueprint('produto', __name__, url_prefix='/produto', template_folder='templates')
 
