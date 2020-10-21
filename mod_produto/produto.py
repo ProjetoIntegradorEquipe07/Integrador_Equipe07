@@ -14,7 +14,7 @@ def formListaProdutos():
 
     return render_template('formListaProdutos.html', lista_produto = lista_produto)
 
-@bp_produto.route("formProduto")
+@bp_produto.route("/formProduto")
 @validaSessao
 @validaGrupo
 def formProduto():
@@ -44,7 +44,7 @@ def addProduto():
             _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
-@bp_produto.route("formEditCliente", methods=['POST'])
+@bp_produto.route("/formEditCliente", methods=['POST'])
 @validaSessao
 @validaGrupo
 def formEditProduto():
@@ -55,7 +55,7 @@ def formEditProduto():
     return render_template('formProduto.html', produto = _produto)
 
 
-@bp_produto.route("editProduto", methods = ['POST'])
+@bp_produto.route("/editProduto", methods = ['POST'])
 @validaSessao
 @validaGrupo
 def editProduto():
@@ -78,3 +78,22 @@ def editProduto():
             _mensagem_exception = e.args
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
+@bp_produto.route("/deleteProduto", methods= ['POST'])
+@validaSessao
+@validaGrupo
+def deleteProduto():
+    try:
+        _produto = Produto()
+        _produto.id_produto = request.form['id_produto']
+
+        _mensagem =  _produto.delete()
+
+        return jsonify(erro = False, mensagem = _mensagem)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
