@@ -19,19 +19,18 @@
         </tr>
     </thead>
     <tbody>
+        {% for produto in lista_produto: %}
         <tr>
-            <td>1</td>
-            <td>Pastel de Carne</td>
-            <td>Pastel de Carne</td>
-            <td>5,00</td>
+            <td>{{ produto[0] }}</td>
+            <td>{{ produto[1] }}</td>
+            <td>{{ produto[2] }}</td>
+            <td>{{ produto[4] }}</td>
             <td>'''''''''''''''</td>
             <td>
-                <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
-                </div>  
+                
             </td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 

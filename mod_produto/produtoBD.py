@@ -14,7 +14,7 @@ class Produto():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_produto, nome, descricao, foto, valor_unitario, grupo FROM tb_funcionario')
+            c.execute('SELECT id_produto, nome, descricao, foto, valor_unitario FROM tb_produto')
 
             result = c.fetchall()
             c.close()
@@ -28,7 +28,7 @@ class Produto():
 
             c = banco.conexao.cursor()
 
-            c.execute('INSERT INTO tb_produto(nome,descricao,foto,valor_unitario) VALUES(%s,%s,%s,%s)',(self.nome,self.descricao,self.foto,self.valor_unitario))
+            c.execute('INSERT INTO tb_produto(nome,descricao,valor_unitario) VALUES(%s,%s,%s)',(self.nome,self.descricao,self.valor_unitario))
             banco.conexao.commit()
             c.close()
 
