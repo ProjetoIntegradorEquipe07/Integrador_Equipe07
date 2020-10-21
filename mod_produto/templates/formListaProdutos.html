@@ -27,7 +27,12 @@
             <td>{{ produto[4] }}</td>
             <td>'''''''''''''''</td>
             <td>
-                
+                <div class="text-center">
+                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
+                        <input type="hidden" name="id_produto" value="{{ produto[0] }}">
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </form>
+                </div>
             </td>
         </tr>
         {% endfor %}

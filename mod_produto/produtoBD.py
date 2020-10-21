@@ -22,6 +22,26 @@ class Produto():
         except Exception as e:
             return 'Erro ao buscar produtos!'
 
+    def selectOne(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_produto, nome, descricao, valor_unitario FROM tb_produto WHERE id_produto = %s',(self.id_produto))
+
+            for linha in c:
+                self.id_produto = linha[0]
+                self.nome = linha[1]
+                self.descricao = linha[2]
+                self.valor_unitario = linha[3]
+
+            c.close()
+
+        except Exception as e:
+            raise Exception('Erro ao localizar produto!', str(e))
+
+
     def insert(self):
         try:
             banco = Banco()
