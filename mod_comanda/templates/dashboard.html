@@ -19,17 +19,65 @@
       <div class="modal-body">
         <form id="numeroComanda">
           <div class="form-group">
-            <label for="numero" class="col-form-label">Número da comanda:</label>
-            <input type="text" class="form-control" id="numero">
+            <label for="comanda" class="col-form-label">Número da comanda:</label>
+            <input type="text" class="form-control" id="comanda">
           </div>          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary">Ok</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-primary">Ok</button>
       </div>
     </div>
   </div>
 </div>
 
+<ul>
+  {% for comanda in lista_comandas: %}
+  <li>{{ comanda[0] }}</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $('#numeroComanda').submit(function(e){
+
+    e.preventDefault()
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
+      
+      comanda:$('#comanda').val()
+      
+      }, function(data){
+
+        if(!data.erro){
+
+          swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.dashboard') }}");
+                        } 
+                    });
+        }
+        else{
+
+          swal('',data.mensagem, 'error')
+          console.log(data.mensagem_exception)
+        }
+
+      })
+  })
+</script>
 {% endblock %}

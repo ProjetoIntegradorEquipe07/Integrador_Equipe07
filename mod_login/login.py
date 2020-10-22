@@ -58,6 +58,7 @@ def validaLogin():
             session.clear()
             session['usuario'] = funcionario.nome
             session['grupo'] = funcionario.grupo
+            session['id'] = funcionario.id_funcionario
             return jsonify(erro = False, nome = funcionario.nome)
 
         else:
