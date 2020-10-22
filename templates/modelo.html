@@ -27,12 +27,7 @@
             <a href="{{ url_for('home.home') }}">
               <i class="fa fa-home" aria-hidden="true"></i> Home
             </a>
-          </li>
-          <li> 
-            <a href="#">
-              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
-            </a>
-          </li>
+          </li>          
           <li>             
           </li>
           {% if session['grupo'] == 1 %}
@@ -55,10 +50,11 @@
           {% endif %}
           <li class="header">Comandas</li>
           <li>
-            <a href="#">
-              <i class="fas fa-plus-circle" aria-hidden="true"></i> Adicionar produtos
+            <li> 
+            <a href="{{ url_for('comanda.dashboard') }}">
+              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
             </a>
-          </li>
+          </li>            
           <li>
             <a href="#">
               <i class="fas fa-check-circle" aria-hidden="true"></i> Fechar Comanda

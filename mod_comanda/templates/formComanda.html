@@ -1,0 +1,13 @@
+{% extends 'modelo.html' %}
+
+{% block title %}Comandas{% endblock %}
+
+{% block content %}
+<form id="addComanda">
+    <div class="form-group">
+        <label for="numero">Número:</label>
+        <input type="text" readonly id="numero" value="{{ comanda.numero }}" maxlength="3" name="numero" class="form-control col-5">
+    </div>
+</form>
+
+{% endblock %}
