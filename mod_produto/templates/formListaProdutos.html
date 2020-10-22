@@ -15,24 +15,91 @@
             <th>Descrição</th>
             <th>Valor Unitário</th>
             <th>Imagem</th>
-            <th class="text-center">Opções</th>
+            <th>Opções</th>
         </tr>
     </thead>
     <tbody>
+        {% for produto in lista_produto: %}
         <tr>
-            <td>1</td>
-            <td>Pastel de Carne</td>
-            <td>Pastel de Carne</td>
-            <td>5,00</td>
+            <td>{{ produto[0] }}</td>
+            <td>{{ produto[1] }}</td>
+            <td>{{ produto[2] }}</td>
+            <td>{{ produto[4] }}</td>
             <td>'''''''''''''''</td>
             <td>
                 <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
-                </div>  
+                    <form style=" clear: both; float:left; margin-right: 10px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
+                        <input type="hidden" name="id_produto" value="{{ produto[0] }}">
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form name="excluiProduto">
+                        <input type="hidden" name="id_produto" value="{{ produto[0] }}">
+                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </div>
             </td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block js %}
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    $("form[name='excluiProduto']").submit(function(e){
+
+        e.preventDefault();
+
+        swal({
+            title: "",
+            text: "Deseja realmente excluir o produto?",
+            type: "warning",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Sim",
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            closeOnConfirm: false
+            },
+            function(){
+                
+                deletaProduto($(e.target)[0][0].value);// Retorna o valor que está no id do cliente escolhido);
+        });
+
+        
+    })
+
+    function deletaProduto(id_produto){
+
+        $.post($SCRIPT_ROOT + "{{ url_for('produto.deleteProduto') }}",{
+
+            id_produto: id_produto
+        },function(data){
+
+            if(!data.erro){
+
+                swal({
+                        title: "",
+                        text: data.mensagem,
+                        type: "success",                    
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",                    
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProdutos') }}");
+                            } 
+                        });
+                }
+                else{
+                    swal("",data.mensagem,"error");
+                    console.log(data.mensagem_exception);
+                }
+        })
+    }
+</script>
 {% endblock %}

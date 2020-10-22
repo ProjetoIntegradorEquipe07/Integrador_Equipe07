@@ -3,22 +3,28 @@
 
 {% block content %}
 
+    {% if produto.id_produto == 0: %}
     <h2>Cadastro Novo Produto</h2>
-    <form>
+    <form id="addProduto">
+    {% else: %}
+    <h2>Editar Produto</h2>
+    <form id="editProduto">
+    {% endif %}
+    <input type="hidden" id="id_produto" value="{{ produto.id_produto }}" name="id_produto">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" class="form-control col-5" required>
+            <input type="text" value="{{ produto.nome }}" name="nome" id="nome" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <input type="text" name="descricao" class="form-control col-5" required>
+            <input type="text" value="{{ produto.descricao }}" name="descricao" id="descricao" class="form-control col-5" required>
         </div>
         <div class="form-group">
-            <label for="valor">Valor Unitário:</label>
-            <input type="number" name="valor" class="form-control col-5" required>
+            <label for="valor_unitario">Valor Unitário:</label>
+            <input type="number" value="{{ produto.valor_unitario }}" name="valor_unitario" id="valor_unitario" class="form-control col-5" required>
         </div>       
         <div class="custom-file mt-2">
-            <input type="file" class="custom-file-input" id="imagem" required>
+            <input type="file" class="custom-file-input" id="imagem">
             <label class="custom-file-label" for="imagem">Escolher imagem</label>
         </div>        
         
@@ -27,6 +33,93 @@
 
 
 {% endblock %}
+
+{% block js %}
+
+<script>
+
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $('#addProduto').submit(function(e){
+
+        e.preventDefault()
+
+        $.post($SCRIPT_ROOT + "{{ url_for('produto.addProduto') }}", {
+
+            nome: $('#nome').val(),
+            descricao: $('#descricao').val(),
+            valor_unitario: $('#valor_unitario').val()
+        }, function(data){
+
+            if(!data.erro){
+
+                swal(
+                    {
+                        title: "",
+                        text: data.mensagem,
+                        type: "success",                    
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Ok",                    
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProdutos') }}");
+                        } 
+                    
+                    });
+            }
+            else{
+
+                swal('', data.mensagem, 'error')
+                console.log(data.mensagem_exception)
+            }
+        })
+    })
+
+    $('#editProduto').submit(function(e){
+
+        e.preventDefault();
+
+        $.post($SCRIPT_ROOT + "{{ url_for('produto.editProduto') }}", {
+            id_produto: $('#id_produto').val(),
+            nome: $('#nome').val(),
+            descricao: $('#descricao').val(),
+            valor_unitario: $('#valor_unitario').val()
+
+        }, function(data){
+
+            if(!data.erro){
+
+                    swal(
+                        {
+                            title: "",
+                            text: data.mensagem,
+                            type: "success",                    
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Ok",                    
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProdutos') }}");
+                            } 
+                        
+                        });
+                    }
+                    else{
+
+                    swal('', data.mensagem, 'error')
+                    console.log(data.mensagem_exception)
+                    }
+
+        })
+
+    })
+</script>
+{% endblock %}
+
 
 
 
