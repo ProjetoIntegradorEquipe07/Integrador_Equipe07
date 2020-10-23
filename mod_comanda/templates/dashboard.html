@@ -34,7 +34,13 @@
 
 <ul>
   {% for comanda in lista_comandas: %}
-  <li>{{ comanda[0] }}</li>
+  <li>{{ comanda[1] }}</li>
+  <li>
+    <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+      <input type="hidden" value="{{ comanda[0] }}" name="id_comanda">
+      <button type="submit" class="btn btn-primary">Adicionar produtos</button>
+    </form>
+  </li>
   {% endfor %}
 </ul>
 

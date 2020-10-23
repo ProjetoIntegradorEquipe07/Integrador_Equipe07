@@ -3,6 +3,9 @@ import datetime
 
 from mod_login.login import validaSessao
 from mod_comanda.comandaBD import Comanda
+from mod_comanda.comandaProdutoBD import ComandaProduto
+from mod_produto.produtoBD import Produto
+
 
 bp_comanda = Blueprint('comanda', __name__, url_prefix='/comanda', template_folder='templates')
 
@@ -39,8 +42,24 @@ def addComanda():
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
 
+@bp_comanda.route("/formAddProdutoComanda", methods=['POST'])
+@validaSessao
+def formAddProdutoComanda():
+    _comanda = ComandaProduto()
+    _produto = Produto()
+    _lista_produto = _produto.selectAll()
+    _comanda.comanda_id = request.form['id_comanda']
+    comanda2 = _comanda.selectOneComanda()    
+    return render_template('formComanda.html', comanda = comanda2, lista_produto = _lista_produto)
 
 @bp_comanda.route("/addProdutoComanda", methods=['POST'])
 @validaSessao
 def addProdutoComanda():
-    return render_template('formComanda.html')
+    try:
+        _comanda_produto = ComandaProduto()
+        _comanda_produto.funcionario_id = session['id']
+
+
+
+    except Exception as e:
+        pass

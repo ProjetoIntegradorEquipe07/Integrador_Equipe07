@@ -11,13 +11,14 @@ class Comanda():
         self.funcionario_id = funcionario_id
         self.cliente_id = cliente_id
 
+
     def selectAll(self):
         try:
             banco = Banco()
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT comanda, data_hora, status_pagamento, status_comanda FROM tb_comanda')
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda FROM tb_comanda')
 
             result = c.fetchall()
 
@@ -33,7 +34,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, comanda, data_hora FROM tb_comanta WHERE id_comanda = %s ',(self.id_comanda))
+            c.execute('SELECT id_comanda, comanda, data_hora FROM tb_comanda WHERE id_comanda = %s ',(self.id_comanda))
 
             for linha in c:
                 self.id_comanda = linha[0]
@@ -42,7 +43,7 @@ class Comanda():
 
             c.close()
 
-            return 'Comanda buscada com sucesso!'
+            return comanda
 
         except Exception as e:
             return str(e)
@@ -62,3 +63,5 @@ class Comanda():
 
         except Exception as e:
             raise Exception('Erro ao criar comanda', str(e))
+
+    
