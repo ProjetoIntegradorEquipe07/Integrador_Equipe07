@@ -65,7 +65,7 @@ class ComandaProduto():
                     'quantidade': linha[2],
                     'valor_unitario': linha[3],
                     'comanda': linha[4],
-                    'data_hora': linha[5].strftime("%d/%m/%Y")
+                    'data_hora': linha[5].strftime("%d/%m/%Y")#Converte de mes-dia-ano para dia/mes/ano
                 }
 
             
@@ -76,3 +76,20 @@ class ComandaProduto():
 
         except Exception as e:
             raise Exception('Erro ao buscar comanda!', str(e))
+
+    def selectValorTotalComanda(self, status_comanda):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT SUM(valor_unitario * quantidade) FROM tb_comanda_produto INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda_id = %s AND status_comanda = %s ',(self.comanda_id, status_comanda))
+
+            valor_total = c.fetchone()
+
+            c.close()
+
+            return valor_total
+
+        except Exception as e:
+            raise Exception('Erro ao retornar valor total', str(e))

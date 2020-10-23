@@ -4,7 +4,7 @@
 
 {% block content %} 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+<button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
 
 <!-- Modal para digitar o número da comanda desejado -->
 <div class="modal fade" id="novaComanda" tabindex="-1" role="dialog" aria-labelledby="novaComanda" aria-hidden="true">
@@ -32,17 +32,31 @@
   </div>
 </div>
 
-<ul>
-  {% for comanda in lista_comandas: %}
-  <li>{{ comanda[1] }}</li>
-  <li>
-    <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
-      <input type="hidden" value="{{ comanda[0] }}" name="id_comanda">
-      <button type="submit" class="btn btn-primary">Adicionar produtos</button>
-    </form>
-  </li>
+
+  {% for comanda in lista_comandas: %}  
+  <div  class="row">
+    <div class="col-5">
+        <div class="card mb-2" style="width:200px">    
+          <div class="card-body">
+            <p class="card-title"><b>Número comanda: {{ comanda[1] }}</b></p>
+            {% if comanda[4] == 0: %}
+            <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
+            {% else: %}
+            <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
+            {% endif %}
+            <p class="card-text" id="valorComanda">Valor total: R$ {{ comanda[5] }}</p>
+            <p class="card-text">Data: {{ comanda[2] }} </p>
+            <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+              <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+              <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+              <button type="submit" class="btn btn-danger"><i class="fas fa-plus-square"></i> Produto</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   {% endfor %}
-</ul>
+
 
 {% endblock %}
 
@@ -85,5 +99,17 @@
 
       })
   })
+
+ 
+
+
+    
+        
+      
+      
+  
+    
+     
+      
 </script>
 {% endblock %}

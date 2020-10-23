@@ -12,13 +12,13 @@ class Comanda():
         self.cliente_id = cliente_id
 
 
-    def selectAll(self):
+    def selectAllComandaDashboard(self):
         try:
             banco = Banco()
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda FROM tb_comanda')
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda')
 
             result = c.fetchall()
 

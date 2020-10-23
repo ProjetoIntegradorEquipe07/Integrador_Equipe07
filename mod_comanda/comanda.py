@@ -1,19 +1,21 @@
-from flask import Blueprint, render_template, request, url_for, jsonify, session
+from flask import Blueprint, render_template, request, url_for, jsonify, session, json
 import datetime
 
 from mod_login.login import validaSessao
 from mod_comanda.comandaBD import Comanda
 from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
+from decimalEncoder import DecimalEncoder
 
 
 bp_comanda = Blueprint('comanda', __name__, url_prefix='/comanda', template_folder='templates')
+
 
 @bp_comanda.route("/")
 @validaSessao
 def dashboard():
     comanda = Comanda()
-    lista_comandas = comanda.selectAll()
+    lista_comandas = comanda.selectAllComandaDashboard()
     return render_template('dashboard.html', lista_comandas = lista_comandas)
 
 
@@ -25,7 +27,7 @@ def addComanda():
         comanda.comanda = request.form['comanda']
         comanda.data_hora = datetime.datetime.now()
         comanda.status_pagamento = 0
-        comanda.status_comanda = 1
+        comanda.status_comanda = 0
         comanda.funcionario_id = session['id']
 
         _mensagem = comanda.insertNumeroComanda()
@@ -79,3 +81,4 @@ def addProdutoComanda():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
