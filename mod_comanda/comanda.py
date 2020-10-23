@@ -49,17 +49,33 @@ def formAddProdutoComanda():
     _produto = Produto()
     _lista_produto = _produto.selectAll()
     _comanda.comanda_id = request.form['id_comanda']
-    comanda2 = _comanda.selectOneComanda()    
-    return render_template('formComanda.html', comanda = comanda2, lista_produto = _lista_produto)
+    comanda_aux = _comanda.selectOneComanda()    
+    return render_template('formComanda.html', comanda = comanda_aux, lista_produto = _lista_produto)
 
 @bp_comanda.route("/addProdutoComanda", methods=['POST'])
 @validaSessao
 def addProdutoComanda():
     try:
         _comanda_produto = ComandaProduto()
+        _produto = Produto()
+        _produto.id_produto = request.form['id_produto']
+        _produto.selectOne()
         _comanda_produto.funcionario_id = session['id']
+        _comanda_produto.produto_id = request.form['id_produto']
+        _comanda_produto.comanda_id = request.form['id_comanda']
+        _comanda_produto.quantidade = request.form['quantidade']
+        _comanda_produto.valor_unitario = _produto.valor_unitario
 
+        _mensagem = _comanda_produto.insertProdutoComanda()
+
+        return jsonify(erro = False, mensagem = _mensagem)
 
 
     except Exception as e:
-        pass
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)

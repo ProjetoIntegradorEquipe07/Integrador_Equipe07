@@ -55,7 +55,7 @@ class ComandaProduto():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT comanda_id, produto_id, quantidade, valor_unitario, comanda, data_hora FROM tb_comanda_produto RIGHT JOIN tb_comanda ON id_comanda = comanda_id  WHERE id_comanda = %s ',(self.comanda_id))
+            c.execute('SELECT id_comanda, produto_id, quantidade, valor_unitario, comanda, data_hora FROM tb_comanda_produto RIGHT JOIN tb_comanda ON id_comanda = comanda_id  WHERE id_comanda = %s ',(self.comanda_id))
 
             for linha in c:
                 comanda = {

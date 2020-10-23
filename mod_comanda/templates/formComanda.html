@@ -5,7 +5,8 @@
 {% block content %}
 
 <h2>Adicionar produtos</h2>
-<form id="addComanda">
+<form id="addProdutoComanda">
+    <input type="hidden" value="{{ comanda['id_comanda'] }}" id="id_comanda" name="id_comanda">
     <div class="form-group">
         <label for="comanda">Número comanda:</label>
         <input type="text" readonly id="comanda" value="{{ comanda['comanda'] }}" maxlength="3" name="comanda" class="form-control col-5">
@@ -15,14 +16,13 @@
         <input type="datetime" readonly id="data_hora" value="{{ comanda['data_hora'] }}"  name="data_hora" class="form-control col-5">
     </div>
     <div class="form-group">
-        <label for="produto_id">Produto:</label>
-        <select class="form-control selectpicker" aria-search-live='true'>
-            <option value=""></option>
+        <label for="id_produto">Produto:</label>
+        <select name="id_produto" id="id_produto" class="form-control col-5">
+            <option value="">Selecione um produto</option>            
             {% for produto in lista_produto: %}
-            <option value="{{ produto[0] }}">{{ produto[1] }}</option>
+            <option value="{{ produto[0] }}">{{ produto[1] }} - R$ {{ produto[4] }}</option>            
             {% endfor %}
-        </select>
-        
+        </select>        
     </div>
     <div class="form-group">
         <label for="quantidade">Quantidade:</label>
@@ -32,5 +32,49 @@
     <button type="submit" id="botaoSubmit" class="btn btn-success">Enviar</button>
     
 </form>
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+    $('#addProdutoComanda').submit(function(e){
+
+        e.preventDefault()
+
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.addProdutoComanda') }}",{
+
+            id_comanda:$('#id_comanda').val(),
+            id_produto:$('#id_produto').val(),
+            quantidade:$('#quantidade').val()
+
+        }, function(data){
+
+            if(!data.erro){
+                swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.dashboard') }}");
+                        } 
+                    });
+                
+
+            }
+            else{
+                swal("", data.mensagem, "error");
+                console.log(data.mensagem_exception)
+            }
+        })
+    })
+</script>
 
 {% endblock %}
