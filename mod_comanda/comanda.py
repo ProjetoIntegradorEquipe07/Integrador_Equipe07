@@ -104,3 +104,22 @@ def validaComanda():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+@bp_comanda.route("/buscaNumeroComanda", methods = ['POST'])
+@validaSessao
+def buscaNumeroComanda():
+    try:
+        _comanda = Comanda()
+        _comanda.comanda = request.form['comanda']
+        lista = _comanda.selectComandaByNumero()
+
+        return jsonify(erro = False, lista =lista)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception) 

@@ -77,3 +77,19 @@ class Comanda():
             return result
         except Exception as e:
             raise Exception('Erro ao buscar número da comanda', str(e))
+
+    def selectComandaByNumero(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute("SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda WHERE comanda LIKE '%'%s'%'",(self.comanda))
+
+            result = c.fetchall()
+            c.close()
+
+            return result
+        
+        except Exception as e:
+            raise Exception('Erro ao buscar numero', str(e))

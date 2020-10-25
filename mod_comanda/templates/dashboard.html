@@ -1,11 +1,27 @@
 {% extends 'modelo.html' %}
 
 {% block title %} Comandas {% endblock %}
-
+{% block style %}
+<style>
+  form button {
+    width: 100%;
+  }
+</style>
+{% endblock %}
 {% block content %} 
 
-<button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+<div class="row">
+  <div class="col-3">
+    <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+  </div>
+  <div class="col-8">
+    <div class="form-group">
+      <label for="buscaNumeroComanda">Buscar por Nº: </label>
+      <input class="form-control col-5" type="text" pattern="^[0-9]*[1-9][0-9]*$" name="buscaNumeroComanda" id="buscaNumeroComanda">
+    </div>
+  </div>
 
+</div>
 <!-- Modal para digitar o número da comanda desejado -->
 <div class="modal fade" id="novaComanda" tabindex="-1" role="dialog" aria-labelledby="novaComanda" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -34,32 +50,38 @@
   </div>
 </div>
 
-
+<div class="row">
   {% for comanda in lista_comandas: %}  
-  <div  class="row">
-    <div class="col-5">
-        <div class="card mb-2" style="width:200px">    
-          <div class="text-center" style="background-color: #8c1c1c; clear: both;">
-            <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{ comanda[1] }}</b></p>
-          </div>
-          <div class="card-body">
-            {% if comanda[4] == 0: %}
-            <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
-            {% else: %}
-            <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
-            {% endif %}
-            <p class="card-text" id="valorComanda">Valor total: R$ {{ comanda[5] }}</p>
-            <p class="card-text">Data: {{ comanda[2] }} </p>
-            <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
-              <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
-              <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
-              <button type="submit" class="btn btn-danger"><i class="fas fa-plus-square"></i> Produto</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+     <div class="col-3 ">
+       <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+         <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+           <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{ comanda[1] }}</b></p>
+         </div>
+         <div class="card-body">
+           {% if comanda[4] == 0: %}
+           <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
+           {% else: %}
+           <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
+           {% endif %}
+           <p class="card-text" id="valorComanda">Valor total: R$ {{ comanda[5] }}</p>
+           <p class="card-text">Data: {{ comanda[2] }} </p>
+           <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+             <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+             <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+             <button type="submit" class="btn btn-danger"><i class="fas fa-plus-square"></i> Produto</button>
+           </form>
+           <form method="POST">
+            <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+            <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+            <button type="submit" class="btn btn-success"><i class="fas fa-check-square"></i> Fechar</button>
+          </form>
+         </div>
+       </div>      
+
+     </div>
+    
   {% endfor %}
+</div>
 
 
 {% endblock %}
