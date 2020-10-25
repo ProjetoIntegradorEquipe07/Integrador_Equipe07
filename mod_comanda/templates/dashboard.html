@@ -39,8 +39,10 @@
   <div  class="row">
     <div class="col-5">
         <div class="card mb-2" style="width:200px">    
+          <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+            <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{ comanda[1] }}</b></p>
+          </div>
           <div class="card-body">
-            <p class="card-title"><b>Número comanda: {{ comanda[1] }}</b></p>
             {% if comanda[4] == 0: %}
             <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
             {% else: %}
