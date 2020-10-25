@@ -86,7 +86,7 @@
     <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>
     <script>
       $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-      function validaSeInputExiste(seletor,funcao){
+      function validaSeInputExiste(seletor,funcao,tamanho=10){
         $(seletor).keyup(function(e){
         
             $.post($SCRIPT_ROOT +`${funcao}`,{
@@ -104,7 +104,7 @@
                     $('#botaoSubmit').attr('disabled', true);
                 }
                 else{
-                    if($(seletor).val().length >= 10){
+                    if($(seletor).val().length >= tamanho){
         
                         $(seletor).addClass('is-valid').removeClass('is-invalid');
                         $('#botaoSubmit').attr('disabled', false);

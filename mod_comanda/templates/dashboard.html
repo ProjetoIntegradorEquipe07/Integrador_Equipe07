@@ -21,10 +21,12 @@
           <div class="form-group">
             <label for="comanda" class="col-form-label">Número da comanda:</label>
             <input type="text" class="form-control" id="comanda">
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback">Comanda já aberta!</div>
           </div>          
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary">Ok</button>
+            <button type="submit" id="botaoSubmit" class="btn btn-primary">Ok</button>
           </div>
         </form>
       </div>
@@ -100,7 +102,10 @@
       })
   })
 
- 
+  $(document).ready(function(){
+
+    validaSeInputExiste('#comanda','validaComanda',1);
+  })
 
 
     

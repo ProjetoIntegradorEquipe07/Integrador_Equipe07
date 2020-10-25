@@ -64,4 +64,16 @@ class Comanda():
         except Exception as e:
             raise Exception('Erro ao criar comanda', str(e))
 
-    
+    def verificaSeComandaExiste(self):
+        try:
+            banco = Banco()
+
+            c= banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda FROM tb_comanda WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+
+            result = c.fetchall()
+
+            return result
+        except Exception as e:
+            raise Exception('Erro ao buscar número da comanda', str(e))

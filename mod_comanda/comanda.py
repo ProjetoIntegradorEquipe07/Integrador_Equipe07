@@ -5,7 +5,7 @@ from mod_login.login import validaSessao
 from mod_comanda.comandaBD import Comanda
 from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
-from decimalEncoder import DecimalEncoder
+
 
 
 bp_comanda = Blueprint('comanda', __name__, url_prefix='/comanda', template_folder='templates')
@@ -82,3 +82,25 @@ def addProdutoComanda():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
+@bp_comanda.route("/validaComanda", methods=['POST'])
+@validaSessao
+def validaComanda():
+    try:
+        _comanda = Comanda()
+        _comanda.comanda = request.form['valor']
+        _comanda.status_comanda = 0
+        _resultado = _comanda.verificaSeComandaExiste()
+
+        if len(_resultado) > 0:
+            return jsonify(input_existe = True)
+        else:
+            return jsonify(input_existe = False)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
