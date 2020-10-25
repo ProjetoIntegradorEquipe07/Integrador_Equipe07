@@ -1,0 +1,122 @@
+{% extends 'modelo.html' %}
+
+{% block title %} Comandas {% endblock %}
+
+{% block content %} 
+
+<button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+
+<!-- Modal para digitar o número da comanda desejado -->
+<div class="modal fade" id="novaComanda" tabindex="-1" role="dialog" aria-labelledby="novaComanda" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="novaComanda">Nova Comanda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="numeroComanda">
+          <div class="form-group">
+            <label for="comanda" class="col-form-label">Número da comanda:</label>
+            <input type="text" class="form-control" id="comanda">
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback">Comanda já aberta!</div>
+          </div>          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            <button type="submit" id="botaoSubmit" class="btn btn-primary">Ok</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  {% for comanda in lista_comandas: %}  
+  <div  class="row">
+    <div class="col-5">
+        <div class="card mb-2" style="width:200px">    
+          <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+            <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{ comanda[1] }}</b></p>
+          </div>
+          <div class="card-body">
+            {% if comanda[4] == 0: %}
+            <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
+            {% else: %}
+            <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
+            {% endif %}
+            <p class="card-text" id="valorComanda">Valor total: R$ {{ comanda[5] }}</p>
+            <p class="card-text">Data: {{ comanda[2] }} </p>
+            <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+              <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+              <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+              <button type="submit" class="btn btn-danger"><i class="fas fa-plus-square"></i> Produto</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $('#numeroComanda').submit(function(e){
+
+    e.preventDefault()
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
+      
+      comanda:$('#comanda').val()
+      
+      }, function(data){
+
+        if(!data.erro){
+
+          swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.dashboard') }}");
+                        } 
+                    });
+        }
+        else{
+
+          swal('',data.mensagem, 'error')
+          console.log(data.mensagem_exception)
+        }
+
+      })
+  })
+
+  $(document).ready(function(){
+
+    validaSeInputExiste('#comanda','validaComanda',1);
+  })
+
+
+    
+        
+      
+      
+  
+    
+     
+      
+</script>
+{% endblock %}

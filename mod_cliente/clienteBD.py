@@ -24,8 +24,9 @@ class Cliente():
             return result
            
 
-        except:
-            return 'Erro ao buscar clientes!'
+        except Exception as e:
+            return str(e)
+           
 
     def selectOne(self):
         try:
@@ -33,16 +34,15 @@ class Cliente():
 
             c=banco.conexao.cursor()
 
-            c.execute('SELECT id_cliente, nome,cpf, telefone, compra_fiado, senha, dia_fiado FROM tb_cliente WHERE id_cliente = %s ', (self.id_cliente))
+            c.execute('SELECT id_cliente, nome,cpf, telefone, compra_fiado, dia_fiado FROM tb_cliente WHERE id_cliente = %s ', (self.id_cliente))
 
             for linha in c:
                 self.id_cliente = linha[0]
                 self.nome = linha[1]
                 self.cpf = linha[2]
                 self.telefone = linha[3]
-                self.compra_fiado = linha[4]
-                self.senha = linha[5]
-                self.dia_fiado = linha[6]
+                self.compra_fiado = linha[4]                
+                self.dia_fiado = linha[5]
 
             c.close()
 
@@ -62,23 +62,24 @@ class Cliente():
             c.close()
 
             return 'Cliente cadastrado com sucesso!'
-        except:
-            return 'Erro ao cadastrar cliente!'
+        except Exception as e:
+            raise Exception('Erro ao cadastrar cliente!', str(e))
 
     def update(self):
         try:
             banco = Banco()
             c = banco.conexao.cursor()
 
-            c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,senha=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado,self.senha, self.dia_fiado, self.id_cliente))
+            c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado, self.dia_fiado, self.id_cliente))
             banco.conexao.commit()
 
             c.close()
 
             return 'Cliente editado com sucesso!'
 
-        except:
-            return 'Erro ao editar cliente!'
+        except Exception as e:
+            raise Exception('Erro ao editar cliente!', str(e))
+             
 
     def delete(self):
         try:
@@ -91,5 +92,19 @@ class Cliente():
 
             return 'Cliente excluido com sucesso'
         
-        except:
-            return 'Erro ao tentar excluir cliente'
+        except Exception as e:
+            raise Exception('Erro ao tentar excluir cliente', str(e))
+            
+    def validaCPFExistente(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_cliente FROM tb_cliente WHERE cpf=%s', (self.cpf))
+
+            result = c.fetchall()
+            c.close()
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao tentar validar CPF', str(e))

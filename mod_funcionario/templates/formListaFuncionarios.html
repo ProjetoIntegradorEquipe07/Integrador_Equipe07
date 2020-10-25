@@ -18,19 +18,89 @@
         </tr>
     </thead>
     <tbody>
+        {% for funcionario in funcionarios: %}
         <tr>
-            <td>1</td>
-            <td>Zé</td>
-            <td>11111111</td>
+            <td>{{ funcionario[0] }}</td>
+            <td>{{ funcionario[1] }}</td>
+            <td>{{ funcionario[2] }}</td>
+            {% if funcionario[3] == 2: %}
+            <td>Balcão</td>
+            {% else: %}
             <td>Admin</td>
-            <td>
+            {% endif %}
+            <td>   
                 <div class="text-center">
-                    <a href="#">Editar</a>
-                    <a href="#">Excluir</a>
-                </div>  
+                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST">
+                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form name="excluiUsuario">
+                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </div>             
             </td>
         </tr>
+        {% endfor %}
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block js %}
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $("form[name='excluiUsuario']").submit(function(e){        
+        e.preventDefault();
+
+        swal({
+            title: "",
+            text: "Deseja realmente excluir o funcionário?",
+            type: "warning",
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Sim",
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            closeOnConfirm: false
+            },
+            function(){
+                
+                deletaFuncionario($(e.target)[0][0].value);// Retorna o valor que está no id do cliente escolhido);
+        });
+        
+})
+
+    function deletaFuncionario(idFuncionario){
+
+    $.post($SCRIPT_ROOT + "{{ url_for('funcionario.deleteFuncionario') }}",{id_funcionario:idFuncionario},
+
+
+    function(data){
+
+        if(!data.erro){
+
+            swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionarios') }}");
+                        } 
+                    });
+            }
+            else{
+                swal("",data.mensagem,"error");
+                console.log(data.mensagem_exception);
+            }
+        }       
+
+    );
+    }
+</script>
 {% endblock %}

@@ -2,7 +2,9 @@
 <head>
     <meta charset="utf=8">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.5.2-dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select/css/bootstrap-select.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-5.14.0-web/css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'sweet-alert/sweetalert.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/modelo.css') }}">
     {% block style %}{% endblock %}
     <title>{% block title %}{% endblock %} - Pastelaria do Zé</title>
@@ -11,6 +13,7 @@
 <body>
   <header>
     {{session['usuario']}}
+  
 
     <a href="{{ url_for('login.logout') }}">Sair</a>
   </header>
@@ -25,14 +28,10 @@
             <a href="{{ url_for('home.home') }}">
               <i class="fa fa-home" aria-hidden="true"></i> Home
             </a>
-          </li>
-          <li> 
-            <a href="#">
-              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
-            </a>
-          </li>
+          </li>          
           <li>             
           </li>
+          {% if session['grupo'] == 1 %}
           <li class="header">Administrador</li>
           <li>
             <a href="{{ url_for('cliente.formListaClientes') }}">
@@ -49,12 +48,14 @@
               <i class="fas fa-utensils" aria-hidden="true"></i>  Produtos
             </a>
           </li>
+          {% endif %}
           <li class="header">Comandas</li>
           <li>
-            <a href="#">
-              <i class="fas fa-plus-circle" aria-hidden="true"></i> Adicionar produtos
+            <li> 
+            <a href="{{ url_for('comanda.dashboard') }}">
+              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
             </a>
-          </li>
+          </li>            
           <li>
             <a href="#">
               <i class="fas fa-check-circle" aria-hidden="true"></i> Fechar Comanda
@@ -78,7 +79,42 @@
       </div>
 
 
-    <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>    
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>
+    <script>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+      function validaSeInputExiste(seletor,funcao,tamanho=10){
+        $(seletor).keyup(function(e){
+        
+            $.post($SCRIPT_ROOT +`${funcao}`,{
+        
+                valor:e.target.value
+            }, function(data){
+        
+                if(data.erro){
+                    swal(data.mensagem,'','error');
+                    console.log(data.mensagem_exception)
+                }
+                else if(data.input_existe){
+                    
+                    $(seletor).addClass('is-invalid').removeClass('is-valid');
+                    $('#botaoSubmit').attr('disabled', true);
+                }
+                else{
+                    if($(seletor).val().length >= tamanho){
+        
+                        $(seletor).addClass('is-valid').removeClass('is-invalid');
+                        $('#botaoSubmit').attr('disabled', false);
+                    }
+                }
+            })
+        })
+
+    }
+    </script>
+     
     {% block js %}{% endblock %}
 </body>
