@@ -108,3 +108,35 @@ class Cliente():
 
         except Exception as e:
             raise Exception('Erro ao tentar validar CPF', str(e))
+
+    def validaClienteFiado(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_cliente FROM tb_cliente where cpf = %s and compra_fiado = %s', (self.cpf, 1))
+
+            result = c.fetchall()
+
+            return result
+        except Exception as e:
+            raise Exception('Erro ao tentar validar cliente', str(e))
+
+        finally:
+            c.close()
+
+    def validaSenhaCliente(self):
+        try:
+            banco = Banco()
+            c = banco.conexao.commit()
+
+            c.execute('SELECT id_cliente FROM tb_cliente WHERE cpf = %s AND senha = %s', (self.cpf, self.senha))
+
+            result = c.fetchall()
+
+            return result
+         except Exception as e:
+            raise Exception('Erro ao tentar validar cliente', str(e))
+
+        finally:
+            c.close()

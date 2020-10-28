@@ -166,3 +166,21 @@ class Comanda():
 
         finally:
             c.close()
+
+    def registraComandaFiado(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s WHERE id_comanda = %s', (self.status_comanda, self.id_comanda))
+            banco.conexao.commit()
+            c.close()
+
+            return 'Fiado registrado!'
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            c.close()

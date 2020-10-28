@@ -5,6 +5,7 @@ from mod_login.login import validaSessao, validaGrupo
 from mod_comanda.comandaBD import Comanda
 from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
+from mod_cliente.clienteBD import Cliente
 
 
 
@@ -171,4 +172,37 @@ def fechaComandaAVista():
             _mensagem = 'Erro no banco'
             _mensagem_exception = e.args
         
-        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception) 
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+@bp_comanda.route("/registraComandaFiado", methods = ['POST'])
+@validaSessao
+def registraComandaFiado():
+    try:
+        _cliente = Cliente()
+        _cliente.cpf = request.form['cpf']
+        _cliente.senha = request.form['senha']
+        compra_fiado = True if _cliente.validaClienteFiado() > 0 else False
+
+        if compra_fiado:
+            senha_correta = True if _cliente.validaSenhaCliente() > 0 else False
+            if senha_correta:
+                _comanda = Comanda()
+                _comanda.id_comanda = request.form['id_comanda']
+                _comanda.status_comanda = 2
+                _mensagem = _comanda.registraComandaFiado()
+
+                return jsonify(erro = False, mensagem = _mensagem)
+            else:
+                 _mensagem = 'Senha incorreta!'
+            return jsonify(erro = True, mensagem = _mensagem)
+        else:
+            _mensagem = 'Cliente não está registrado para fiado!'
+            return jsonify(erro = True, mensagem = _mensagem)
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
