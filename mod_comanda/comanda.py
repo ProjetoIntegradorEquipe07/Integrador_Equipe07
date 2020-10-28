@@ -115,7 +115,7 @@ def validaComanda():
         if len(e.args) > 1:
             _mensagem, _mensagem_exception = e.args
         else:
-            _mensagem = 'Erro no banco'
+            _mensagem = 'Erro no banco controller'
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
@@ -148,6 +148,7 @@ def formFechaComanda():
     _comanda.comanda_id = request.form['id_comanda']
     comanda_aux = _comanda.selectOneComanda()
     return render_template('formFechaComanda.html', comanda = comanda_aux)
+
 @bp_comanda.route("/fechaComanda", methods = ['POST'])
 @validaSessao
 def fechaComandaAVista():
@@ -157,8 +158,11 @@ def fechaComandaAVista():
         _comanda.status_pagamento = 1
         _comanda.status_comanda = 1
         _valor_total = request.form['valor_total']
-        _valor_desconto = request.form['valor_desconto']
-        _mensagem = _comanda.fechaComanda(1, _valor_total, _valor_desconto, datetime.datetime.now())
+        desconto = request.form['valor_desconto']
+        _valor_desconto = 0 if desconto == "" else desconto
+        _mensagem = _comanda.fechaComanda(1, _valor_total, _valor_desconto, datetime.datetime.now(),1)
+
+        return jsonify(erro = False, mensagem = _mensagem)
 
     except Exception as e:
         if len(e.args) > 1:
