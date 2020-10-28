@@ -128,8 +128,9 @@ def buscaNumeroComanda():
         _comanda.comanda = request.form['comanda']
         _comanda.status_comanda = 0
         _comanda_aux = _comanda.selectComandaByNumero()
+        _produtos_comanda = _comanda.selectProdutosPorNumeroComanda()
 
-        return jsonify(erro = False, comanda = _comanda_aux)
+        return jsonify(erro = False, comanda = _comanda_aux, produtos = _produtos_comanda)
 
     except Exception as e:
         if len(e.args) > 1:
