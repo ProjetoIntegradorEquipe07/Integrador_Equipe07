@@ -1,0 +1,224 @@
+{% extends 'modelo.html' %}
+{%  block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{% block title %}Comandas{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2">
+        <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+    </div>
+    <div class="col-4">
+        <form id="buscaComanda">
+            <input type="text" id="comanda" placeholder="Nº Comanda">
+            <button type="submit" class="btn btn-info"><i class="fas fa-search"></i></button>
+        </form>
+        <div id="msg_comanda" class="alert alert-danger">Comanda não encontrada!</div>
+    </div>
+
+</div>
+<!-- Modal para digitar o número da comanda desejado -->
+<div class="modal fade" id="novaComanda" tabindex="-1" role="dialog" aria-labelledby="novaComanda" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="novaComanda">Nova Comanda</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="numeroComanda">
+            <div class="form-group">
+              <label for="numeroNovaComanda" class="col-form-label">Número da comanda:</label>
+              <input type="text" class="form-control" id="numeroNovaComanda">
+              <div class="valid-feedback"></div>
+              <div class="invalid-feedback">Comanda já aberta!</div>
+            </div>          
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="submit" id="botaoSubmit" class="btn btn-primary">Ok</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Número</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Valor total</th>
+            <th class="text-center">Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="tabela">
+            <td id="id_comanda"></td>
+            <td id="comanda_tabela"></td>
+            <td id="status_comanda"></td>
+            <td id="data_hora"></td>
+            <td id="valor_total"></td>
+            <td id="opcoes">
+                <div class="text-center">
+                    <form style=" float:left; margin-right: -10px;" action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+                        <input type="hidden" id="id_comanda_add" name="id_comanda">
+                        <button title="Adicionar Produtos" type="submit" class="btn btn-warning"><i class="fas fa-plus"></i></button>
+                    </form>
+                    <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+                        <input type="hidden" id="id_comanda_fecha" name="id_comanda">
+                        <button title="Fechar Comanda" type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                    </form>                        
+                </div>         
+            </td>
+        </tr>
+    </tbody>
+
+    <table id="tabelaProdutos" class="table table-striped">
+        <thead>
+            <tr>                
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Valor Unitário</th>                
+            </tr>
+        </thead>
+        <tbody id="corpoTabelaProdutos">
+            
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+  $('#msg_comanda').hide();
+  $('#opcoes div').hide();
+  $('#tabelaProdutos').hide();
+
+  function limpaTabela(){
+    $('#opcoes div').hide();
+    $('#tabelaProdutos').hide();
+    $('#id_comanda').html("");
+    $('#comanda_tabela').html("");
+    $('#status_comanda').html("");
+    $('#data_hora').html("");
+    $('#valor_total').html("");
+    $('#corpoTabelaProdutos').empty();
+
+}
+  
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $('#numeroComanda').submit(function(e){
+
+    e.preventDefault()
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
+      
+      comanda:$('#numeroNovaComanda').val()
+      
+      }, function(data){
+
+        if(!data.erro){
+
+          swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: true,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        
+                    });
+        }
+        else{
+
+          swal('',data.mensagem, 'error')
+          console.log(data.mensagem_exception)
+        }
+
+      })
+  })
+
+  $('#buscaComanda').submit(function(e){
+
+      e.preventDefault();
+      limpaTabela();
+
+      $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaNumeroComanda') }}",{
+
+          comanda:$('#comanda').val()
+      }, function(data){
+          if(!data.erro && data.comanda[0] != null){
+            $('#msg_comanda').hide();
+            $('#opcoes div').show();
+            $('#id_comanda').html(data.comanda[0]);
+            $('#id_comanda_add').val(data.comanda[0]);
+            $('#id_comanda_fecha').val(data.comanda[0]);
+            $('#comanda_tabela').html(data.comanda[1]);
+
+            if(data.comanda[2] == 0){
+
+                $('#status_comanda').html('Aberta');
+            }
+            else{
+                $('#status_comanda').html('Fechada');
+            }
+
+            $('#data_hora').html(data.comanda[3]);
+            $('#valor_total').html('R$ ' + data.comanda[4]);
+            $('#tabelaProdutos').show();
+
+            data.produtos.forEach(produto => {
+                
+                $('#corpoTabelaProdutos').append(`
+                <tr>
+                    <td>${produto[0]}</td>
+                    <td>${produto[1]}</td>
+                    <td>R$ ${produto[2]}</td>
+                </tr>
+
+                `);
+            });
+
+          }
+          else if(data.erro){
+            console.log(data.mensagem_exception);
+            limpaTabela();
+              
+              
+          }
+          else{
+            $('#msg_comanda').show();
+            limpaTabela();
+              
+            
+            
+          }
+          
+      })
+  })
+  $(document).ready(function(){
+
+    validaSeInputExiste('#numeroNovaComanda','validaComanda',1);
+  })
+
+
+    
+        
+      
+      
+  
+    
+     
+      
+</script>
+{% endblock %}

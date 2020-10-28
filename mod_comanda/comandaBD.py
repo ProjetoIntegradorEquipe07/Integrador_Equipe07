@@ -77,3 +77,68 @@ class Comanda():
             return result
         except Exception as e:
             raise Exception('Erro ao buscar número da comanda', str(e))
+
+    def selectComandaByNumero(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute("SELECT id_comanda , comanda, status_comanda, data_hora,  CONVERT(SUM(valor_unitario*quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda  WHERE comanda = %s AND status_comanda = %s",(self.comanda, self.status_comanda))
+
+            result = c.fetchone()
+
+            c.close()
+
+            return result
+        
+        except Exception as e:
+            raise Exception('Erro ao buscar numero', str(e))
+
+    def selectComandaByStatus(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda HAVING status_comanda = %s ',(self.status_comanda) )
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))
+
+    def contaComandasPorStatus(self, status_comanda):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT COUNT(id_comanda) FROM tb_comanda WHERE status_comanda = %s ',(status_comanda) )
+
+            result = c.fetchone()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))
+
+    def selectProdutosPorNumeroComanda(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR) FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+
+            
+
+            result = c.fetchall()
+            c.close()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar produtos das comandas', str(e))

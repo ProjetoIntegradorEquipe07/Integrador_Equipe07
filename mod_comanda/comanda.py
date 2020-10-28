@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, jsonify, session, json
 import datetime
 
-from mod_login.login import validaSessao
+from mod_login.login import validaSessao, validaGrupo
 from mod_comanda.comandaBD import Comanda
 from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
@@ -10,13 +10,28 @@ from mod_produto.produtoBD import Produto
 
 bp_comanda = Blueprint('comanda', __name__, url_prefix='/comanda', template_folder='templates')
 
-
 @bp_comanda.route("/")
 @validaSessao
+def formListaComandas():
+    return render_template('formListaComandas.html')
+
+@bp_comanda.route("/dashboard", methods = ['GET', 'POST'])
+@validaSessao
+@validaGrupo
 def dashboard():
     comanda = Comanda()
-    lista_comandas = comanda.selectAllComandaDashboard()
-    return render_template('dashboard.html', lista_comandas = lista_comandas)
+    _comandas_abertas = comanda.contaComandasPorStatus(0)
+    return render_template('dashboard.html', comandas_abertas = _comandas_abertas)
+
+@bp_comanda.route("/formListaComandasAbertas", methods = ['POST'])
+@validaSessao
+@validaGrupo
+def formListaComandasAbertas():
+    _comanda = Comanda()
+    _comanda.status_comanda = 0
+    _lista = _comanda.selectComandaByStatus()
+
+    return render_template('formListaComandasAbertas.html', lista = _lista)
 
 
 @bp_comanda.route("/addComanda", methods=['POST'])
@@ -104,3 +119,24 @@ def validaComanda():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+@bp_comanda.route("/buscaNumeroComanda", methods = ['POST'])
+@validaSessao
+def buscaNumeroComanda():
+    try:
+        _comanda = Comanda()
+        _comanda.comanda = request.form['comanda']
+        _comanda.status_comanda = 0
+        _comanda_aux = _comanda.selectComandaByNumero()
+        _produtos_comanda = _comanda.selectProdutosPorNumeroComanda()
+
+        return jsonify(erro = False, comanda = _comanda_aux, produtos = _produtos_comanda)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception) 
