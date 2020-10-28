@@ -84,9 +84,10 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute("SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda WHERE comanda = %s AND status_comanda = %s",(self.comanda, 0))
+            c.execute("SELECT id_comanda , comanda, status_comanda, data_hora,  CONVERT(SUM(valor_unitario*quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda  WHERE comanda = %s AND status_comanda = %s",(self.comanda, self.status_comanda))
 
-            result = c.fetchall()
+            result = c.fetchone()
+
             c.close()
 
             return result

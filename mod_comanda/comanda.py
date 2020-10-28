@@ -126,9 +126,10 @@ def buscaNumeroComanda():
     try:
         _comanda = Comanda()
         _comanda.comanda = request.form['comanda']
-        lista = _comanda.selectComandaByNumero()
+        _comanda.status_comanda = 0
+        _comanda_aux = _comanda.selectComandaByNumero()
 
-        return jsonify(erro = False, lista =lista)
+        return jsonify(erro = False, comanda = _comanda_aux)
 
     except Exception as e:
         if len(e.args) > 1:

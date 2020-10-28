@@ -12,9 +12,10 @@
     </div>
     <div class="col-4">
         <form id="buscaComanda">
-            <input type="text" placeholder="Nº Comanda">
+            <input type="text" id="comanda" placeholder="Nº Comanda">
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i></button>
         </form>
+        <div id="msg_comanda" class="alert alert-danger">Comanda não encontrada!</div>
     </div>
 
 </div>
@@ -51,17 +52,19 @@
             <th>#</th>
             <th>Número</th>
             <th>Status</th>
+            <th>Data</th>
             <th>Valor total</th>
             <th class="text-center">Opções</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td id="id_comanda"></td>
+            <td id="comanda_tabela"></td>
+            <td id="status_comanda"></td>
+            <td id="data_hora"></td>
+            <td id="valor_total"></td>
+            <td id="opcoes"></td>
         </tr>
     </tbody>
 {% endblock %}
@@ -69,6 +72,7 @@
 {% block js %}
 <script>
 
+  $('#msg_comanda').hide();
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   $('#numeroComanda').submit(function(e){
 
@@ -106,6 +110,37 @@
       })
   })
 
+  $('#buscaComanda').submit(function(e){
+
+      e.preventDefault();
+
+      $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaNumeroComanda') }}",{
+
+          comanda:$('#comanda').val()
+      }, function(data){
+          if(!data.erro && data.comanda[0] != null){
+            $('#msg_comanda').hide();
+            $('#id_comanda').html(data.comanda[0]);
+            $('#comanda_tabela').html(data.comanda[1]);
+
+            if(data.comanda[2] == 0){
+
+                $('#status_comanda').html('Aberta');
+            }
+            else{
+                $('#status_comanda').html('Fechada');
+            }
+
+            $('#data_hora').html(data.comanda[3]);
+            $('#valor_total').html('R$ ' + data.comanda[4]);
+
+          }
+          else{
+            $('#msg_comanda').show();
+          }
+          
+      })
+  })
   $(document).ready(function(){
 
     validaSeInputExiste('#comanda','validaComanda',1);
