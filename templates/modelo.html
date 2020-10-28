@@ -33,6 +33,11 @@
           </li>
           {% if session['grupo'] == 1 %}
           <li class="header">Administrador</li>
+          <li> 
+            <a href="{{ url_for('comanda.dashboard') }}">
+              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
+            </a>
+          </li>
           <li>
             <a href="{{ url_for('cliente.formListaClientes') }}">
               <i class="fa fa-users" aria-hidden="true"></i> Clientes
@@ -51,11 +56,11 @@
           {% endif %}
           <li class="header">Comandas</li>
           <li>
-            <li> 
-            <a href="{{ url_for('comanda.dashboard') }}">
-              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
+            <a href="{{ url_for('comanda.formListaComandas') }}">
+              <i class="fas fa-shopping-cart"></i> Gerenciar Comandas
             </a>
-          </li>         
+          </li>
+          
           <li>
             <a href="#">
               <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado

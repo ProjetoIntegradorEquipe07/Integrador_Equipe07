@@ -84,7 +84,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute("SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda WHERE comanda LIKE '%'%s'%'",(self.comanda))
+            c.execute("SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda WHERE comanda = %s AND status_comanda = %s",(self.comanda, 0))
 
             result = c.fetchall()
             c.close()
@@ -93,3 +93,33 @@ class Comanda():
         
         except Exception as e:
             raise Exception('Erro ao buscar numero', str(e))
+
+    def selectComandaByStatus(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda HAVING status_comanda = %s ',(self.status_comanda) )
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))
+
+    def contaComandasPorStatus(self, status_comanda):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT COUNT(id_comanda) FROM tb_comanda WHERE status_comanda = %s ',(status_comanda) )
+
+            result = c.fetchone()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))

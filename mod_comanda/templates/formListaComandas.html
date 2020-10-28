@@ -1,0 +1,124 @@
+{% extends 'modelo.html' %}
+{%  block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{% block title %}Comandas{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-2">
+        <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+    </div>
+    <div class="col-4">
+        <form id="buscaComanda">
+            <input type="text" placeholder="Nº Comanda">
+            <button type="submit" class="btn btn-info"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+
+</div>
+<!-- Modal para digitar o número da comanda desejado -->
+<div class="modal fade" id="novaComanda" tabindex="-1" role="dialog" aria-labelledby="novaComanda" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="novaComanda">Nova Comanda</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="numeroComanda">
+            <div class="form-group">
+              <label for="comanda" class="col-form-label">Número da comanda:</label>
+              <input type="text" class="form-control" id="comanda">
+              <div class="valid-feedback"></div>
+              <div class="invalid-feedback">Comanda já aberta!</div>
+            </div>          
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="submit" id="botaoSubmit" class="btn btn-primary">Ok</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Número</th>
+            <th>Status</th>
+            <th>Valor total</th>
+            <th class="text-center">Opções</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+{% endblock %}
+
+{% block js %}
+<script>
+
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  $('#numeroComanda').submit(function(e){
+
+    e.preventDefault()
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
+      
+      comanda:$('#comanda').val()
+      
+      }, function(data){
+
+        if(!data.erro){
+
+          swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                        } 
+                    });
+        }
+        else{
+
+          swal('',data.mensagem, 'error')
+          console.log(data.mensagem_exception)
+        }
+
+      })
+  })
+
+  $(document).ready(function(){
+
+    validaSeInputExiste('#comanda','validaComanda',1);
+  })
+
+
+    
+        
+      
+      
+  
+    
+     
+      
+</script>
+{% endblock %}

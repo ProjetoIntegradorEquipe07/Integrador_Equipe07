@@ -1,0 +1,46 @@
+{% extends 'modelo.html' %}
+
+{% block title %} Comandas Abertas {% endblock %}
+
+
+{% block content %}
+<form action="{{ url_for('comanda.dashboard') }}" method="POST">
+    <button type="submit" class="btn btn-primary">Voltar</button>
+</form>
+<div class="row">
+    {% if lista: %}
+    {% for comanda in lista: %}  
+       <div class="col-3 ">
+         <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+           <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+             <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{ comanda[1] }}</b></p>
+           </div>
+           <div class="card-body">
+             {% if comanda[4] == 0: %}
+             <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
+             {% else: %}
+             <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
+             {% endif %}
+             <p class="card-text" id="valorComanda">Valor total: R$ {{ comanda[5] }}</p>
+             <p class="card-text">Data: {{ comanda[2] }} </p>
+             <form action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
+               <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+               <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+               <button type="submit" class="btn btn-danger"><i class="fas fa-plus-square"></i> Produto</button>
+             </form>
+             <form method="POST">
+              <input type="hidden" value="{{ comanda[0] }}" id="id_comanda" name="id_comanda">
+              <input type="hidden" value="{{ comanda[4] }}" id="status_comanda" name="status_comanda">
+              <button type="submit" class="btn btn-success"><i class="fas fa-check-square"></i> Fechar</button>
+            </form>
+           </div>
+         </div>      
+  
+       </div>
+      
+    {% endfor %}
+    {% endif %}
+  
+  </div>
+
+{% endblock %}
