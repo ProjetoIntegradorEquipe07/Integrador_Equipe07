@@ -128,14 +128,14 @@ class Cliente():
     def validaSenhaCliente(self):
         try:
             banco = Banco()
-            c = banco.conexao.commit()
+            c = banco.conexao.cursor()
 
             c.execute('SELECT id_cliente FROM tb_cliente WHERE cpf = %s AND senha = %s', (self.cpf, self.senha))
 
             result = c.fetchall()
 
             return result
-         except Exception as e:
+        except Exception as e:
             raise Exception('Erro ao tentar validar cliente', str(e))
 
         finally:

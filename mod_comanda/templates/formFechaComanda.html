@@ -23,13 +23,21 @@
         <input class="form-check-input" type="radio" name="tipo" id="fiado" value="2">
         <label class="form-check-label" for="inlineRadio2">Fiado</label>
       </div>
-    <div class="form-group">
+    <div id="inputDesconto" class="form-group">
         <label for="valor_desconto">Desconto:</label>
         <input type="text" id="valor_desconto"   name="valor_total" class="form-control col-5">
     </div>
-    <div class="form-group">
+    <div id="inputValorFinal" class="form-group">
         <label for="valor_final">Valor Final:</label>
         <input readonly type="text" id="valor_final"   name="valor_final" class="form-control col-5">
+    </div>
+    <div id="inputCpf" class="form-group">
+        <label for="cpf">CPF Cliente:</label>
+        <input type="text" maxlength="11" minlength="11" id="cpf"   name="cpf" class="form-control col-5">
+    </div>
+    <div id="inputSenha" class="form-group">
+        <label for="senha">Senha Cliente:</label>
+        <input type="password" id="senha"   name="senha" class="form-control col-5">
     </div>
 
     <button type="submit" class="btn btn-success">OK</button>
@@ -65,6 +73,11 @@
                 if(!data.erro){
 
                     swal(data.mensagem,'','success');
+
+                    setTimeout(function(){
+
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                    }, 2000)
                 }
                 else{
                     swal(data.mensagem,'','error');
@@ -73,12 +86,58 @@
 
             })
         }
+        
+        else{
+
+            $.post($SCRIPT_ROOT + "{{ url_for('comanda.registraComandaFiado') }}", {
+
+                cpf: $('#cpf').val(),
+                senha: $('#senha').val(),
+                id_comanda: $('#id_comanda').val()
+
+
+            }, function(data){
+
+                if(!data.erro){
+
+                    swal(data.mensagem,'','success');
+
+                    setTimeout(function(){
+
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                    }, 2000)
+                    }
+                    else{
+                        swal(data.mensagem,'','error');
+                        console.log(data.mensagem_exception);
+                }
+            })
+        }
     })
     
     
+    
     $(document).ready(function(e){
-
+        $('#inputCpf').attr('required', false).hide();
+        $('#inputSenha').attr('required', false).hide();
         permiteApenasValoresDecimais('#valor_desconto');
+
+        $("input[type='radio']").change(function(){            
+            if($('#vista').is(':checked')){
+
+                $('#inputDesconto').show();
+                $('#inputValorFinal').show();
+                $('#inputCpf').attr('required', false).hide();
+                $('#inputSenha').attr('required', false).hide();
+
+            }
+            else{
+                $('#inputDesconto').hide();
+                $('#inputValorFinal').hide();
+                $('#inputCpf').attr('required', true).show();
+                $('#inputSenha').attr('required', true).show();
+            }
+        })
         
 
     })

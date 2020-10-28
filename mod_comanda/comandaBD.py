@@ -173,9 +173,9 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('UPDATE tb_comanda SET status_comanda = %s WHERE id_comanda = %s', (self.status_comanda, self.id_comanda))
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, data_assinatura_fiado = %s, cliente_id = %s WHERE id_comanda = %s', (self.status_comanda, self.data_assinatura_fiado, self.cliente_id, self.id_comanda))
             banco.conexao.commit()
-            c.close()
+            
 
             return 'Fiado registrado!'
 

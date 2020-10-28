@@ -6,6 +6,7 @@ from mod_comanda.comandaBD import Comanda
 from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
 from mod_cliente.clienteBD import Cliente
+from funcoes import Funcoes
 
 
 
@@ -180,15 +181,18 @@ def registraComandaFiado():
     try:
         _cliente = Cliente()
         _cliente.cpf = request.form['cpf']
-        _cliente.senha = request.form['senha']
-        compra_fiado = True if _cliente.validaClienteFiado() > 0 else False
+        _cliente.senha = Funcoes.criptografaSenha(request.form['senha']) 
+        compra_fiado = True if len(_cliente.validaClienteFiado()) > 0 else False
 
         if compra_fiado:
-            senha_correta = True if _cliente.validaSenhaCliente() > 0 else False
+            result = _cliente.validaSenhaCliente()
+            senha_correta = True if len(result) > 0 else False
             if senha_correta:
                 _comanda = Comanda()
                 _comanda.id_comanda = request.form['id_comanda']
                 _comanda.status_comanda = 2
+                _comanda.data_assinatura_fiado = datetime.datetime.now()
+                _comanda.cliente_id = result[0]
                 _mensagem = _comanda.registraComandaFiado()
 
                 return jsonify(erro = False, mensagem = _mensagem)
