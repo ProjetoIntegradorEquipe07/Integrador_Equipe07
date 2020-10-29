@@ -33,7 +33,7 @@
     </div>
     <div id="inputCpf" class="form-group">
         <label for="cpf">CPF Cliente:</label>
-        <input type="text" maxlength="11" minlength="11" id="cpf"   name="cpf" class="form-control col-5">
+        <input type="text" placeholder="000-000-000-00" maxlength="11" minlength="11" id="cpf"   name="cpf" class="form-control col-5">
     </div>
     <div id="inputSenha" class="form-group">
         <label for="senha">Senha Cliente:</label>
@@ -48,6 +48,7 @@
 <script>
     
     var valorTotal = $('#valor_total').val();
+    $('#cpf').mask('000.000.000-00')
     $('#valor_desconto').keyup(function(e){
 
         let valorDesconto = $('#valor_desconto').val();
@@ -58,6 +59,7 @@
     $('#fechaComanda').submit(function(e){
 
         e.preventDefault();
+        $('#cpf').unmask();
 
         if($('#vista').is(':checked')){
             
