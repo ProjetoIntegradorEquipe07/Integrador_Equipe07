@@ -33,6 +33,11 @@
           </li>
           {% if session['grupo'] == 1 %}
           <li class="header">Administrador</li>
+          <li> 
+            <a href="{{ url_for('comanda.dashboard') }}">
+              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
+            </a>
+          </li>
           <li>
             <a href="{{ url_for('cliente.formListaClientes') }}">
               <i class="fa fa-users" aria-hidden="true"></i> Clientes
@@ -45,22 +50,17 @@
           </li>
           <li>
             <a href="{{ url_for('produto.formListaProdutos') }}">
-              <i class="fas fa-utensils" aria-hidden="true"></i>  Produtos
+              <i class="fas fa-utensils" aria-hidden="true"></i> Produtos
             </a>
           </li>
           {% endif %}
           <li class="header">Comandas</li>
           <li>
-            <li> 
-            <a href="{{ url_for('comanda.dashboard') }}">
-              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
-            </a>
-          </li>            
-          <li>
-            <a href="#">
-              <i class="fas fa-check-circle" aria-hidden="true"></i> Fechar Comanda
+            <a href="{{ url_for('comanda.formListaComandas') }}">
+              <i class="fas fa-shopping-cart"></i> Gerenciar Comandas
             </a>
           </li>
+          
           <li>
             <a href="#">
               <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-
+      
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>    
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-select/js/bootstrap-select.min.js') }}"></script>
@@ -114,6 +114,31 @@
         })
 
     }
+    // Restricts input for the set of matched elements to the given inputFilter function.
+      (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+          return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+            if (inputFilter(this.value)) {
+              this.oldValue = this.value;
+              this.oldSelectionStart = this.selectionStart;
+              this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+              this.value = this.oldValue;
+              this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+              this.value = "";
+            }
+          });
+        };
+      }(jQuery));
+
+      function permiteApenasValoresDecimais(seletor){
+        $(seletor).inputFilter(function(value){
+
+        return /^\$?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}[0-9]{0,}(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);    // Allow digits only, using a RegExp
+    })
+    }
+      
     </script>
      
     {% block js %}{% endblock %}

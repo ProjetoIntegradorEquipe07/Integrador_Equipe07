@@ -77,3 +77,110 @@ class Comanda():
             return result
         except Exception as e:
             raise Exception('Erro ao buscar número da comanda', str(e))
+
+    def selectComandaByNumero(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute("SELECT id_comanda , comanda, status_comanda, data_hora,  CONVERT(SUM(valor_unitario*quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda  WHERE comanda = %s AND status_comanda = %s",(self.comanda, self.status_comanda))
+
+            result = c.fetchone()
+
+            c.close()
+
+            return result
+        
+        except Exception as e:
+            raise Exception('Erro ao buscar numero', str(e))
+
+    def selectComandaByStatus(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda HAVING status_comanda = %s ',(self.status_comanda) )
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))
+
+    def contaComandasPorStatus(self, status_comanda):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT COUNT(id_comanda) FROM tb_comanda WHERE status_comanda = %s ',(status_comanda) )
+
+            result = c.fetchone()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar comandas', str(e))
+
+    def selectProdutosPorNumeroComanda(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR) FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+
+            
+
+            result = c.fetchall()
+            c.close()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar produtos das comandas', str(e))
+
+    def fechaComanda(self, total_comandas, valor_total, desconto, data_hora, tipo):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (self.status_comanda, self.status_pagamento, self.id_comanda))
+
+            c.execute('INSERT INTO tb_recebimento(total_comandas, valor_total, desconto, data_hora, tipo) VALUES(%s, %s, %s, %s, %s)', (total_comandas, valor_total, desconto, data_hora, tipo))
+
+            id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
+            c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, self.id_comanda))
+
+            banco.conexao.commit()
+
+           
+
+            return 'Comanda fechada com sucesso!'
+        except Exception as e:
+             raise Exception('Erro fechar comanda banco', str(e))
+
+        finally:
+            c.close()
+
+    def registraComandaFiado(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, data_assinatura_fiado = %s, cliente_id = %s WHERE id_comanda = %s', (self.status_comanda, self.data_assinatura_fiado, self.cliente_id, self.id_comanda))
+            banco.conexao.commit()
+            
+
+            return 'Fiado registrado!'
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            c.close()

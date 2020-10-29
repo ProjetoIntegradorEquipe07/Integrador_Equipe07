@@ -55,7 +55,7 @@ class ComandaProduto():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, produto_id, quantidade, valor_unitario, comanda, data_hora FROM tb_comanda_produto RIGHT JOIN tb_comanda ON id_comanda = comanda_id  WHERE id_comanda = %s ',(self.comanda_id))
+            c.execute('SELECT id_comanda, produto_id, quantidade, valor_unitario, comanda, data_hora, CONVERT(SUM(valor_unitario * quantidade), CHAR) FROM tb_comanda_produto RIGHT JOIN tb_comanda ON id_comanda = comanda_id  WHERE id_comanda = %s ',(self.comanda_id))
 
             for linha in c:
                 comanda = {
@@ -65,7 +65,8 @@ class ComandaProduto():
                     'quantidade': linha[2],
                     'valor_unitario': linha[3],
                     'comanda': linha[4],
-                    'data_hora': linha[5].strftime("%d/%m/%Y")#Converte de mes-dia-ano para dia/mes/ano
+                    'data_hora': linha[5].strftime("%d/%m/%Y"),#Converte de mes-dia-ano para dia/mes/ano
+                    'valor_total': linha[6]
                 }
 
             
