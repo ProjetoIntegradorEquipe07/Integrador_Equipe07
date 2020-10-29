@@ -142,3 +142,45 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
+
+    def fechaComanda(self, total_comandas, valor_total, desconto, data_hora, tipo):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (self.status_comanda, self.status_pagamento, self.id_comanda))
+
+            c.execute('INSERT INTO tb_recebimento(total_comandas, valor_total, desconto, data_hora, tipo) VALUES(%s, %s, %s, %s, %s)', (total_comandas, valor_total, desconto, data_hora, tipo))
+
+            id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
+            c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, self.id_comanda))
+
+            banco.conexao.commit()
+
+           
+
+            return 'Comanda fechada com sucesso!'
+        except Exception as e:
+             raise Exception('Erro fechar comanda banco', str(e))
+
+        finally:
+            c.close()
+
+    def registraComandaFiado(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, data_assinatura_fiado = %s, cliente_id = %s WHERE id_comanda = %s', (self.status_comanda, self.data_assinatura_fiado, self.cliente_id, self.id_comanda))
+            banco.conexao.commit()
+            
+
+            return 'Fiado registrado!'
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            c.close()
