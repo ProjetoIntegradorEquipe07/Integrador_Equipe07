@@ -77,12 +77,16 @@ CREATE TABLE tb_comanda_produto (
 
 CREATE TABLE tb_recebimento (
    id_recebimento int auto_increment,
-   total_comandas int,
+   funcionario_id int,   
    valor_total decimal(11,2),
    desconto decimal(11,2),
+   valor_final decimal(11,2),
    data_hora datetime,
    tipo tinyint,
-   primary key (id_recebimento)
+   primary key (id_recebimento),
+   constraint FK_RecebimentoFuncionario
+   foreign key (funcionario_id)
+   references tb_funcionario(id_funcionario)
 );
 
 CREATE TABLE tb_comanda_recebimento (

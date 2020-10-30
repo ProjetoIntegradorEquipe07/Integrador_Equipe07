@@ -29,7 +29,7 @@
     </div>
     <div id="inputValorFinal" class="form-group">
         <label for="valor_final">Valor Final:</label>
-        <input readonly type="text" id="valor_final"   name="valor_final" class="form-control col-5">
+        <input readonly value="{{ comanda['valor_total'] }}" type="text" id="valor_final"   name="valor_final" class="form-control col-5">
     </div>
     <div id="inputCpf" class="form-group">
         <label for="cpf">CPF Cliente:</label>
@@ -67,7 +67,8 @@
 
                 id_comanda: $('#id_comanda').val(),
                 valor_total: $('#valor_total').val(),
-                valor_desconto: $('#valor_desconto').val()
+                valor_desconto: $('#valor_desconto').val(),
+                valor_final: $('#valor_final').val()
 
             }, function(data){
 

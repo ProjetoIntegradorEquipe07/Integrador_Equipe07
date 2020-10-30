@@ -161,8 +161,10 @@ def fechaComandaAVista():
         _comanda.status_comanda = 1
         _valor_total = request.form['valor_total']
         desconto = request.form['valor_desconto']
+        _valor_final = request.form['valor_final']
+        _funcionario_id = session['id']
         _valor_desconto = 0 if desconto == "" else desconto
-        _mensagem = _comanda.fechaComanda(1, _valor_total, _valor_desconto, datetime.datetime.now(),1)
+        _mensagem = _comanda.fechaComanda(_valor_final, _valor_total, _valor_desconto, datetime.datetime.now(),1, _funcionario_id)
 
         return jsonify(erro = False, mensagem = _mensagem)
 
