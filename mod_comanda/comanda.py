@@ -21,7 +21,8 @@ def formListaComandas():
 def dashboard():
     comanda = Comanda()
     _comandas_abertas = comanda.contaComandasPorStatus(0)
-    return render_template('dashboard.html', comandas_abertas = _comandas_abertas)
+    _recebimentos_a_vista = comanda.contaRecebimentosPorTipo(1)
+    return render_template('dashboard.html', comandas_abertas = _comandas_abertas, recebimentos_a_vista = _recebimentos_a_vista)
 
 @bp_comanda.route("/buscaComandasPorStatus", methods = ['POST'])
 @validaSessao
@@ -39,6 +40,25 @@ def buscaComandasPorStatus():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+@bp_comanda.route('/buscaRecebimentosPorTipo', methods = ['POST'])
+@validaSessao
+def buscaRecebimentosPorTipo():
+    try:
+        _comanda = Comanda()
+        _tipo = request.form['tipo']
+        _lista = _comanda.selectRecebimentosPorTipo(_tipo)
+        return jsonify(erro = False, comandas = _lista)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+    
 
 
 @bp_comanda.route("/formListaComandasAbertas", methods = ['POST'])

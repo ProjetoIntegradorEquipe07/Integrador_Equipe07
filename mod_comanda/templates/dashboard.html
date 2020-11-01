@@ -7,11 +7,14 @@
 {% block content %} 
 
 <div class="container">
-  <div class="row">
+  <div class="row" style="margin-bottom: 10px;">
     
-    <div class="col-4">      
+    <div class="col-2">      
         <button type="button" id="comandasAbertas" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>    
       
+  </div>
+  <div class="col-2">
+    <button type="button" id="recebimentosAVista" class="btn btn-info">Recebimentos a vista [{{ recebimentos_a_vista[0] }}]</button>
   </div>
 </div>
 
@@ -30,36 +33,76 @@
 <script>
 
   $('#comandasAbertas').click(function(){
+    $('#comandas').empty();
 
-  $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
-    status_comanda:0
-    },function(data){
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
+      status_comanda:0
+      },function(data){
 
-      if(!data.erro){
+        if(!data.erro){
 
-        data.comandas.forEach(comanda => {
-          console.log(comanda);
-          $('#comandas').append(`
-          <div class="col-3 ">
-          <div class="card mb-2 ml-2 mr-2" style="width:200px">    
-           <div class="text-center" style="background-color: #8c1c1c; clear: both;">
-             <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
-           </div>
-           <div class="card-body">             
-             <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>          
-             <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[5]} </p>
-             <p class="card-text">Data:  ${comanda[2]}  </p>
-             
-           </div>
-         </div>      
-  
-       </div>
-          
-          `)
-          
-        });
-      }
-    })
+          data.comandas.forEach(comanda => {
+            let data = new Date(comanda[2]).toLocaleDateString();
+            $('#comandas').append(`
+            <div class="col-3 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+            </div>
+            <div class="card-body">             
+              <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>          
+              <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[5]} </p>
+              <p class="card-text">Data:  ${data} </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+            
+          });
+        }
+      })
+  })
+
+  $('#recebimentosAVista').click(function(){
+    $('#comandas').empty();
+    
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaRecebimentosPorTipo') }}",{
+      tipo:1
+      },function(data){
+        console.log(data);
+        if(!data.erro){
+
+          data.comandas.forEach(comanda => {
+            console.log(comanda);
+            let data = new Date(comanda[5]).toLocaleDateString();
+            
+            $('#comandas').append(`
+            <div class="col-3 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+            </div>
+            <div class="card-body">             
+              <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>          
+              <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[2]} </p>
+              <p class="card-text" >Desconto: R$  ${comanda[3]} </p>
+              <p class="card-text" >Valor Final: R$  ${comanda[4]} </p>
+              <p class="card-text">Data:  ${data}  </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+            
+          });
+        }
+      })
+
   })
 </script>
 {% endblock %}
