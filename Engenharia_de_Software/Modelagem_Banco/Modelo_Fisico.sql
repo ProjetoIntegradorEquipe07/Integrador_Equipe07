@@ -29,7 +29,7 @@ CREATE TABLE tb_produto (
    id_produto int auto_increment,
    nome varchar(100) not null,
    descricao varchar(200) not null,
-   foto blob,
+   foto mediumblob not null,
    valor_unitario decimal(11,2),
    primary key (id_produto)
 );
