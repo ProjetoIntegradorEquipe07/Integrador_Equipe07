@@ -142,6 +142,48 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
+            
+    def selectRecebimentosPorTipo(self, tipo):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda, comanda, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id WHERE tipo = %s', (tipo))
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao buscar recebimentos por tipo', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
+
+    def contaRecebimentosPorTipo(self, tipo):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT COUNT(id_recebimento) FROM tb_recebimento WHERE tipo = %s', (tipo))
+
+            result = c.fetchone()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao contar recebimentos por tipo', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
 
     def fechaComanda(self, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
         try:
