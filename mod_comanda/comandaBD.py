@@ -142,7 +142,6 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
-<<<<<<< HEAD
             
     def selectRecebimentosPorTipo(self, tipo):
         banco = None
@@ -185,7 +184,6 @@ class Comanda():
                 c.close()
             if banco:
                 banco.conexao.close()
-=======
 
     def fechaComanda(self, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
         try:
@@ -228,4 +226,3 @@ class Comanda():
 
         finally:
             c.close()
->>>>>>> 57d307b1c82e4242ea3d3598d0b20e8637bb7af1
