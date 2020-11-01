@@ -6,13 +6,17 @@
 {% endblock %}
 {% block content %} 
 
-<div class="row">
-  
-  <div class="col-4">
-    <form action="{{ url_for('comanda.formListaComandasAbertas') }}" method="POST">
-      <button type="submit" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>
-    </form>
+<div class="container">
+  <div class="row">
     
+    <div class="col-4">      
+        <button type="button" id="comandasAbertas" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>    
+      
+  </div>
+</div>
+
+  <div class="row" id="comandas">   
+
   </div>
 
 </div>
@@ -20,7 +24,43 @@
 
 
 
+{% endblock %}
 
+{% block js %}
+<script>
 
+  $('#comandasAbertas').click(function(){
+
+  $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
+    status_comanda:0
+    },function(data){
+
+      if(!data.erro){
+
+        data.comandas.forEach(comanda => {
+          console.log(comanda);
+          $('#comandas').append(`
+          <div class="col-3 ">
+          <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+           <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+             <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+           </div>
+           <div class="card-body">             
+             <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>          
+             <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[5]} </p>
+             <p class="card-text">Data:  ${comanda[2]}  </p>
+             
+           </div>
+         </div>      
+  
+       </div>
+          
+          `)
+          
+        });
+      }
+    })
+  })
+</script>
 {% endblock %}
 

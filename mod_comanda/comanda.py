@@ -23,6 +23,24 @@ def dashboard():
     _comandas_abertas = comanda.contaComandasPorStatus(0)
     return render_template('dashboard.html', comandas_abertas = _comandas_abertas)
 
+@bp_comanda.route("/buscaComandasPorStatus", methods = ['POST'])
+@validaSessao
+def buscaComandasPorStatus():
+    try:
+        _comanda = Comanda()
+        _comanda.status_comanda = request.form['status_comanda']
+        _lista = _comanda.selectComandaByStatus()
+        return jsonify(erro = False, comandas = _lista)
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+
 @bp_comanda.route("/formListaComandasAbertas", methods = ['POST'])
 @validaSessao
 @validaGrupo
