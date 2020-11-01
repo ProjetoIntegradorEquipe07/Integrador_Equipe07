@@ -114,6 +114,31 @@
         })
 
     }
+    // Restricts input for the set of matched elements to the given inputFilter function.
+      (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+          return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+            if (inputFilter(this.value)) {
+              this.oldValue = this.value;
+              this.oldSelectionStart = this.selectionStart;
+              this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+              this.value = this.oldValue;
+              this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+              this.value = "";
+            }
+          });
+        };
+      }(jQuery));
+
+      function permiteApenasValoresDecimais(seletor){
+        $(seletor).inputFilter(function(value){
+
+        return /^\$?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}[0-9]{0,}(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/.test(value);    // Allow digits only, using a RegExp
+    })
+    }
+      
     </script>
      
     {% block js %}{% endblock %}

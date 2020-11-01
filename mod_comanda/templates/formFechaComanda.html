@@ -1,0 +1,148 @@
+{% extends 'modelo.html' %}
+
+{% block title %}Fechar comanda{% endblock %}
+
+{% block content %}
+<h2>Fechar Comanda: Nº {{ comanda['comanda'] }} </h2>
+<form id="fechaComanda">
+    <input type="hidden" value="{{ comanda['id_comanda'] }}" id="id_comanda" name="id_comanda">
+    <div class="form-group">
+        <label for="data_hora">Data:</label>
+        <input type="text" readonly id="data_hora" value="{{ comanda['data_hora'] }}"  name="data_hora" class="form-control col-5">
+    </div>
+    <div class="form-group">
+        <label for="valor_total">Valor total:</label>
+        <input type="text" readonly id="valor_total" value="{{ comanda['valor_total'] }}" name="valor_total" class="form-control col-5">
+    </div>
+    <p>Tipo pagamento: </p>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo" id="vista" value="1" checked>
+        <label class="form-check-label" for="inlineRadio1">Á Vista</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo" id="fiado" value="2">
+        <label class="form-check-label" for="inlineRadio2">Fiado</label>
+      </div>
+    <div id="inputDesconto" class="form-group">
+        <label for="valor_desconto">Desconto:</label>
+        <input type="text" id="valor_desconto"   name="valor_total" class="form-control col-5">
+    </div>
+    <div id="inputValorFinal" class="form-group">
+        <label for="valor_final">Valor Final:</label>
+        <input readonly value="{{ comanda['valor_total'] }}" type="text" id="valor_final"   name="valor_final" class="form-control col-5">
+    </div>
+    <div id="inputCpf" class="form-group">
+        <label for="cpf">CPF Cliente:</label>
+        <input type="text" placeholder="000-000-000-00" maxlength="11" minlength="11" id="cpf"   name="cpf" class="form-control col-5">
+    </div>
+    <div id="inputSenha" class="form-group">
+        <label for="senha">Senha Cliente:</label>
+        <input type="password" id="senha"   name="senha" class="form-control col-5">
+    </div>
+
+    <button type="submit" class="btn btn-success">OK</button>
+</form>
+{% endblock %}
+
+{% block js %}
+<script>
+    
+    var valorTotal = $('#valor_total').val();
+    $('#cpf').mask('000.000.000-00')
+    $('#valor_desconto').keyup(function(e){
+
+        let valorDesconto = $('#valor_desconto').val();
+
+        $('#valor_final').val(valorTotal - valorDesconto)
+
+    })
+    $('#fechaComanda').submit(function(e){
+
+        e.preventDefault();
+        $('#cpf').unmask();
+
+        if($('#vista').is(':checked')){
+            
+            $.post($SCRIPT_ROOT + "{{ url_for('comanda.fechaComandaAVista') }}",{
+
+                id_comanda: $('#id_comanda').val(),
+                valor_total: $('#valor_total').val(),
+                valor_desconto: $('#valor_desconto').val(),
+                valor_final: $('#valor_final').val()
+
+            }, function(data){
+
+                
+                if(!data.erro){
+
+                    swal(data.mensagem,'','success');
+
+                    setTimeout(function(){
+
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                    }, 2000)
+                }
+                else{
+                    swal(data.mensagem,'','error');
+                    console.log(data.mensagem_exception);
+                }
+
+            })
+        }
+        
+        else{
+
+            $.post($SCRIPT_ROOT + "{{ url_for('comanda.registraComandaFiado') }}", {
+
+                cpf: $('#cpf').val(),
+                senha: $('#senha').val(),
+                id_comanda: $('#id_comanda').val()
+
+
+            }, function(data){
+
+                if(!data.erro){
+
+                    swal(data.mensagem,'','success');
+
+                    setTimeout(function(){
+
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                    }, 2000)
+                    }
+                    else{
+                        swal(data.mensagem,'','error');
+                        console.log(data.mensagem_exception);
+                }
+            })
+        }
+    })
+    
+    
+    
+    $(document).ready(function(e){
+        $('#inputCpf').attr('required', false).hide();
+        $('#inputSenha').attr('required', false).hide();
+        permiteApenasValoresDecimais('#valor_desconto');
+
+        $("input[type='radio']").change(function(){            
+            if($('#vista').is(':checked')){
+
+                $('#inputDesconto').show();
+                $('#inputValorFinal').show();
+                $('#inputCpf').attr('required', false).hide();
+                $('#inputSenha').attr('required', false).hide();
+
+            }
+            else{
+                $('#inputDesconto').hide();
+                $('#inputValorFinal').hide();
+                $('#inputCpf').attr('required', true).show();
+                $('#inputSenha').attr('required', true).show();
+            }
+        })
+        
+
+    })
+</script>
+{% endblock %}

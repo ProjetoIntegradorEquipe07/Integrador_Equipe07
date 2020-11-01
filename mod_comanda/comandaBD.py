@@ -142,6 +142,7 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
+<<<<<<< HEAD
             
     def selectRecebimentosPorTipo(self, tipo):
         banco = None
@@ -184,3 +185,47 @@ class Comanda():
                 c.close()
             if banco:
                 banco.conexao.close()
+=======
+
+    def fechaComanda(self, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (self.status_comanda, self.status_pagamento, self.id_comanda))
+
+            c.execute('INSERT INTO tb_recebimento(valor_final, valor_total, desconto, data_hora, tipo, funcionario_id) VALUES(%s, %s, %s, %s, %s, %s)', (valor_final, valor_total, desconto, data_hora, tipo, funcionario_id))
+
+            id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
+            c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, self.id_comanda))
+
+            banco.conexao.commit()
+
+           
+
+            return 'Comanda fechada com sucesso!'
+        except Exception as e:
+             raise Exception('Erro fechar comanda banco', str(e))
+
+        finally:
+            c.close()
+
+    def registraComandaFiado(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, data_assinatura_fiado = %s, cliente_id = %s WHERE id_comanda = %s', (self.status_comanda, self.data_assinatura_fiado, self.cliente_id, self.id_comanda))
+            banco.conexao.commit()
+            
+
+            return 'Fiado registrado!'
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            c.close()
+>>>>>>> 57d307b1c82e4242ea3d3598d0b20e8637bb7af1

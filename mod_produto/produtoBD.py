@@ -14,7 +14,7 @@ class Produto():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_produto, nome, descricao, foto, valor_unitario FROM tb_produto')
+            c.execute('SELECT id_produto, nome, descricao, CONVERT(foto USING utf8), valor_unitario FROM tb_produto')
 
             result = c.fetchall()
             c.close()
@@ -28,13 +28,14 @@ class Produto():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_produto, nome, descricao, valor_unitario FROM tb_produto WHERE id_produto = %s',(self.id_produto))
+            c.execute('SELECT id_produto, nome, descricao,CONVERT(foto USING utf8), valor_unitario FROM tb_produto WHERE id_produto = %s',(self.id_produto))
 
             for linha in c:
                 self.id_produto = linha[0]
                 self.nome = linha[1]
                 self.descricao = linha[2]
-                self.valor_unitario = linha[3]
+                self.foto = linha[3]
+                self.valor_unitario = linha[4]
 
             c.close()
 
@@ -48,7 +49,7 @@ class Produto():
 
             c = banco.conexao.cursor()
 
-            c.execute('INSERT INTO tb_produto(nome,descricao,valor_unitario) VALUES(%s,%s,%s)',(self.nome,self.descricao,self.valor_unitario))
+            c.execute('INSERT INTO tb_produto(nome,descricao,foto,valor_unitario) VALUES(%s,%s,%s,%s)',(self.nome,self.descricao,self.foto,self.valor_unitario))
             banco.conexao.commit()
             c.close()
 

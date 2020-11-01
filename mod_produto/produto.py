@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
+import base64
 
 from mod_login.login import validaSessao, validaGrupo
 from mod_produto.produtoBD import Produto
@@ -30,8 +31,9 @@ def addProduto():
         _nome = request.form['nome']
         _descricao = request.form['descricao']
         _valor_unitario = request.form['valor_unitario']
+        _foto = "data:" + request.files['foto'].content_type + ";base64," + str(base64.b64encode(request.files['foto'].read()), "utf-8")
 
-        _produto = Produto(0, _nome, _descricao, "", _valor_unitario)
+        _produto = Produto(0, _nome, _descricao, _foto, _valor_unitario)
 
         _mensagem = _produto.insert()
 
@@ -64,8 +66,9 @@ def editProduto():
         _nome = request.form['nome']
         _descricao = request.form['descricao']
         _valor_unitario = request.form['valor_unitario']
+        _foto = "data:" + request.files['foto'].content_type + ";base64," + str(base64.b64encode(request.files['foto'].read()), "utf-8")
 
-        _produto = Produto(_id_produto, _nome, _descricao, "", _valor_unitario)
+        _produto = Produto(_id_produto, _nome, _descricao, _foto, _valor_unitario)
 
         _mensagem = _produto.update()
 
