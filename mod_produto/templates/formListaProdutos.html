@@ -25,10 +25,10 @@
             <td>{{ produto[1] }}</td>
             <td>{{ produto[2] }}</td>
             <td>{{ produto[4] }}</td>
-            <td>'''''''''''''''</td>
+            <td><img src="{{ produto[3] }}" alt="{{ produto[1] }}" width="100"></td>
             <td>
                 <div class="text-center">
-                    <form style=" clear: both; float:left; margin-right: 10px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
+                    <form style=" clear: both; float:left; margin-right: -2px; margin-left: -10px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
                         <input type="hidden" name="id_produto" value="{{ produto[0] }}">
                         <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
                     </form>
