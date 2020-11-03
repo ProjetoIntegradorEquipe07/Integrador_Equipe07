@@ -1,0 +1,89 @@
+{% extends 'modelo.html' %}
+{%  block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{% block title %}Recebe Fiado{% endblock %}
+
+{% block content %}
+<div class="col-4">
+    <form id="buscaCliente" method="POST">
+        <input autofocus type="text" name="cpf_cliente" maxlength="11" minlength="11" id="cpf_cliente" placeholder="CPF Cliente">
+        <button type="submit"  class="btn btn-info"><i class="fas fa-search"></i></button>
+    </form>
+    <div id="msg_cliente" class="alert alert-danger">Cliente não encontrado!</div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Número</th>            
+            <th>Data</th>
+            <th>Dias Atraso</th>
+            <th>Valor</th>            
+            <th>Multa</th>
+            <th>Juros</th>
+        </tr>
+    </thead>
+    <tbody id="fiados">
+        
+    </tbody>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    
+
+    $('#buscaCliente').submit(function(e){
+
+        e.preventDefault();
+        $('#cpf_cliente').unmask();
+
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaFiadoPorCliente') }}",{
+
+            cpf_cliente:$('#cpf_cliente').val()
+        },function(data){
+
+            if(!data.erro){
+                if(data.cliente_encontrado){
+                    $('#msg_cliente').hide();
+                    $('#fiados').empty();
+                    data.fiados.forEach(fiado => {
+                        
+                        $('#fiados').append(`
+                            <tr>
+                                <td>${fiado['ID']}</td>
+                                <td>${fiado['Numero']}</td>
+                                <td>${new Date(fiado['Data']).toLocaleDateString()}</td>
+                                <td>${fiado['Dias Atraso']}</td>
+                                <td>${fiado['Valor']}</td>
+                                <td>${fiado['Multa']}</td>
+                                <td>${fiado['Juros']}</td>
+                            </tr>
+                        `)
+                    });
+                    
+                }
+
+                else{
+                    $('#msg_cliente').show();
+                    $('#fiados').empty();
+                }
+            }
+            else{
+                $('#fiados').empty();
+                console.log(data.mensagem_exception);
+            }
+        })
+    })
+
+    $(document).ready(function(){
+        $('#msg_cliente').hide();
+        $('#cpf_cliente').mask('000.000.000-00');
+
+    })
+    
+</script>
+{% endblock %}
+

@@ -1,3 +1,5 @@
+import pymysql
+
 from bancoBD import Banco
 
 class Comanda():
@@ -226,3 +228,28 @@ class Comanda():
 
         finally:
             c.close()
+
+    def buscaFiadosPorCliente(self, id_cliente):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor(pymysql.cursors.DictCursor)#Retorna o select com um array associativo
+
+            _sql = "SELECT tbc.id_comanda as ID, tbc.cliente_id as IDCliente, tbc.comanda as Numero, CONVERT(SUM(tbcp.valor_unitario*tbcp.quantidade), CHAR) as Valor, if(datediff(date(now()),tbc.data_assinatura_fiado)>30,datediff(date(now()),tbc.data_assinatura_fiado)-30,0) as 'Dias Atraso',CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT multa_atraso FROM tb_empresa),0), CHAR) as Multa, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT taxa_juro_diario FROM tb_empresa)*(datediff(date(now()),tbc.data_assinatura_fiado)-30),0), CHAR) as Juros, tbc.data_assinatura_fiado as Data, tbc.status_comanda as Status_Comanda FROM tb_comanda tbc INNER JOIN tb_comanda_produto tbcp ON tbc.id_comanda = tbcp.comanda_id GROUP BY ID HAVING tbc.status_comanda = %s AND tbc.cliente_id = %s ORDER BY tbc.data_assinatura_fiado"
+            _sql_data = (self.status_comanda, id_cliente)
+            c.execute(_sql, _sql_data)
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()

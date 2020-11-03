@@ -140,3 +140,36 @@ class Cliente():
 
         finally:
             c.close()
+
+    def buscaClientePorCPF(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_cliente, nome, cpf, telefone, dia_fiado FROM tb_cliente WHERE cpf = %s', (self.cpf))
+            result = c.fetchall()
+            if len(result) > 0:
+                for linha in result:
+                    self.id_cliente = linha[0]
+                    self.nome = linha[1]
+                    self.cpf = linha[2]
+                    self.telefone = linha[3]
+                    self.dia_fiado = linha[4]
+                return True
+            else:
+                return False
+
+           
+
+        except Exception as e:
+            raise Exception('Erro ao tentar buscar cliente', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
+            

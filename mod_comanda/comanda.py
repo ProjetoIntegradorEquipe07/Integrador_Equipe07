@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, url_for, jsonify, session, json
+from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect
 import datetime
+import decimal
 
 from mod_login.login import validaSessao, validaGrupo
 from mod_comanda.comandaBD import Comanda
@@ -16,6 +17,13 @@ bp_comanda = Blueprint('comanda', __name__, url_prefix='/comanda', template_fold
 @validaSessao
 def formListaComandas():
     return render_template('formListaComandas.html')
+
+@bp_comanda.route("/formListaFiados", methods = ['GET', 'POST'])
+@validaSessao
+def formListaFiados():
+    return render_template('formListaFiados.html')
+
+
 
 @bp_comanda.route("/dashboard", methods = ['GET', 'POST'])
 @validaSessao
@@ -249,4 +257,36 @@ def registraComandaFiado():
             _mensagem = 'Erro no banco'
             _mensagem_exception = e.args
         
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+@bp_comanda.route("/buscaFiadoPorCliente", methods = ['POST'])
+@validaSessao
+def buscaFiadoPorCliente():
+    try:
+        _comanda = Comanda()
+        _cliente = Cliente()
+        _cliente.cpf = request.form['cpf_cliente']
+        _cliente_encontrado = _cliente.buscaClientePorCPF()
+        if _cliente_encontrado:
+            
+            _comanda.status_comanda = 2
+            print(_cliente.id_cliente)
+            
+            _tupla_fiados = _comanda.buscaFiadosPorCliente(_cliente.id_cliente)      
+            return jsonify(erro = False,cliente_encontrado = True, fiados = _tupla_fiados)
+        else:
+            return jsonify(erro = False, cliente_encontrado = False)
+  
+                            
+
+        
+        
+    
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        print(str(e))
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
