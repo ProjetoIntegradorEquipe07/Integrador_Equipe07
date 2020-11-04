@@ -8,6 +8,7 @@ from mod_funcionario.funcionario import bp_funcionario
 from mod_produto.produto import bp_produto
 from mod_login.login import bp_login
 from mod_comanda.comanda import bp_comanda
+from mod_empresa.empresa import bp_empresa
 
 app = Flask(__name__)
 
@@ -27,6 +28,7 @@ app.register_blueprint(bp_funcionario)
 app.register_blueprint(bp_produto)
 app.register_blueprint(bp_login)
 app.register_blueprint(bp_comanda)
+app.register_blueprint(bp_empresa)
 
 
 
