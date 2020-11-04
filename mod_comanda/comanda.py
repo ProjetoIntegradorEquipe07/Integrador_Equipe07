@@ -318,7 +318,7 @@ def recebeFiado():
         else:
             _mensagem = 'Erro no banco'
             _mensagem_exception = e.args
-        print(str(e))
+        
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
         

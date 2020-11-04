@@ -20,7 +20,7 @@
             <input type="hidden" id="id_comandas">
             <div class="form-group">
               <label for="valor_total_input" class="col-form-label">Valor Total(R$):</label>
-              <input type="text" class="form-control" id="valor_total_input" readonly>              
+              <input type="text" value="0" class="form-control" id="valor_total_input" readonly>              
             </div>
             <div class="form-group">
                 <label for="desconto" class="col-form-label">Desconto(R$):</label>
@@ -46,6 +46,7 @@
         <button type="submit"  class="btn btn-info"><i class="fas fa-search"></i></button>
     </form>
     <div id="msg_cliente" class="alert alert-danger">Cliente não encontrado!</div>
+    <div id="msg_fiado" class="alert alert-success">Cliente não deve nenhum fiado</div>
 </div>
 
 <table class="table table-striped">
@@ -68,14 +69,13 @@
 </table>
 <div class="row">
     <div class="col-2">
-        <button type="button" data-toggle="modal" data-target="#fechaFiado" data-whatever="@mdo" class="btn btn-success" id="receber_fiados">Receber fiados marcados</button>
+        <button type="button" data-toggle="modal" data-target="#fechaFiado" data-whatever="@mdo" class="btn btn-success" id="botao_fiado">Receber fiados marcados</button>
 
     </div>
     <div class="col-2">
         
-        <div class="alert alert-success">
-            <p>Total(R$):</p>    
-            <p id="valor_total">0</p>
+        <div id="mostra_valor" class="alert alert-success">
+            Total R$ <span id="valor_total">0</span>            
         </div>
     </div>
 
@@ -106,16 +106,25 @@
             if(!data.erro){
                 if(data.cliente_encontrado){
                     $('#msg_cliente').hide();
-                    $('#receber_fiados').show();
+                    $('#botao_fiado').show();
+                    $('#msg_fiado').hide();
+                    $('#mostra_valor').show();     
                     $('#fiados').empty();
+                    if(data.fiados.length == 0){
+                        $('#msg_fiado').show();
+                        $('#botao_fiado').hide();
+                        $('#mostra_valor').hide(); 
+                    }
                     data.fiados.forEach(fiado => {
                         
-                        $('#fiados').append(`
+                        if(fiado['Dias Atraso'] > 0){
+
+                            $('#fiados').append(`
                             <tr>
                                 <td>${fiado['ID']}</td>
                                 <td>${fiado['Numero']}</td>
                                 <td>${new Date(fiado['Data']).toLocaleDateString()}</td>
-                                <td>${fiado['Dias Atraso']}</td>
+                                <td style='color:red;'>${fiado['Dias Atraso']}</td>
                                 <td>${fiado['Valor']}</td>
                                 <td>${fiado['Multa']}</td>
                                 <td>${fiado['Juros']}</td>
@@ -125,6 +134,25 @@
                                 </td>
                             </tr>
                         `)
+                        }
+                        else{
+                            $('#fiados').append(`
+                                <tr>
+                                    <td>${fiado['ID']}</td>
+                                    <td>${fiado['Numero']}</td>
+                                    <td>${new Date(fiado['Data']).toLocaleDateString()}</td>
+                                    <td>${fiado['Dias Atraso']}</td>
+                                    <td>${fiado['Valor']}</td>
+                                    <td>${fiado['Multa']}</td>
+                                    <td>${fiado['Juros']}</td>
+                                    <td>
+                                        <input name='id_comanda' value='${fiado['ID']}' type='checkbox' id='id_comanda'>
+                                        <input name='soma_valores' value='${ parseFloat(fiado['Valor']) + parseFloat(fiado['Multa']) + parseFloat(fiado['Juros'])}' type='hidden' id='soma_valores'>
+                                    </td>
+                                </tr>
+                            `)
+
+                        }
                     });
                     let lista_comandas = [];
                     $("input[name='id_comanda']").click(function(e){
@@ -135,6 +163,7 @@
                             $('#valor_final').val(valor);
                             lista_comandas.push($(this)[0].value); // Pega o valor que está no checbox marcado
                             $('#id_comandas').val(lista_comandas);
+                            toggleBotaoRecebeFiado();
                             
                         }
                         else{
@@ -145,6 +174,8 @@
                             let indice = lista_comandas.indexOf($(this)[0].value);
                             lista_comandas.splice(indice, 1);
                             $('#id_comandas').val(lista_comandas);
+                            toggleBotaoRecebeFiado();
+
                             
 
 
@@ -159,7 +190,9 @@
 
                 else{
                     $('#msg_cliente').show();
+                    $('#msg_fiado').hide();
                     $('#receber_fiados').hide();
+                    $('#mostra_valor').hide();     
                     $('#fiados').empty();
                 }
             }
@@ -169,11 +202,23 @@
             }
         })
     })
+    console.log($('#valor_total_input').val() == "0")
+    function toggleBotaoRecebeFiado(){
+        console.log($('#valor_total_input').val() == "0")
+        if ($('#valor_total_input').val() == "0" ){
 
-    
+            $('#botao_fiado').attr('disabled',true);
+        }
+        else{
+            $('#botao_fiado').attr('disabled',false);
+        }
+
+    }
     $('#recebeFiado').submit(function(e){
 
         e.preventDefault();
+
+        
         
         $.post($SCRIPT_ROOT + "{{ url_for('comanda.recebeFiado') }}",{
 
@@ -206,12 +251,16 @@
     
     $(document).ready(function(){
         $('#msg_cliente').hide();
-        $('#receber_fiados').hide();        
+        $('#botao_fiado').hide();
+        $('#mostra_valor').hide();
+        $('#msg_fiado').hide();        
         $('#cpf_cliente').mask('000.000.000-00');
 
         permiteApenasValoresDecimais('#valor_total_input');
         permiteApenasValoresDecimais('#desconto');
         permiteApenasValoresDecimais('#valor_final');
+
+        toggleBotaoRecebeFiado();
 
 
     })
