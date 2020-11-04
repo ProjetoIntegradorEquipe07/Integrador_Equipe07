@@ -32,7 +32,9 @@ def dashboard():
     comanda = Comanda()
     _comandas_abertas = comanda.contaComandasPorStatus(0)
     _recebimentos_a_vista = comanda.contaRecebimentosPorTipo(1)
-    return render_template('dashboard.html', comandas_abertas = _comandas_abertas, recebimentos_a_vista = _recebimentos_a_vista)
+    _recebimentos_fiado = comanda.contaRecebimentosPorTipo(2)
+    _comandas_em_atraso = len(comanda.selectComandasEmAtraso())
+    return render_template('dashboard.html', comandas_abertas = _comandas_abertas, recebimentos_a_vista = _recebimentos_a_vista, recebimentos_fiado = _recebimentos_fiado, comandas_em_atraso = _comandas_em_atraso)
 
 @bp_comanda.route("/buscaComandasPorStatus", methods = ['POST'])
 @validaSessao
@@ -51,6 +53,23 @@ def buscaComandasPorStatus():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
+@bp_comanda.route("/buscaComandasEmAtraso", methods = ['POST'])
+@validaSessao
+def buscaComandasEmAtraso():
+    try:
+        _comanda = Comanda()        
+        result = _comanda.selectComandasEmAtraso()
+
+        return jsonify(erro = False, comandas = result)
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+    
 @bp_comanda.route('/buscaRecebimentosPorTipo', methods = ['POST'])
 @validaSessao
 def buscaRecebimentosPorTipo():
@@ -68,19 +87,6 @@ def buscaRecebimentosPorTipo():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
-    
-
-
-@bp_comanda.route("/formListaComandasAbertas", methods = ['POST'])
-@validaSessao
-@validaGrupo
-def formListaComandasAbertas():
-    _comanda = Comanda()
-    _comanda.status_comanda = 0
-    _lista = _comanda.selectComandaByStatus()
-
-    return render_template('formListaComandasAbertas.html', lista = _lista)
-
 
 @bp_comanda.route("/addComanda", methods=['POST'])
 @validaSessao

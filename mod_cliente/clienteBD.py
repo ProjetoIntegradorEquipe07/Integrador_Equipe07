@@ -172,4 +172,5 @@ class Cliente():
                 c.close()
             if banco:
                 banco.conexao.close()
-            
+        
+        

@@ -285,3 +285,28 @@ class Comanda():
                 c.close()
             if banco:
                 banco.conexao.close()
+
+    def selectComandasEmAtraso(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor(pymysql.cursors.DictCursor)
+
+            _sql = "SELECT id_cliente as ID, nome as NOME,  telefone as TELEFONE, cpf as CPF, tbc.comanda as 'Número Comanda', tbc.data_assinatura_fiado as 'Data Fiado', tbc.status_comanda as 'Status', CONVERT(SUM(tbcp.valor_unitario*tbcp.quantidade), CHAR) as Valor, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT multa_atraso FROM tb_empresa),0), CHAR) as Multa, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT taxa_juro_diario FROM tb_empresa)*(datediff(date(now()),tbc.data_assinatura_fiado)-30),0), CHAR) as Juros FROM tb_cliente INNER JOIN tb_comanda tbc ON id_cliente = tbc.cliente_id INNER JOIN tb_comanda_produto tbcp ON tbcp.comanda_id = tbc.id_comanda GROUP BY tbc.comanda HAVING tbc.status_comanda = %s AND if(datediff(date(now()),tbc.data_assinatura_fiado)>30,datediff(date(now()),tbc.data_assinatura_fiado)-30,0) > 30"
+            _sql_data = 2
+            c.execute(_sql, _sql_data)
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao buscar comandas em atraso', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
