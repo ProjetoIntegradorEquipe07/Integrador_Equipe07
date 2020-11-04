@@ -19,3 +19,40 @@
 {% endfor %}
 {% endif %}
 {% endblock %}
+
+{% block js %}
+<script>
+
+    $('#salvaConfiguracoes').submit(function(e){
+
+        e.preventDefault();
+
+        $.post($SCRIPT_ROOT + "{{ url_for('empresa.salvaConfiguracoes') }}", {
+
+            multa_atraso:$('#multa_atraso').val(),
+            taxa_juro_diario:$('#taxa_juro_diario').val()
+        }, function(data){
+
+            if(!data.erro){
+
+                swal(data.mensagem,'','success')
+
+                setTimeout(function(e){
+
+                    window.location.replace($SCRIPT_ROOT + "{{ url_for('empresa.configuracoes') }}")
+                }, 2000)
+            }
+            else{
+                swal(data.mensagem,'','error');
+                console.log(data.mensagem_exception);
+            }
+        })
+    })
+    $(document).ready(function(){
+
+        permiteApenasValoresDecimais('#multa_atraso');
+        permiteApenasValoresDecimais('#taxa_juro_diario');
+
+    })
+</script>
+{% endblock %}

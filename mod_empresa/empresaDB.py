@@ -28,3 +28,26 @@ class Empresa():
             if banco:
                 banco.conexao.close()
             
+    def update(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_empresa SET multa_atraso = %s, taxa_juro_diario = %s', (self.multa_atraso, self.taxa_juro_diario))
+
+            banco.conexao.commit()
+
+            return 'Alterações salvas com sucesso!'
+
+        except Exception as e:
+            raise Exception('Erro ao salvar alterações', str(e))
+
+        finally:
+            if c:
+                c.close()
+
+            if banco:
+                banco.conexao.close()
