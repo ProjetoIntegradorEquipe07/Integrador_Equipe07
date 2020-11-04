@@ -17,6 +17,7 @@
         </div>
         <div class="modal-body">
           <form id="recebeFiado">
+            <input type="hidden" id="id_comandas">
             <div class="form-group">
               <label for="valor_total_input" class="col-form-label">Valor Total(R$):</label>
               <input type="text" class="form-control" id="valor_total_input" readonly>              
@@ -125,13 +126,15 @@
                             </tr>
                         `)
                     });
-
+                    let lista_comandas = [];
                     $("input[name='id_comanda']").click(function(e){
-                        if($(this).is(':checked')){
+                        if($(this).is(':checked')){                                       //Pega o elemento 'pai' e vai até o input coma soma dos valores
                             let valor = parseFloat($('#valor_total').text()) + parseFloat($(this).parent().children()[1].value);
                             $('#valor_total').html(valor);
                             $('#valor_total_input').val(valor);
                             $('#valor_final').val(valor);
+                            lista_comandas.push($(this)[0].value); // Pega o valor que está no checbox marcado
+                            $('#id_comandas').val(lista_comandas);
                             
                         }
                         else{
@@ -139,6 +142,11 @@
                             $('#valor_total').html(valor);
                             $('#valor_total_input').val(valor);
                             $('#valor_final').val(valor);
+                            let indice = lista_comandas.indexOf($(this)[0].value);
+                            lista_comandas.splice(indice, 1);
+                            $('#id_comandas').val(lista_comandas);
+                            
+
 
                         }
                         
@@ -164,23 +172,7 @@
 
     
     
-    $('#receber_fiados').click(function(){
-
-         let ids_comandas_marcadas = [];
-         
-         let checks_fiado_botao = document.querySelectorAll('#pagamento_fiado');
-         checks_fiado_botao.forEach(fiado => {
-
-             if($(fiado).is(':checked')){
-
-                ids_comandas_marcadas.push(fiado.parentElement.parentElement.firstElementChild.textContent);
-             }
-             
-         });
-
-         console.log(ids_comandas_marcadas);
-
-    })
+    
     $(document).ready(function(){
         $('#msg_cliente').hide();
         $('#receber_fiados').hide();        
