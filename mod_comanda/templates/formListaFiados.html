@@ -5,6 +5,40 @@
 {% block title %}Recebe Fiado{% endblock %}
 
 {% block content %}
+<!-- Modal para fechar os fiados -->
+<div class="modal fade" id="fechaFiado" tabindex="-1" role="dialog" aria-labelledby="fechaFiado" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fechaFiado">Receber Fiado</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="recebeFiado">
+            <div class="form-group">
+              <label for="valor_total_input" class="col-form-label">Valor Total(R$):</label>
+              <input type="text" class="form-control" id="valor_total_input" readonly>              
+            </div>
+            <div class="form-group">
+                <label for="desconto" class="col-form-label">Desconto(R$):</label>
+                <input type="text" value="0" class="form-control" id="desconto">              
+              </div>
+              <div class="form-group">
+                <label for="valor_final" class="col-form-label">Valor Final(R$):</label>
+                <input type="text" class="form-control" id="valor_final" readonly>              
+              </div>
+                        
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="submit" id="botaoSubmit" class="btn btn-success">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="col-4">
     <form id="buscaCliente" method="POST">
         <input autofocus type="text" name="cpf_cliente" maxlength="11" minlength="11" id="cpf_cliente" placeholder="CPF Cliente">
@@ -33,7 +67,7 @@
 </table>
 <div class="row">
     <div class="col-2">
-        <button type="button" class="btn btn-success" id="receber_fiados">Receber fiados marcados</button>
+        <button type="button" data-toggle="modal" data-target="#fechaFiado" data-whatever="@mdo" class="btn btn-success" id="receber_fiados">Receber fiados marcados</button>
 
     </div>
     <div class="col-2">
@@ -51,6 +85,12 @@
 {% block js %}
 <script>   
     
+    $('#desconto').keyup(function(e){
+
+        let valorTotal = $('#valor_total_input').val();
+        let desconto = e.target.value;
+        $('#valor_final').val(valorTotal - desconto);
+    })
     
     $('#buscaCliente').submit(function(e){
 
@@ -90,11 +130,16 @@
                         if($(this).is(':checked')){
                             let valor = parseFloat($('#valor_total').text()) + parseFloat($(this).parent().children()[1].value);
                             $('#valor_total').html(valor);
+                            $('#valor_total_input').val(valor);
+                            $('#valor_final').val(valor);
                             
                         }
                         else{
                             let valor = parseFloat($('#valor_total').text()) - parseFloat($(this).parent().children()[1].value);
                             $('#valor_total').html(valor);
+                            $('#valor_total_input').val(valor);
+                            $('#valor_final').val(valor);
+
                         }
                         
                     })
@@ -140,6 +185,11 @@
         $('#msg_cliente').hide();
         $('#receber_fiados').hide();        
         $('#cpf_cliente').mask('000.000.000-00');
+
+        permiteApenasValoresDecimais('#valor_total_input');
+        permiteApenasValoresDecimais('#desconto');
+        permiteApenasValoresDecimais('#valor_final');
+
 
     })
     
