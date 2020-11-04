@@ -253,3 +253,28 @@ class Comanda():
                 c.close()
             if banco:
                 banco.conexao.close()
+
+        
+    def recebeFiados(lista_comandas):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (self.status_comanda, self.status_pagamento, self.id_comanda))
+
+            c.execute('INSERT INTO tb_recebimento(valor_final, valor_total, desconto, data_hora, tipo, funcionario_id) VALUES(%s, %s, %s, %s, %s, %s)', (valor_final, valor_total, desconto, data_hora, tipo, funcionario_id))
+
+            id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
+            c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, self.id_comanda))
+
+
+        except Exception as e:
+             raise Exception('Erro fecha comanda fiado banco', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()

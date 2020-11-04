@@ -265,21 +265,16 @@ def buscaFiadoPorCliente():
     try:
         _comanda = Comanda()
         _cliente = Cliente()
-        _cliente.cpf = request.form['cpf_cliente']
+        _cliente.cpf = request.form['cpf_cliente'].replace('-','').replace('.','')
         _cliente_encontrado = _cliente.buscaClientePorCPF()
         if _cliente_encontrado:
             
-            _comanda.status_comanda = 2
-            print(_cliente.id_cliente)
+            _comanda.status_comanda = 2           
             
             _tupla_fiados = _comanda.buscaFiadosPorCliente(_cliente.id_cliente)      
             return jsonify(erro = False,cliente_encontrado = True, fiados = _tupla_fiados)
         else:
             return jsonify(erro = False, cliente_encontrado = False)
-  
-                            
-
-        
         
     
     except Exception as e:
@@ -288,5 +283,8 @@ def buscaFiadoPorCliente():
         else:
             _mensagem = 'Erro no banco'
             _mensagem_exception = e.args
-        print(str(e))
+        
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+    
+        
