@@ -286,5 +286,39 @@ def buscaFiadoPorCliente():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
-    
+@bp_comanda.route("/recebeFiado", methods = ['POST'])
+@validaSessao
+def recebeFiado():
+    try:
+        _id_comandas = request.form.getlist('id_comandas')[0].split(",")
+        _valor_final = request.form['valor_final']
+        _valor_total = request.form['valor_total']
+        _desconto = request.form['desconto']
+        _data_hora = datetime.datetime.now()
+        _tipo = 2
+        _funcionario_id = session['id']
+        _lista_comandas = []
+        for id_comanda in _id_comandas:
+            _comanda = Comanda()
+            _comanda.id_comanda = id_comanda
+            _comanda.status_comanda = 1
+            _comanda.status_pagamento = 1
+            _lista_comandas.append(_comanda)
+        
+        
+        _comanda_aux = Comanda()
+        _mensagem = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
+        return jsonify(erro = False, mensagem = _mensagem)
+        
+        
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        print(str(e))
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
         

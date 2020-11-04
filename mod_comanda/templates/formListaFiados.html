@@ -171,7 +171,38 @@
     })
 
     
-    
+    $('#recebeFiado').submit(function(e){
+
+        e.preventDefault();
+        
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.recebeFiado') }}",{
+
+            id_comandas:$('#id_comandas').val(),
+            valor_final:$('#valor_final').val(),
+            valor_total:$('#valor_total_input').val(),
+            desconto:$('#desconto').val()
+        },function(data){
+
+            if(!data.erro){
+
+                swal(data.mensagem,'','success');
+
+                setTimeout(function(){
+
+                    window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaFiados') }}")
+                },2000)
+            }
+            else{
+                swal(data.mensagem,'','error');
+                console.log(data.mensagem_exception);
+            }
+
+        })
+    });
+        
+        
+        
+        
     
     $(document).ready(function(){
         $('#msg_cliente').hide();

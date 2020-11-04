@@ -1,5 +1,6 @@
 import pymysql
 
+
 from bancoBD import Banco
 
 class Comanda():
@@ -36,12 +37,14 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, comanda, data_hora FROM tb_comanda WHERE id_comanda = %s ',(self.id_comanda))
+            c.execute('SELECT id_comanda, comanda, data_hora, status_comanda, status_pagamento FROM tb_comanda WHERE id_comanda = %s ',(self.id_comanda))
 
             for linha in c:
                 self.id_comanda = linha[0]
                 self.comanda = linha[1]
                 self.data_hora = linha[2]
+                self.status_comanda = linha[3]
+                self.status_pagamento = linha[4]
 
             c.close()
 
@@ -255,21 +258,25 @@ class Comanda():
                 banco.conexao.close()
 
         
-    def recebeFiados(lista_comandas):
+    def recebeFiados(self,lista_comandas, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
         banco = None
         c = None
         try:
             banco = Banco()
             c = banco.conexao.cursor()
 
-            c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (self.status_comanda, self.status_pagamento, self.id_comanda))
-
             c.execute('INSERT INTO tb_recebimento(valor_final, valor_total, desconto, data_hora, tipo, funcionario_id) VALUES(%s, %s, %s, %s, %s, %s)', (valor_final, valor_total, desconto, data_hora, tipo, funcionario_id))
 
             id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
-            c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, self.id_comanda))
+            for comanda in lista_comandas:
 
+                c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (comanda.status_comanda, comanda.status_pagamento, comanda.id_comanda))
+            
+                c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, comanda.id_comanda))
 
+            banco.conexao.commit()
+
+            return 'Fiado fechado com sucesso!'
         except Exception as e:
              raise Exception('Erro fecha comanda fiado banco', str(e))
 
