@@ -38,6 +38,11 @@
               <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
             </a>
           </li>
+          <li> 
+            <a href="{{ url_for('empresa.configuracoes') }}">
+              <i class="fas fa-cog" aria-hidden="true"></i> Configurações
+            </a>
+          </li>
           <li>
             <a href="{{ url_for('cliente.formListaClientes') }}">
               <i class="fa fa-users" aria-hidden="true"></i> Clientes
@@ -62,7 +67,7 @@
           </li>
           
           <li>
-            <a href="#">
+            <a href="{{ url_for('comanda.formListaFiados') }}">
               <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
             </a>
           </li>

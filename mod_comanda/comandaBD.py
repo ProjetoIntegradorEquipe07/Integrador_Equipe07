@@ -1,3 +1,6 @@
+import pymysql
+
+
 from bancoBD import Banco
 
 class Comanda():
@@ -34,12 +37,14 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, comanda, data_hora FROM tb_comanda WHERE id_comanda = %s ',(self.id_comanda))
+            c.execute('SELECT id_comanda, comanda, data_hora, status_comanda, status_pagamento FROM tb_comanda WHERE id_comanda = %s ',(self.id_comanda))
 
             for linha in c:
                 self.id_comanda = linha[0]
                 self.comanda = linha[1]
                 self.data_hora = linha[2]
+                self.status_comanda = linha[3]
+                self.status_pagamento = linha[4]
 
             c.close()
 
@@ -142,6 +147,48 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
+            
+    def selectRecebimentosPorTipo(self, tipo):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT id_comanda, comanda, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id WHERE tipo = %s', (tipo))
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao buscar recebimentos por tipo', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
+
+    def contaRecebimentosPorTipo(self, tipo):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT COUNT(id_recebimento) FROM tb_recebimento WHERE tipo = %s', (tipo))
+
+            result = c.fetchone()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao contar recebimentos por tipo', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
 
     def fechaComanda(self, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
         try:
@@ -184,3 +231,82 @@ class Comanda():
 
         finally:
             c.close()
+
+    def buscaFiadosPorCliente(self, id_cliente):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor(pymysql.cursors.DictCursor)#Retorna o select com um array associativo
+
+            _sql = "SELECT tbc.id_comanda as ID, tbc.cliente_id as IDCliente, tbc.comanda as Numero, CONVERT(SUM(tbcp.valor_unitario*tbcp.quantidade), CHAR) as Valor, if(datediff(date(now()),tbc.data_assinatura_fiado)>30,datediff(date(now()),tbc.data_assinatura_fiado)-30,0) as 'Dias Atraso',CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT multa_atraso FROM tb_empresa),0), CHAR) as Multa, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT taxa_juro_diario FROM tb_empresa)*(datediff(date(now()),tbc.data_assinatura_fiado)-30),0), CHAR) as Juros, tbc.data_assinatura_fiado as Data, tbc.status_comanda as Status_Comanda FROM tb_comanda tbc INNER JOIN tb_comanda_produto tbcp ON tbc.id_comanda = tbcp.comanda_id GROUP BY ID HAVING tbc.status_comanda = %s AND tbc.cliente_id = %s ORDER BY tbc.data_assinatura_fiado"
+            _sql_data = (self.status_comanda, id_cliente)
+            c.execute(_sql, _sql_data)
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro registra comanda fiado banco', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
+
+        
+    def recebeFiados(self,lista_comandas, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            c.execute('INSERT INTO tb_recebimento(valor_final, valor_total, desconto, data_hora, tipo, funcionario_id) VALUES(%s, %s, %s, %s, %s, %s)', (valor_final, valor_total, desconto, data_hora, tipo, funcionario_id))
+
+            id_recebimento = c.lastrowid #pega o ultimo id inserido no cursor
+            for comanda in lista_comandas:
+
+                c.execute('UPDATE tb_comanda SET status_comanda = %s, status_pagamento = %s WHERE id_comanda = %s', (comanda.status_comanda, comanda.status_pagamento, comanda.id_comanda))
+            
+                c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, comanda.id_comanda))
+
+            banco.conexao.commit()
+
+            return 'Fiado fechado com sucesso!'
+        except Exception as e:
+             raise Exception('Erro fecha comanda fiado banco', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
+
+    def selectComandasEmAtraso(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor(pymysql.cursors.DictCursor)
+
+            _sql = "SELECT id_cliente as ID, nome as NOME,  telefone as TELEFONE, cpf as CPF, tbc.comanda as 'Número Comanda', tbc.data_assinatura_fiado as 'Data Fiado', tbc.status_comanda as 'Status', CONVERT(SUM(tbcp.valor_unitario*tbcp.quantidade), CHAR) as Valor, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT multa_atraso FROM tb_empresa),0), CHAR) as Multa, CONVERT(if(datediff(date(now()),tbc.data_assinatura_fiado)>30,(SELECT taxa_juro_diario FROM tb_empresa)*(datediff(date(now()),tbc.data_assinatura_fiado)-30),0), CHAR) as Juros FROM tb_cliente INNER JOIN tb_comanda tbc ON id_cliente = tbc.cliente_id INNER JOIN tb_comanda_produto tbcp ON tbcp.comanda_id = tbc.id_comanda GROUP BY tbc.comanda HAVING tbc.status_comanda = %s AND if(datediff(date(now()),tbc.data_assinatura_fiado)>30,datediff(date(now()),tbc.data_assinatura_fiado)-30,0) > 30"
+            _sql_data = 2
+            c.execute(_sql, _sql_data)
+
+            result = c.fetchall()
+
+            return result
+
+        except Exception as e:
+            raise Exception('Erro ao buscar comandas em atraso', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
