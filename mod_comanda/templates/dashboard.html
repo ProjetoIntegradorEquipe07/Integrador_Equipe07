@@ -161,7 +161,10 @@
 
           data.comandas.forEach(comanda => {
             console.log(comanda);
-            let data = new Date(comanda['Data Fiado']).toLocaleDateString();
+            let data = new Date(comanda['Data Fiado']);
+            let dia = data.getUTCDate();
+            let mes = data.getMonth() + 1;
+            let ano = data.getFullYear();
             
             $('#comandas').append(`
             <div class="col-4 ">
@@ -171,11 +174,11 @@
             </div>
             <div class="card-body">              
               <p class="card-text">Nome Cliente: ${comanda['NOME']} </p>
-              <p class="card-text">Telefone: ${comanda['TELEFONE']} </p>    
+              <p class="card-text">Telefone: <span id='telefone_cliente'>${comanda['TELEFONE']}</span> </p>    
               <p class="card-text">Valor: R$  ${comanda['Valor']} </p>
               <p class="card-text">Multa: R$  ${comanda['Multa']} </p>   
               <p class="card-text">Juros: R$  ${comanda['Juros']} </p>               
-              <p class="card-text">Data:  ${data}  </p>
+              <p class="card-text">Data:  ${dia}/${mes}/${ano}  </p>
               
             </div>
           </div>      
@@ -183,6 +186,8 @@
         </div>
             
             `)
+
+            $('[id=telefone_cliente]').mask('(00)00000-0000');
             
           });
         }
