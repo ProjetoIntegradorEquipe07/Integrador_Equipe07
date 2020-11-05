@@ -136,7 +136,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR) FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR), tbpc.id_comanda_produto FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
 
             
 
