@@ -69,13 +69,14 @@
                     swal({
 
                         title:`Bem vindo ${data.nome}!`,
-                        imageUrl:"{{ url_for('static', filename='imgs/pastel_mascote.png') }}",
-                        confirmButtonClass:'btn btn-primary',
-                        confirmButtonText:'OK',
+                        imageUrl:"{{ url_for('static', filename='imgs/pastel_mascote.png') }}",                        
                         imageSize:'200x200'
-                    }, function(){
+                    });
+
+                    setTimeout(function(){
+
                         window.location.replace($SCRIPT_ROOT + "{{ url_for('home.home') }}");
-                    })
+                    }, 2000)
 
                 }
                 else{
