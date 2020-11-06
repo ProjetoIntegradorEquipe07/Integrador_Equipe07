@@ -155,7 +155,7 @@ class Comanda():
             banco = Banco()
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, comanda, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id WHERE tipo = %s', (tipo))
+            c.execute('SELECT id_comanda, tbr.id_recebimento, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora, tbr.tipo FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id GROUP BY recebimento_id HAVING tbr.tipo = %s', (tipo))
 
             result = c.fetchall()
 
