@@ -31,11 +31,8 @@
               </a>
             </li>
           </ul>          
-          
           {% if session['grupo'] == 1 %}
-          <ul class="header" id="administrador"><h6>Administrador <i class="fa fa-angle-down"></i>
-
-          </h6>
+          <ul class="header" id="administrador"><h6>Administrador <i class="fa fa-angle-down"></i></h6>
             <li class="itens-administrador"> 
               <a href="{{ url_for('comanda.dashboard') }}">
                 <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
