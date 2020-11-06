@@ -44,7 +44,7 @@
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
       status_comanda:0
       },function(data){
-
+        
         if(!data.erro){
 
           data.comandas.forEach(comanda => {
@@ -82,7 +82,7 @@
         if(!data.erro){
 
           data.comandas.forEach(comanda => {
-            console.log(comanda);
+            
             let data = new Date(comanda[5]).toLocaleDateString();
             
             $('#comandas').append(`
