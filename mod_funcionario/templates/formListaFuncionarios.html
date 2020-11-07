@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<a href="{{ url_for('funcionario.formFuncionario') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Funcionário</i></button></a>
+<a href="{{ url_for('funcionario.formFuncionario') }}"><button type="button" class="btn btn-add mb-5"><i class="fas fa-plus-square"> Novo Funcionário</i></button></a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -32,11 +32,11 @@
                 <div class="text-center">
                     <form style=" float:left; margin-right: -50px;" action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST">
                         <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
-                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                        <button title="Editar" type="submit" class="btn btn-edit"><i class="fas fa-edit"></i></button>
                     </form>
                     <form name="excluiUsuario">
                         <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
-                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        <button title="Excluir" type="submit" class="btn btn-remove"><i class="fas fa-trash-alt"></i></button>
                     </form>
                 </div>             
             </td>

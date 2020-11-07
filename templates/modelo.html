@@ -10,18 +10,21 @@
     <title>{% block title %}{% endblock %} - Pastelaria do Zé</title>
 </head>
 {% endblock %}
-<body>
-  <header>
-    {{session['usuario']}}
-  
-
-    <a href="{{ url_for('login.logout') }}">Sair</a>
-  </header>
-    <div class="sidebar-container" style="background-color:#222222;">
+<body class="container-fluid" style="padding: 0;">
+    <div class="div-menu-bars display display-mobile">
+      <i class="fa fa-bars menu-bars fa-2x" aria-hidden="true"></i>
+      <p class="p-button-close display-mobile"><a href="{{ url_for('login.logout') }}">Sair</a></p>
+    </div>
+    <div class="row" style="height: 100vh; margin:0">
+      <div class="col-md-3 sidebar-container" style="background-color:#8c1c1c; padding:0;">
+        
         <div class="sidebar-logo">
             <img src="{{ url_for('static', filename='imgs/pastel_positiva.png') }}"  >
             <p>Pastelaria do Zé</p>
         </div>
+        <hr>
+        <p class="p-user-on">Usuário: {{session['usuario']}}</p>
+        <p class="p-button-close display-desktop display-desktop"><a href="{{ url_for('login.logout') }}">Sair</a></p>
         <hr>
         <ul class="sidebar-navigation" >
           <ul class="header" id="principal"><h6>Principal <i class="fa fa-angle-down"></i></h6>
@@ -75,15 +78,12 @@
         </ul>
       </div>
       
-      <div class="content-container">
-      
-        <div class="container-fluid col-12">
+      <div class="col-md-9 content-container">
           
             {% block content %}{% endblock %}
       
-        </div>
       </div>
-
+    </div>
       
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>    
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>

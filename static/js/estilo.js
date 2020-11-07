@@ -18,3 +18,15 @@
         $(".itens-comandas").toggle();
         });
     });
+
+    $tamanhoTela = $(window).width();
+
+    if($tamanhoTela < 768){
+        console.log("aqui")
+        $(".sidebar-container").toggle();
+        $(document).ready(function(){
+            $(".menu-bars").click(function(){
+            $(".sidebar-container").toggle();
+            });
+        });
+    }
