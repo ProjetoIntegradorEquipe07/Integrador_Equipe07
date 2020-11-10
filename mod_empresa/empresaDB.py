@@ -1,4 +1,5 @@
 from bancoBD import Banco
+from funcoes import Funcoes, LOG
 
 class Empresa():
     def __init__(self, multa_atraso=0, taxa_juro_diario=0):
@@ -40,9 +41,12 @@ class Empresa():
 
             banco.conexao.commit()
 
+            Funcoes.criaLOG('UPDATE Configurações', LOG.info)
+
             return 'Alterações salvas com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao salvar alterações', str(e))
 
         finally:
