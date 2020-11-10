@@ -195,6 +195,27 @@ def buscaNumeroComanda():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception) 
 
+@bp_comanda.route("/deletaProdutoComanda", methods = ['POST'])
+@validaSessao
+def deletaProdutoComanda():
+    try:
+        _comanda_produto = ComandaProduto()
+
+        _comanda_produto.id_comanda_produto = request.form['id_comanda_produto']
+
+        _mensagem = _comanda_produto.deleteProdutoComanda()
+
+        return jsonify(erro = False, mensagem = _mensagem)
+
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
+        
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+    
 @bp_comanda.route("/formFechaComanda", methods = ['POST'])
 @validaSessao
 def formFechaComanda():

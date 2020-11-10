@@ -94,3 +94,24 @@ class ComandaProduto():
 
         except Exception as e:
             raise Exception('Erro ao retornar valor total', str(e))
+
+    def deleteProdutoComanda(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('DELETE FROM tb_comanda_produto WHERE id_comanda_produto = %s', (self.id_comanda_produto))
+            banco.conexao.commit()
+
+            return 'Produto deletado da comanda'
+
+        except Exception as e:
+            raise Exception('Erro ao deletar produto da comanda', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()

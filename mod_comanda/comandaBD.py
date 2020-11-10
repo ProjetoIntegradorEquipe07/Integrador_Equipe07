@@ -106,7 +106,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, SUM(valor_unitario * quantidade) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda HAVING status_comanda = %s ',(self.status_comanda) )
+            c.execute('SELECT id_comanda , comanda, data_hora, status_pagamento, status_comanda, CONVERT(SUM(valor_unitario * quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda GROUP BY id_comanda HAVING status_comanda = %s ',(self.status_comanda) )
 
             result = c.fetchall()
 
@@ -136,7 +136,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR) FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR), tbpc.id_comanda_produto FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
 
             
 
@@ -155,7 +155,7 @@ class Comanda():
             banco = Banco()
             c = banco.conexao.cursor()
 
-            c.execute('SELECT id_comanda, comanda, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id WHERE tipo = %s', (tipo))
+            c.execute('SELECT id_comanda, tbr.id_recebimento, CONVERT(valor_total, CHAR), CONVERT(desconto, CHAR), CONVERT(valor_final, CHAR), tbr.data_hora, tbr.tipo FROM tb_comanda INNER JOIN tb_comanda_recebimento ON id_comanda = comanda_id INNER JOIN tb_recebimento tbr ON id_recebimento = recebimento_id GROUP BY recebimento_id HAVING tbr.tipo = %s', (tipo))
 
             result = c.fetchall()
 

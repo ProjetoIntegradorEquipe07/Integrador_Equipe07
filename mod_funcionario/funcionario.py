@@ -118,12 +118,12 @@ def validaMatricula():
 def validaCPF():
     try:
         _funcionario = Funcionario()
-        _funcionario.cpf = request.form['valor']
+        _funcionario.cpf = request.form['valor'].replace('-','').replace('.','')
 
         result = _funcionario.validaCPFExistente()
 
         if len(result) > 0:
-                return jsonify(input_existe = True)
+            return jsonify(input_existe = True)
         else:
             return jsonify(input_existe = False)
 
