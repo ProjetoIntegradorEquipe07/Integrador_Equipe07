@@ -44,7 +44,7 @@
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
       status_comanda:0
       },function(data){
-
+        
         if(!data.erro){
 
           data.comandas.forEach(comanda => {
@@ -82,7 +82,7 @@
         if(!data.erro){
 
           data.comandas.forEach(comanda => {
-            console.log(comanda);
+            
             let data = new Date(comanda[5]).toLocaleDateString();
             
             $('#comandas').append(`
@@ -121,14 +121,14 @@
         if(!data.erro){
 
           data.comandas.forEach(comanda => {
-            console.log(comanda);
+            
             let data = new Date(comanda[5]).toLocaleDateString();
             
             $('#comandas').append(`
             <div class="col-3 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
-              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+              <p class="card-title mt-2" style="color: white;"><b>Nº Recebimento:  ${comanda[1]} </b></p>
             </div>
             <div class="card-body">             
               <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>          

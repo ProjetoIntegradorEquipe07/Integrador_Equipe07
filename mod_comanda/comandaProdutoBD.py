@@ -1,5 +1,8 @@
-from bancoBD import Banco
 import datetime
+
+from bancoBD import Banco
+from funcoes import Funcoes, LOG
+
 
 class ComandaProduto():
     def __init__(self, id_comanda_produto=0, funcionario_id=0, produto_id=0, comanda_id=0, quantidade=0, valor_unitario=0):
@@ -22,9 +25,12 @@ class ComandaProduto():
 
             c.close()
 
+            Funcoes.criaLOG(f'Insere produtos comanda, id_comanda: {self.comanda_id}, id_produto: {self.produto_id}', LOG.info)            
+
             return 'Produto adicionado com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao adicionar produto!', str(e))
 
     def selectOne(self):
@@ -94,3 +100,25 @@ class ComandaProduto():
 
         except Exception as e:
             raise Exception('Erro ao retornar valor total', str(e))
+
+    def deleteProdutoComanda(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('DELETE FROM tb_comanda_produto WHERE id_comanda_produto = %s', (self.id_comanda_produto))
+            banco.conexao.commit()
+            Funcoes.criaLOG('Delete produto comanda', LOG.info)
+            return 'Produto deletado da comanda'
+
+        except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
+            raise Exception('Erro ao deletar produto da comanda', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()

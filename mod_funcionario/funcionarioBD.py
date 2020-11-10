@@ -1,4 +1,5 @@
 from bancoBD import Banco
+from funcoes import Funcoes, LOG
 
 class Funcionario():
     def __init__(self, id_funcionario=0, nome="", cpf="", telefone="", senha="", matricula="", grupo=2):
@@ -54,12 +55,15 @@ class Funcionario():
 
             c.execute('INSERT INTO tb_funcionario(nome,cpf,telefone,senha,matricula,grupo) VALUES(%s,%s,%s,%s,%s,%s)',(self.nome,self.cpf,self.telefone,self.senha,self.matricula,self.grupo))
             banco.conexao.commit()
+
+            Funcoes.criaLOG(f'INSERT FUNCIONARIO, id_funcionario: {c.lastrowid}', LOG.info)
+
             c.close()
 
             return 'Funcionário cadastrado com sucesso!'
 
-        except Exception as e:
-            
+        except Exception as e:  
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao cadastrar funcionario!', str(e))
     
     def update(self):
@@ -70,11 +74,13 @@ class Funcionario():
 
             c.execute('UPDATE tb_funcionario SET nome=%s,cpf=%s,telefone=%s,matricula=%s,grupo=%s WHERE id_funcionario=%s',(self.nome,self.cpf,self.telefone,self.matricula,self.grupo,self.id_funcionario))
             banco.conexao.commit()
+            Funcoes.criaLOG(f'UPDATE FUNCIONARIO, id_funcionario: {self.id_funcionario}', LOG.info)
             c.close()
 
             return 'Funcionário editado com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao editar funcionário!', str(e))
 
     def delete(self):
@@ -86,11 +92,14 @@ class Funcionario():
             c.execute('DELETE FROM tb_funcionario WHERE id_funcionario = %s',(self.id_funcionario))
 
             banco.conexao.commit()
+
+            Funcoes.criaLOG(f'DELETE FUNCIONARIO, id_funcionario: {self.id_funcionario}', LOG.info)
             c.close()
 
             return 'Funcionário excluído com sucesso'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao excluir funcionário', str(e))
 
     

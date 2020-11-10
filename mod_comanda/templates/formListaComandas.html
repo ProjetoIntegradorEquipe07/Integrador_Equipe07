@@ -84,7 +84,8 @@
             <tr>                
                 <th>Produto</th>
                 <th>Quantidade</th>
-                <th>Valor Unitário</th>                
+                <th>Valor Unitário</th>
+                <th>Opções</th>                
             </tr>
         </thead>
         <tbody id="corpoTabelaProdutos">
@@ -180,13 +181,74 @@
             data.produtos.forEach(produto => {
                 
                 $('#corpoTabelaProdutos').append(`
-                <tr>
+                <tr>                    
                     <td>${produto[0]}</td>
                     <td>${produto[1]}</td>
                     <td>R$ ${produto[2]}</td>
+                    <td> 
+                      <form name='deletaProdutoComanda' id='deletaProdutoComanda'>
+                        <input type='hidden' value='${produto[3]}' name='id_comanda_produto' id='id_comanda_produto'>
+                        <button title="Excluir produto" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                      </form>
+                    </td>
                 </tr>
 
                 `);
+
+                $("form[name='deletaProdutoComanda']").submit(function(e){
+
+                  e.preventDefault();
+
+                  swal({
+                      title: "",
+                      text: "Deseja realmente excluir o produto?",
+                      type: "warning",
+                      confirmButtonClass: "btn-danger",
+                      confirmButtonText: "Sim",
+                      showCancelButton: true,
+                      cancelButtonText: 'Cancelar',
+                      closeOnConfirm: false
+                      },
+                      function(){
+                          
+                          deletaProdutoComanda($(e.target)[0][0].value);// Retorna o valor que está no id do comanda_produto escolhido);
+                  });
+
+                  
+                })
+                function deletaProdutoComanda(idProdutoComanda){
+
+                    $.post($SCRIPT_ROOT + "{{ url_for('comanda.deletaProdutoComanda') }}",{id_comanda_produto:idProdutoComanda},
+
+
+                    function(data){
+
+                        if(!data.erro){
+
+                            swal({
+                                    title: "",
+                                    text: data.mensagem,
+                                    type: "success",                    
+                                    confirmButtonClass: "btn-success",
+                                    confirmButtonText: "Ok",                    
+                                    closeOnConfirm: false,
+                                    closeOnCancel: false
+                                    },
+                                    function(isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaComandas') }}");
+                                        } 
+                });
+        }
+        else{
+            swal("",data.mensagem,"error");
+            console.log(data.mensagem_exception);
+        }
+    }       
+
+);
+}
+                
             });
 
           }
