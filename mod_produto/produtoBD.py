@@ -1,4 +1,5 @@
 from bancoBD import Banco
+from funcoes import Funcoes, LOG
 
 class Produto():
     def __init__(self, id_produto = 0,	nome="",	descricao="",	foto="",	valor_unitario=0):
@@ -51,12 +52,14 @@ class Produto():
 
             c.execute('INSERT INTO tb_produto(nome,descricao,foto,valor_unitario) VALUES(%s,%s,%s,%s)',(self.nome,self.descricao,self.foto,self.valor_unitario))
             banco.conexao.commit()
+
+            Funcoes.criaLOG(f'INSERT PRODUTO, id_produto: {c.lastrowid}', LOG.info)
             c.close()
 
             return 'Produto cadastrado com sucesso!'
 
         except Exception as e:
-            
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao cadastrar produto!', str(e))
     
     def update(self):
@@ -67,11 +70,13 @@ class Produto():
 
             c.execute('UPDATE tb_produto SET nome=%s,descricao=%s,foto=%s,valor_unitario=%s WHERE id_produto=%s',(self.nome,self.descricao,self.foto,self.valor_unitario,self.id_produto))
             banco.conexao.commit()
+            Funcoes.criaLOG(f'UPDATE PRODUTO, id_produto: {self.id_produto}', LOG.info)
             c.close()
 
             return 'Produto editado com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao editar produto!', str(e))
 
     def delete(self):
@@ -83,11 +88,13 @@ class Produto():
             c.execute('DELETE FROM tb_produto WHERE id_produto = %s',(self.id_produto))
 
             banco.conexao.commit()
+            Funcoes.criaLOG(f'DELETE PRODUTO, id_produto: {sele.id_produto}', LOG.info)
             c.close()
 
             return 'Produto excluído com sucesso'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao excluir produto', str(e))
 
         

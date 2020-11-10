@@ -1,4 +1,5 @@
 from bancoBD import Banco
+from funcoes import Funcoes, LOG
 
 class Cliente():
     def __init__(self, id_cliente=0, nome="", cpf="", telefone="", compra_fiado=0, senha="", dia_fiado=1):
@@ -58,11 +59,12 @@ class Cliente():
 
             c.execute('INSERT INTO tb_cliente(nome,cpf,telefone,compra_fiado,senha,dia_fiado) VALUES(%s,%s,%s,%s,%s,%s)',(self.nome, self.cpf, self.telefone, self.compra_fiado, self.senha,self.dia_fiado))
             banco.conexao.commit()
-
+            Funcoes.criaLOG(f'INSERT CLIENTE, id_cliente: {c.lastrowid}', LOG.info)
             c.close()
 
             return 'Cliente cadastrado com sucesso!'
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao cadastrar cliente!', str(e))
 
     def update(self):
@@ -72,12 +74,13 @@ class Cliente():
 
             c.execute('UPDATE tb_cliente SET nome=%s,cpf=%s,telefone=%s,compra_fiado=%s,dia_fiado=%s WHERE id_cliente = %s',(self.nome, self.cpf, self.telefone, self.compra_fiado, self.dia_fiado, self.id_cliente))
             banco.conexao.commit()
-
+            Funcoes.criaLOG(f'UPDATE CLIENTE, id_cliente: {self.id_cliente}', LOG.info)
             c.close()
 
             return 'Cliente editado com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao editar cliente!', str(e))
              
 
@@ -88,11 +91,13 @@ class Cliente():
 
             c.execute('DELETE FROM tb_cliente WHERE id_cliente = %s',(self.id_cliente))
             banco.conexao.commit()
+            Funcoes.criaLOG(f'DELETE CLIENTE, id_cliente: {self.id_cliente}', LOG.info)
             c.close()
 
             return 'Cliente excluido com sucesso'
         
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao tentar excluir cliente', str(e))
             
     def validaCPFExistente(self):

@@ -1,7 +1,7 @@
 import pymysql
 
-
 from bancoBD import Banco
+from funcoes import Funcoes, LOG
 
 class Comanda():
     def __init__(self, id_comanda=0, comanda=0, dada_assinatura_fiado="", data_hora="", status_pagamento=0, status_comanda=0, funcionario_id="", cliente_id=""):
@@ -62,11 +62,14 @@ class Comanda():
             c.execute('INSERT INTO tb_comanda(comanda, data_hora, status_pagamento, status_comanda, funcionario_id) VALUES(%s, %s, %s, %s, %s)', (self.comanda, self.data_hora, self.status_pagamento, self.status_comanda, self.funcionario_id))
 
             banco.conexao.commit()
+            Funcoes.criaLOG('INSERT Nova Comanda', LOG.info)
+
 
             c.close()
             return 'Comanda criada com sucesso!'
 
         except Exception as e:
+            Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro ao criar comanda', str(e))
 
     def verificaSeComandaExiste(self):
@@ -205,10 +208,14 @@ class Comanda():
 
             banco.conexao.commit()
 
-           
+            if tipo == 1:
+                Funcoes.criaLOG(f'Fecha comanda a vista, id_recebimento:{id_recebimento}', LOG.info)
+            elif tipo == 2:
+                Funcoes.criaLOG(f'Fecha comanda fiado, id_recebimento:{id_recebimento}', LOG.info)
 
             return 'Comanda fechada com sucesso!'
         except Exception as e:
+             Funcoes.criaLOG(str(e),LOG.error)
              raise Exception('Erro fechar comanda banco', str(e))
 
         finally:
@@ -222,12 +229,15 @@ class Comanda():
 
             c.execute('UPDATE tb_comanda SET status_comanda = %s, data_assinatura_fiado = %s, cliente_id = %s WHERE id_comanda = %s', (self.status_comanda, self.data_assinatura_fiado, self.cliente_id, self.id_comanda))
             banco.conexao.commit()
+
+            Funcoes.criaLOG(f'Registra fiado, id_comanda: {self.id_comanda}, id_cliente: {self.cliente_id}', LOG.info)
             
 
             return 'Fiado registrado!'
 
         except Exception as e:
-             raise Exception('Erro registra comanda fiado banco', str(e))
+            Funcoes.criaLOG(str(e), LOG.error)
+            raise Exception('Erro registra comanda fiado banco', str(e))
 
         finally:
             c.close()
@@ -275,10 +285,11 @@ class Comanda():
                 c.execute('INSERT INTO tb_comanda_recebimento(recebimento_id, comanda_id) VALUES(%s, %s)', (id_recebimento, comanda.id_comanda))
 
             banco.conexao.commit()
-
+            Funcoes.criaLOG(f'Recebe Fiado, id_recebimento: {id_recebimento}', LOG.info)
             return 'Fiado fechado com sucesso!'
         except Exception as e:
-             raise Exception('Erro fecha comanda fiado banco', str(e))
+            Funcoes.criaLOG(str(e), LOG.error)
+            raise Exception('Erro fecha comanda fiado banco', str(e))
 
         finally:
             if c:
