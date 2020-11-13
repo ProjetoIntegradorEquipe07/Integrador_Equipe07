@@ -7,13 +7,13 @@
 </head>
 <body>
     <div id="login">
-        <div class="container">            
-            <img src="{{ url_for('static', filename='imgs/logo.png') }}">                 
-            <div id="login-row" class="row justify-content-center align-items-center">
+        <div class="container" style="height: 100vh;">            
+            <div id="login-row" class="row justify-content-center align-items-center" style="height: 100%;">
                 <div id="login-column" class="col-md-6">
+                    <img src="{{ url_for('static', filename='imgs/logo-login.png') }}"> 
                     <div id="login-box" class="col-md-12">                        
                         <form id="login-form" class="form">
-                            <h3 class="text-center text-info texto">Login</h3>
+                            <h4 class="text-center text-info texto">Login</h4>
                             <div class="form-group">
                                 <label for="usuario" class="text-info" style="color: white;">Usuário:</label><br>
                                 <input type="text" placeholder="Digite o nome" name="usuario" id="usuario" class="form-control" required autofocus>

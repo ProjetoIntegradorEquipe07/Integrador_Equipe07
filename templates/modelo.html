@@ -16,11 +16,10 @@
       <p class="p-button-close display-mobile"><a href="{{ url_for('login.logout') }}">Sair</a></p>
     </div>
     <div class="row" style="height: 100vh; margin:0">
-      <div class="col-md-3 sidebar-container" style="background-color:#8c1c1c; padding:0;">
+      <div class="col-xl-2 col-md-3 col-sm-3 col-11 sidebar-container" style="background-color:#8c1c1c; padding:0;">
         
         <div class="sidebar-logo">
-            <img src="{{ url_for('static', filename='imgs/pastel_positiva.png') }}"  >
-            <p>Pastelaria do Zé</p>
+            <img src="{{ url_for('static', filename='imgs/pastelaria-logo-3.png') }}"  >
         </div>
         <hr>
         <p class="p-user-on">Usuário: {{session['usuario']}}</p>
@@ -78,10 +77,10 @@
         </ul>
       </div>
       
-      <div class="col-md-9 content-container">
-          
+      <div class="col-xl-10 col-md-9 col-sm-9 col-12 content-container">
+          <div class="paginas-padrao">
             {% block content %}{% endblock %}
-      
+          </div>
       </div>
     </div>
       

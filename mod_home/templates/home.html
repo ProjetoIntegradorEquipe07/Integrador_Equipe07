@@ -4,7 +4,10 @@
 {% block content %}
 
 <h1> Bem vindo à Pastelaria do Zé!</h1>
-<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+<div class="home-div row">
+  
+  <div id="carouselExampleSlidesOnly" class="carousel slide col-md-6" data-ride="carousel">
+    <h3>Promoções semanais</h3>
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img class="d-block" src="{{ url_for('static', filename='imgs/pastel1.jpg') }}" alt="First slide">
@@ -17,4 +20,13 @@
       </div>
     </div>
   </div>
+  <div class="col-md-6">
+    <h3></h3>
+    <div>
+      <p>Faça seu pedido pelo <i class="fa fa-whatsapp" aria-hidden="true"></i>whatsapp: (00) 00000-0000</p>
+      <span>ou</span>
+      <p>pelo fone: (49) 0000-0000</p>
+    </div>
+  </div>
+</div>
 {% endblock %}
