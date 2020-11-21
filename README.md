@@ -18,11 +18,14 @@
 
 **[Levantamento de Requisitos](./Engenharia_de_Software/Levantamento_de_Requisitos.docx)**
 
+**[Histórias de Usuário](./Engenharia_de_Software/Historias_de_usuario.docx)**
 ### Documentação - User Experience
 
 &nbsp;&nbsp;**[Protótipo das Telas no Adobe XD](./UX/Prototipo\Pastelaria\do\ZE.xd)**
 
-&nbsp;&nbsp;**[Questionário com usuarios](./UX/Formulário\Questionario\com\Usuarios)**
+&nbsp;&nbsp;**[Questionário com usuarios](./UX/Formulario_questionario_com_Usuarios.docx)**
+
+&nbsp;&nbsp;**[Persona](./UX/Persona_pastelaria.docx)**
 
 <p>Para baixar o repositório faça o comando abaixo no prompt de comando:</p> 
 
