@@ -9,6 +9,7 @@ from mod_produto.produto import bp_produto
 from mod_login.login import bp_login
 from mod_comanda.comanda import bp_comanda
 from mod_empresa.empresa import bp_empresa
+from mod_erro.erro import bp_erro
 
 app = Flask(__name__)
 
@@ -29,6 +30,7 @@ app.register_blueprint(bp_produto)
 app.register_blueprint(bp_login)
 app.register_blueprint(bp_comanda)
 app.register_blueprint(bp_empresa)
+app.register_blueprint(bp_erro)
 
 
 
