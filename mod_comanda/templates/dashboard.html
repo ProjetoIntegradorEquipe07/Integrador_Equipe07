@@ -1,0 +1,202 @@
+{% extends 'modelo.html' %}
+
+{% block title %} Comandas {% endblock %}
+{% block style %}
+
+{% endblock %}
+{% block content %} 
+
+<div class="container">
+  <div class="row" style="margin-bottom: 10px;">
+    
+    <div class="col-2">      
+        <button type="button" id="comandasAbertas" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>   
+      
+  </div>
+  <div class="col-2">
+    <button type="button" id="recebimentosAVista" class="btn btn-info">Recebimentos a vista [{{ recebimentos_a_vista[0] }}]</button>
+  </div>
+  <div class="col-2">
+    <button type="button" id="recebimentosFiado" class="btn btn-warning">Recebimentos Fiado [{{ recebimentos_fiado[0] }}]</button>
+  </div>
+  <div class="col-3">
+    <button type="button" id="comandas_em_atraso" class="btn btn-danger">Comandas  em Atraso [{{ comandas_em_atraso }}]</button>
+  </div>
+</div>
+
+  <div class="row" id="comandas">   
+
+  </div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+  $('#comandasAbertas').click(function(){
+    $('#comandas').empty();
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
+      status_comanda:0
+      },function(data){
+        
+        if(!data.erro){
+
+          data.comandas.forEach(comanda => {
+            let data = new Date(comanda[2]).toLocaleDateString();
+            $('#comandas').append(`
+            <div class="col-3 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+            </div>
+            <div class="card-body">             
+              <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>          
+              <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[5]} </p>
+              <p class="card-text">Data:  ${data} </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+            
+          });
+        }
+      })
+  })
+
+  $('#recebimentosAVista').click(function(){
+    $('#comandas').empty();
+    
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaRecebimentosPorTipo') }}",{
+      tipo:1
+      },function(data){
+        
+        if(!data.erro){
+
+          data.comandas.forEach(comanda => {
+            
+            let data = new Date(comanda[5]).toLocaleDateString();
+            
+            $('#comandas').append(`
+            <div class="col-3 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+            </div>
+            <div class="card-body">             
+              <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>          
+              <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[2]} </p>
+              <p class="card-text" >Desconto: R$  ${comanda[3]} </p>
+              <p class="card-text" >Valor Final: R$  ${comanda[4]} </p>
+              <p class="card-text">Data:  ${data}  </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+            
+          });
+        }
+      })
+
+  })
+
+  $('#recebimentosFiado').click(function(){
+    $('#comandas').empty();
+    
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaRecebimentosPorTipo') }}",{
+      tipo:2
+      },function(data){
+        
+        if(!data.erro){
+
+          data.comandas.forEach(comanda => {
+            
+            let data = new Date(comanda[5]).toLocaleDateString();
+            
+            $('#comandas').append(`
+            <div class="col-3 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Recebimento:  ${comanda[1]} </b></p>
+            </div>
+            <div class="card-body">             
+              <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>          
+              <p class="card-text" id="valorComanda">Valor total: R$  ${comanda[2]} </p>
+              <p class="card-text" >Desconto: R$  ${comanda[3]} </p>
+              <p class="card-text" >Valor Final: R$  ${comanda[4]} </p>
+              <p class="card-text">Data:  ${data}  </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+            
+          });
+        }
+      })
+
+  })
+
+  $('#comandas_em_atraso').click(function(){
+    $('#comandas').empty();
+
+    $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasEmAtraso') }}",{     
+      
+      },function(data){
+        
+        if(!data.erro){
+
+          data.comandas.forEach(comanda => {
+            console.log(comanda);
+            let data = new Date(comanda['Data Fiado']);
+            let dia = data.getUTCDate();
+            let mes = data.getMonth() + 1;
+            let ano = data.getFullYear();
+            
+            $('#comandas').append(`
+            <div class="col-4 ">
+            <div class="card mb-2 ml-2 mr-2" style="width:300px">    
+            <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda['Número Comanda']} </b></p>
+            </div>
+            <div class="card-body">              
+              <p class="card-text">Nome Cliente: ${comanda['NOME']} </p>
+              <p class="card-text">Telefone: <span id='telefone_cliente'>${comanda['TELEFONE']}</span> </p>    
+              <p class="card-text">Valor: R$  ${comanda['Valor']} </p>
+              <p class="card-text">Multa: R$  ${comanda['Multa']} </p>   
+              <p class="card-text">Juros: R$  ${comanda['Juros']} </p>               
+              <p class="card-text">Data:  ${dia}/${mes}/${ano}  </p>
+              
+            </div>
+          </div>      
+    
+        </div>
+            
+            `)
+
+            $('[id=telefone_cliente]').mask('(00)00000-0000');
+            
+          });
+        }
+
+        else{
+          console.log(data.mensagem_exception);
+        }
+      })
+  })
+</script>
+{% endblock %}
+

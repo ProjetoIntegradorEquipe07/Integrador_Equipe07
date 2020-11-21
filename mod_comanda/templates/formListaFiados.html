@@ -1,0 +1,270 @@
+{% extends 'modelo.html' %}
+{%  block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/listas.css') }}">
+{% endblock %}
+{% block title %}Recebe Fiado{% endblock %}
+
+{% block content %}
+<!-- Modal para fechar os fiados -->
+<div class="modal fade" id="fechaFiado" tabindex="-1" role="dialog" aria-labelledby="fechaFiado" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fechaFiado">Receber Fiado</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="recebeFiado">
+            <input type="hidden" id="id_comandas">
+            <div class="form-group">
+              <label for="valor_total_input" class="col-form-label">Valor Total(R$):</label>
+              <input type="text" value="0" class="form-control" id="valor_total_input" readonly>              
+            </div>
+            <div class="form-group">
+                <label for="desconto" class="col-form-label">Desconto(R$):</label>
+                <input type="text" value="0" class="form-control" id="desconto">              
+              </div>
+              <div class="form-group">
+                <label for="valor_final" class="col-form-label">Valor Final(R$):</label>
+                <input type="text" class="form-control" id="valor_final" readonly>              
+              </div>
+                        
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="submit" id="botaoSubmit" class="btn btn-success">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="col-4">
+    <form id="buscaCliente" method="POST">
+        <input autofocus type="text" name="cpf_cliente" maxlength="11" minlength="11" id="cpf_cliente" placeholder="CPF Cliente">
+        <button type="submit"  class="btn btn-info"><i class="fas fa-search"></i></button>
+    </form>
+    <div id="msg_cliente" class="alert alert-danger">Cliente não encontrado!</div>
+    <div id="msg_fiado" class="alert alert-success">Cliente não deve nenhum fiado</div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Número</th>            
+            <th>Data</th>
+            <th>Dias Atraso</th>
+            <th>Valor</th>            
+            <th>Multa</th>
+            <th>Juros</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="fiados">
+        
+    </tbody>
+    
+</table>
+<div class="row">
+    <div class="col-2">
+        <button type="button" data-toggle="modal" data-target="#fechaFiado" data-whatever="@mdo" class="btn btn-success" id="botao_fiado">Receber fiados marcados</button>
+
+    </div>
+    <div class="col-2">
+        
+        <div id="mostra_valor" class="alert alert-success">
+            Total R$ <span id="valor_total">0</span>            
+        </div>
+    </div>
+
+</div>
+    
+{% endblock %}
+
+{% block js %}
+<script>   
+    
+    $('#desconto').keyup(function(e){
+
+        let valorTotal = $('#valor_total_input').val();
+        let desconto = e.target.value;
+        $('#valor_final').val(valorTotal - desconto);
+    })
+    
+    $('#buscaCliente').submit(function(e){
+
+        e.preventDefault();
+        
+
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaFiadoPorCliente') }}",{
+
+            cpf_cliente:$('#cpf_cliente').val()
+        },function(data){
+
+            if(!data.erro){
+                if(data.cliente_encontrado){
+                    $('#msg_cliente').hide();
+                    $('#botao_fiado').show();
+                    $('#msg_fiado').hide();
+                    $('#mostra_valor').show();     
+                    $('#fiados').empty();
+                    if(data.fiados.length == 0){
+                        $('#msg_fiado').show();
+                        $('#botao_fiado').hide();
+                        $('#mostra_valor').hide(); 
+                    }
+                    data.fiados.forEach(fiado => {
+                        
+                        if(fiado['Dias Atraso'] > 0){
+
+                            $('#fiados').append(`
+                            <tr>
+                                <td>${fiado['ID']}</td>
+                                <td>${fiado['Numero']}</td>
+                                <td>${new Date(fiado['Data']).toLocaleDateString()}</td>
+                                <td style='color:red;'>${fiado['Dias Atraso']}</td>
+                                <td>${fiado['Valor']}</td>
+                                <td>${fiado['Multa']}</td>
+                                <td>${fiado['Juros']}</td>
+                                <td>
+                                    <input name='id_comanda' value='${fiado['ID']}' type='checkbox' id='id_comanda'>
+                                    <input name='soma_valores' value='${ parseFloat(fiado['Valor']) + parseFloat(fiado['Multa']) + parseFloat(fiado['Juros'])}' type='hidden' id='soma_valores'>
+                                </td>
+                            </tr>
+                        `)
+                        }
+                        else{
+                            $('#fiados').append(`
+                                <tr>
+                                    <td>${fiado['ID']}</td>
+                                    <td>${fiado['Numero']}</td>
+                                    <td>${new Date(fiado['Data']).toLocaleDateString()}</td>
+                                    <td>${fiado['Dias Atraso']}</td>
+                                    <td>${fiado['Valor']}</td>
+                                    <td>${fiado['Multa']}</td>
+                                    <td>${fiado['Juros']}</td>
+                                    <td>
+                                        <input name='id_comanda' value='${fiado['ID']}' type='checkbox' id='id_comanda'>
+                                        <input name='soma_valores' value='${ parseFloat(fiado['Valor']) + parseFloat(fiado['Multa']) + parseFloat(fiado['Juros'])}' type='hidden' id='soma_valores'>
+                                    </td>
+                                </tr>
+                            `)
+
+                        }
+                    });
+                    let lista_comandas = [];
+                    $("input[name='id_comanda']").click(function(e){
+                        if($(this).is(':checked')){                                       //Pega o elemento 'pai' e vai até o input coma soma dos valores
+                            let valor = parseFloat($('#valor_total').text()) + parseFloat($(this).parent().children()[1].value);
+                            $('#valor_total').html(valor);
+                            $('#valor_total_input').val(valor);
+                            $('#valor_final').val(valor);
+                            lista_comandas.push($(this)[0].value); // Pega o valor que está no checbox marcado
+                            $('#id_comandas').val(lista_comandas);
+                            toggleBotaoRecebeFiado();
+                            
+                        }
+                        else{
+                            let valor = parseFloat($('#valor_total').text()) - parseFloat($(this).parent().children()[1].value);
+                            $('#valor_total').html(valor);
+                            $('#valor_total_input').val(valor);
+                            $('#valor_final').val(valor);
+                            let indice = lista_comandas.indexOf($(this)[0].value);
+                            lista_comandas.splice(indice, 1);
+                            $('#id_comandas').val(lista_comandas);
+                            toggleBotaoRecebeFiado();
+
+                            
+
+
+                        }
+                        
+                    })
+
+                    
+                    
+                    
+                }
+
+                else{
+                    $('#msg_cliente').show();
+                    $('#msg_fiado').hide();
+                    $('#receber_fiados').hide();
+                    $('#mostra_valor').hide();     
+                    $('#fiados').empty();
+                }
+            }
+            else{
+                $('#fiados').empty();
+                console.log(data.mensagem_exception);
+            }
+        })
+    })
+    console.log($('#valor_total_input').val() == "0")
+    function toggleBotaoRecebeFiado(){
+        console.log($('#valor_total_input').val() == "0")
+        if ($('#valor_total_input').val() == "0" ){
+
+            $('#botao_fiado').attr('disabled',true);
+        }
+        else{
+            $('#botao_fiado').attr('disabled',false);
+        }
+
+    }
+    $('#recebeFiado').submit(function(e){
+
+        e.preventDefault();
+
+        
+        
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.recebeFiado') }}",{
+
+            id_comandas:$('#id_comandas').val(),
+            valor_final:$('#valor_final').val(),
+            valor_total:$('#valor_total_input').val(),
+            desconto:$('#desconto').val()
+        },function(data){
+
+            if(!data.erro){
+
+                swal(data.mensagem,'','success');
+
+                setTimeout(function(){
+
+                    window.location.replace($SCRIPT_ROOT + "{{ url_for('comanda.formListaFiados') }}")
+                },2000)
+            }
+            else{
+                swal(data.mensagem,'','error');
+                console.log(data.mensagem_exception);
+            }
+
+        })
+    });
+        
+        
+        
+        
+    
+    $(document).ready(function(){
+        $('#msg_cliente').hide();
+        $('#botao_fiado').hide();
+        $('#mostra_valor').hide();
+        $('#msg_fiado').hide();        
+        $('#cpf_cliente').mask('000.000.000-00');
+
+        permiteApenasValoresDecimais('#valor_total_input');
+        permiteApenasValoresDecimais('#desconto');
+        permiteApenasValoresDecimais('#valor_final');
+
+        toggleBotaoRecebeFiado();
+
+
+    })
+    
+</script>
+{% endblock %}
+

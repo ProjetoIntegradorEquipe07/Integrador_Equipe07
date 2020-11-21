@@ -1,0 +1,58 @@
+{% extends 'modelo.html' %}
+{% block title %}Configurações{% endblock %}
+
+{% block content %}
+{% if configuracoes: %}
+{% for conf in configuracoes: %}
+<h2>Configurações</h2>
+<form id="salvaConfiguracoes">
+    <div class="form-group">
+        <label for="multa_atraso">Multa por Atraso:</label>
+        <input type="text" class="form-control" value="{{conf[0]}}" id="multa_atraso" name="multa_atraso" required>
+    </div>
+    <div class="form-group">
+        <label for="taxa_juro_diario">Juros:</label>
+        <input type="text" class="form-control" value="{{conf[1]}}" id="taxa_juro_diario" name="taxa_juro_diario" required>
+    </div>
+    <button type="submit" class="btn btn-success">Salvar Configurações</button>
+</form>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script>
+
+    $('#salvaConfiguracoes').submit(function(e){
+
+        e.preventDefault();
+
+        $.post($SCRIPT_ROOT + "{{ url_for('empresa.salvaConfiguracoes') }}", {
+
+            multa_atraso:$('#multa_atraso').val(),
+            taxa_juro_diario:$('#taxa_juro_diario').val()
+        }, function(data){
+
+            if(!data.erro){
+
+                swal(data.mensagem,'','success')
+
+                setTimeout(function(e){
+
+                    window.location.replace($SCRIPT_ROOT + "{{ url_for('empresa.configuracoes') }}")
+                }, 2000)
+            }
+            else{
+                swal(data.mensagem,'','error');
+                console.log(data.mensagem_exception);
+            }
+        })
+    })
+    $(document).ready(function(){
+
+        permiteApenasValoresDecimais('#multa_atraso');
+        permiteApenasValoresDecimais('#taxa_juro_diario');
+
+    })
+</script>
+{% endblock %}

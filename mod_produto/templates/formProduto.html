@@ -3,30 +3,115 @@
 
 {% block content %}
 
+    {% if produto.id_produto == 0: %}
     <h2>Cadastro Novo Produto</h2>
-    <form>
+    <form id="addProduto" enctype="multipart/form-data">
+    {% else: %}
+    <h2>Editar Produto</h2>
+    <form id="editProduto" enctype="multipart/form-data">
+    {% endif %}
+    <input type="hidden" id="id_produto" value="{{ produto.id_produto }}" name="id_produto">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" class="form-control col-5" required>
+            <input type="text" value="{{ produto.nome }}" name="nome" id="nome" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <input type="text" name="descricao" class="form-control col-5" required>
+            <input type="text" value="{{ produto.descricao }}" name="descricao" id="descricao" class="form-control col-5" required>
         </div>
         <div class="form-group">
-            <label for="valor">Valor Unitário:</label>
-            <input type="number" name="valor" class="form-control col-5" required>
+            <label for="valor_unitario">Valor Unitário:</label>
+            <input type="number" value="{{ produto.valor_unitario }}" name="valor_unitario" id="valor_unitario" class="form-control col-5" required>
         </div>       
-        <div class="custom-file mt-2">
-            <input type="file" class="custom-file-input" id="imagem" required>
-            <label class="custom-file-label" for="imagem">Escolher imagem</label>
-        </div>        
+        <div class="form-group" style="clear: both;">
+            <label for="foto">Imagem do produto:</label>
+            <input type="file" accept="image/*"  id="foto" name="foto" class="form-control-file" required>     
+            <img src="{{ produto.foto }}" width="150">   
+        </div>     
         
         <button type="submit" id="botaoSubmit" class="btn btn-success mt-3">Enviar</button>
     </form>
 
 
 {% endblock %}
+
+{% block js %}
+
+<script>
+
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $('#addProduto').submit(function(e){
+
+        e.preventDefault()
+
+        var form = $('#addProduto')[0]; // captura o form
+        var data = new FormData(form); // cria o FormData {Object}
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "{{url_for('produto.addProduto')}}",
+            data: data,
+            processData:false,contentType:false,cache:false,timeout: 600000,
+            // manipular o retorno da requisição
+            success: function (data) {
+                if (!data.erro) {
+                    swal({
+                    title:"",text:data.mensagem,type:"success",confirmButtonClass:"btn-success",confirmButtonText:"Ok",closeOnConfirm:false,closeOnCancel:false
+                    },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProdutos') }}");
+                    }
+                });
+            }
+                else {
+                    swal("", data.mensagem + '\n' + data.mensagem_exception, "error");
+                }
+            },
+                error: function (e) {
+                    console.log(e);
+            }
+            })
+    })
+
+    $('#editProduto').submit(function(e){
+
+        e.preventDefault();
+        var form = $('#editProduto')[0]; // captura o form
+        var data = new FormData(form); // cria o FormData {Object}
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "{{url_for('produto.editProduto')}}",
+            data: data,
+            processData:false,contentType:false,cache:false,timeout: 600000,
+            // manipular o retorno da requisição
+            success: function (data) {
+                if (!data.erro) {
+                    swal({
+                    title:"",text:data.mensagem,type:"success",confirmButtonClass:"btn-success",confirmButtonText:"Ok",closeOnConfirm:false,closeOnCancel:false
+                    },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProdutos') }}");
+                    }
+                });
+            }
+                else {
+                    swal("", data.mensagem + '\n' + data.mensagem_exception, "error");
+                }
+            },
+                error: function (e) {
+                    console.log(e);
+            }
+            })
+
+    })
+</script>
+{% endblock %}
+
 
 
 

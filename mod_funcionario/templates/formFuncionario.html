@@ -3,17 +3,51 @@
 
 {% block content %}
 
+    {% if funcionario.id_funcionario == 0: %}
     <h2>Cadastro novo Funcionário</h2>
-    <form>
+    <form id="addFuncionario">
+    {% else: %}
+    <h2>Editar Funcionário</h2>
+    <form id="editFuncionario">
+    {% endif %}
+        <input id="id_funcionario" type="hidden" value="{{ funcionario.id_funcionario }}" name="id_funcionario">
         <div class="form-group">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" class="form-control col-5" required>
+            <input type="text" id="nome" value="{{ funcionario.nome }}" name="nome" class="form-control col-5" required>
         </div>
         <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" placeholder="000.000.000-00" id="cpf" value="{{ funcionario.cpf }}" name="cpf" minlength="11" maxlength="11" class="form-control col-5" required>
+            <div class="valid-feedback">CPF válido!</div>
+            <div class="invalid-feedback">CPF já existe no banco de dados!</div>
+        </div> 
+        <div class="form-group">
             <label for="matricula">Matrícula:</label>
-            <input type="text" name="matricula" class="form-control col-5" required>
-        </div>       
+            <input type="text" id="matricula" value="{{ funcionario.matricula }}" name="matricula" minlength="10" maxlength="10" class="form-control col-5" required>
+            <small id="emailHelp" class="form-text text-muted">Deve ter 10 caracteres.</small>
+            <div class="valid-feedback">Matrícula válida!</div>
+            <div class="invalid-feedback">Mátricula já existe!</div>
+        </div>
+        <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input type="text" placeholder="(00)00000-0000" id="telefone" value="{{ funcionario.telefone }}" name="telefone" minlength="11" maxlength="11" class="form-control col-5" required>
+        </div>         
         <p>Tipo Funcionário: </p>
+        {% if funcionario.grupo == 1: %}
+      
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="grupo" id="admin" value="1" checked>
+            <label class="form-check-label" for="admin">
+              Administrador
+            </label>
+        </div>
+        <div class="form-check form-check-inline mb-2">
+            <input class="form-check-input" type="radio" name="grupo" id="balcao" value="2">
+            <label class="form-check-label" for="balcao">
+                Balcão
+            </label>
+        </div>
+        {% else: %}
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="grupo" id="admin" value="1">
             <label class="form-check-label" for="admin">
@@ -25,15 +59,18 @@
             <label class="form-check-label" for="balcao">
                 Balcão
             </label>
-        </div>       
+        </div>
+        {% endif %}
+        {% if funcionario.id_funcionario == 0: %}       
         <div class="form-group">
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" class="form-control col-5" required>
+            <input type="password" id="senha" value="{{ funcionario.senha }}" name="senha" class="form-control col-5" required>
         </div>
         <div class="form-group">
             <label for="confirmaSenha">Confirmar Senha:</label>
-            <input type="password" id="confirmaSenha" name="confirmaSenha" class="form-control col-5" required>           
+            <input type="password" id="confirmaSenha" value="{{ funcionario.senha }}" name="confirmaSenha" class="form-control col-5" required>           
         </div>
+        {% endif %}
         <div class="alert alert-danger" id="mensagemSenha" role="alert"></div> 
         <button type="submit" id="botaoSubmit" class="btn btn-success">Enviar</button>
     </form>
@@ -43,6 +80,130 @@
 
 {% block js %}
 
-<script src="{{ url_for('static', filename='js/verificaSenha.js') }}"></script>
+<script src="{{ url_for('static', filename='js/verificaSenha.js') }}"></script> 
+<script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    
+    function colocaMascaras(){
+
+        $('#cpf').mask('000.000.000-00');
+        $('#telefone').mask('(00)00000-0000');
+
+    }
+
+    function tiraMascaras(){
+        
+        $('#cpf').unmask();
+        $('#telefone').unmask();
+    }
+    $('#addFuncionario').submit(function(e){
+
+        tiraMascaras();
+        e.preventDefault();
+
+        let grupo = 2;
+
+        if($('#admin').is(':checked')){
+
+            grupo = 1;
+
+        }
+
+        $.post($SCRIPT_ROOT + "{{ url_for('funcionario.addFuncionario') }}",{
+
+            nome:$('#nome').val(),
+            cpf:$('#cpf').val(),
+            telefone:$('#telefone').val(),
+            senha:$('#senha').val(),
+            matricula:$('#matricula').val(),
+            grupo:grupo
+        }, function(data){
+
+            if(!data.erro){
+                swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionarios') }}");
+                        } 
+                    });
+                
+
+            }
+            else{
+                swal("", data.mensagem, "error");
+                console.log(data.mensagem_exception)
+            }
+        })
+    })
+
+    $('#editFuncionario').submit(function(e){
+
+        tiraMascaras();
+        e.preventDefault();
+
+        let grupo = 2;
+
+        if($('#admin').is(':checked')){
+
+            grupo = 1;
+
+        }
+
+        $.post($SCRIPT_ROOT + "{{ url_for('funcionario.editFuncionario') }}",{
+
+            id_funcionario:$('#id_funcionario').val(),
+            nome:$('#nome').val(),
+            cpf:$('#cpf').val(),
+            telefone:$('#telefone').val(),
+            senha:$('#senha').val(),
+            matricula:$('#matricula').val(),
+            grupo:grupo
+        }, function(data){
+
+            if(!data.erro){
+                swal({
+                    title: "",
+                    text: data.mensagem,
+                    type: "success",                    
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "Ok",                    
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('funcionario.formListaFuncionarios') }}");
+                        } 
+                    });
+                
+
+            }
+            else{
+                swal("", data.mensagem, "error");
+                console.log(data.mensagem_exception)
+            }
+        })
+    })
+
+    $(document).ready(function(){
+
+        validaSeInputExiste('#matricula',"validaMatricula");
+        validaSeInputExiste('#cpf',"validaCPF");
+        colocaMascaras();
+    })
+
+
+
+    
+</script>
 
 {% endblock %}
