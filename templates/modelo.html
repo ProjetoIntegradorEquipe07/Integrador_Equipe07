@@ -1,6 +1,6 @@
 {% block head %}
 <head>
-    <meta charset="utf=8">
+    <meta charset="utf=8">    
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.5.2-dist/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-select/css/bootstrap-select.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-5.14.0-web/css/all.css') }}">
@@ -10,87 +10,86 @@
     <title>{% block title %}{% endblock %} - Pastelaria do Zé</title>
 </head>
 {% endblock %}
-<body>
-  <header>
-    {{session['usuario']}}
-  
-
-    <a href="{{ url_for('login.logout') }}">Sair</a>
-  </header>
-    <div class="sidebar-container" style="background-color:#bc7272;">
-        <div class="sidebar-logo" style="background-color: white; text-align: center;">
-            <img src="{{ url_for('static', filename='imgs/logo.png') }}" style="width:100px; height: 100px;" >
-          Pastelaria do Zé
+<body class="container-fluid" style="padding: 0;">
+    <div class="div-menu-bars display display-mobile">
+      <i class="fa fa-bars menu-bars fa-2x" aria-hidden="true"></i>
+      <p class="p-button-close display-mobile"><a href="{{ url_for('login.logout') }}">Sair</a></p>
+    </div>
+    <div class="row" style="height: 100vh; margin:0">
+      <div class="col-xl-2 col-md-3 col-sm-3 col-11 sidebar-container" style="background-color:#8c1c1c; padding:0;">
+        
+        <div class="sidebar-logo">
+            <img src="{{ url_for('static', filename='imgs/pastelaria-logo-3.png') }}"  >
         </div>
+        <hr>
+        <p class="p-user-on">Usuário: {{session['usuario']}}</p>
+        <p class="p-button-close display-desktop display-desktop"><a href="{{ url_for('login.logout') }}">Sair</a></p>
+        <hr>
         <ul class="sidebar-navigation" >
-          <li class="header">Principal</li>
-          <li>
-            <a href="{{ url_for('home.home') }}">
-              <i class="fa fa-home" aria-hidden="true"></i> Home
-            </a>
-          </li>          
-          <li>             
-          </li>
+          <ul class="header" id="principal"><h6>Principal <i class="fa fa-angle-down"></i></h6>
+            <li class="itens-principal">
+              <a href="{{ url_for('home.home') }}">
+                <i class="fa fa-home" aria-hidden="true"></i> Home
+              </a>
+            </li>
+          </ul>          
           {% if session['grupo'] == 1 %}
-          <li class="header">Administrador</li>
-          <li> 
-            <a href="{{ url_for('comanda.dashboard') }}">
-              <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
-            </a>
-          </li>
-          <li> 
-            <a href="{{ url_for('empresa.configuracoes') }}">
-              <i class="fas fa-cog" aria-hidden="true"></i> Configurações
-            </a>
-          </li>
-          <li>
-            <a href="{{ url_for('cliente.formListaClientes') }}">
-              <i class="fa fa-users" aria-hidden="true"></i> Clientes
-            </a>
-          </li>
-          <li>
-            <a href="{{ url_for('funcionario.formListaFuncionarios') }}">
-              <i class="fas fa-id-card" aria-hidden="true"></i> Funcionários
-            </a>
-          </li>
-          <li>
-            <a href="{{ url_for('produto.formListaProdutos') }}">
-              <i class="fas fa-utensils" aria-hidden="true"></i> Produtos
-            </a>
-          </li>
+          <ul class="header" id="administrador"><h6>Administrador <i class="fa fa-angle-down"></i></h6>
+            <li class="itens-administrador"> 
+              <a href="{{ url_for('comanda.dashboard') }}">
+                <i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard
+              </a>
+            </li>
+            <li class="itens-administrador"> 
+              <a href="{{ url_for('empresa.configuracoes') }}">
+                <i class="fas fa-cog" aria-hidden="true"></i> Configurações
+              </a>
+            </li>
+            <li class="itens-administrador">
+              <a href="{{ url_for('cliente.formListaClientes') }}">
+                <i class="fa fa-users" aria-hidden="true"></i> Clientes
+              </a>
+            </li>
+            <li class="itens-administrador">
+              <a href="{{ url_for('funcionario.formListaFuncionarios') }}">
+                <i class="fas fa-id-card" aria-hidden="true"></i> Funcionários
+              </a>
+            </li>
+            <li class="itens-administrador">
+              <a href="{{ url_for('produto.formListaProdutos') }}">
+                <i class="fas fa-utensils" aria-hidden="true"></i> Produtos
+              </a>
+            </li>
+          </ul>
           {% endif %}
-          {% if session['grupo'] == 2 or session['grupo'] == 1: %}
-          <li class="header">Comandas</li>
-          <li>
-            <a href="{{ url_for('comanda.formListaComandas') }}">
-              <i class="fas fa-shopping-cart"></i> Gerenciar Comandas
-            </a>
-          </li>
-          
-          <li>
-            <a href="{{ url_for('comanda.formListaFiados') }}">
-              <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
-            </a>
-          </li>
-          {% endif %}
+          <ul class="header" id="comandas"><h6>Comandas <i class="fa fa-angle-down"></i></h6>
+            <li class="itens-comandas">
+              <a href="{{ url_for('comanda.formListaComandas') }}">
+                <i class="fas fa-shopping-cart"></i> Gerenciar Comandas
+              </a>
+            </li>
+            <li class="itens-comandas">
+              <a href="{{ url_for('comanda.formListaFiados') }}">
+                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
+              </a>
+            </li>
+          </ul>
         </ul>
       </div>
       
-      <div class="content-container">
-      
-        <div class="container-fluid col-12">
-          
+      <div class="col-xl-10 col-md-9 col-sm-9 col-12 content-container">
+          <div class="paginas-padrao">
             {% block content %}{% endblock %}
-      
-        </div>
+          </div>
       </div>
-
+    </div>
       
     <script src="{{ url_for('static', filename='jquery/jquery-3.5.1.js') }}"></script>    
     <script src="{{ url_for('static', filename='bootstrap-4.5.2-dist/js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-select/js/bootstrap-select.min.js') }}"></script>
     <script src="{{ url_for('static', filename='sweet-alert/sweetalert.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery/jquery.mask.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/estilo.js') }}"></script>
     <script>
       $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
       function validaSeInputExiste(seletor,funcao,tamanho=10){

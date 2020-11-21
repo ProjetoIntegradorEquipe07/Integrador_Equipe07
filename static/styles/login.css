@@ -4,22 +4,32 @@ body {
     height: 100vh;
     
   }  
-
+  #login{
+    background: #9d3c3c;
+  }
   #login img{
-
+    margin: 30px 0 10px 0;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: -100px;
-    width: 150px;
+    width: 180px;
+  }
+
+  #login .container #login-row #login-column{
+    background: #fff;
+    border-radius: 20px;
   }
 
   #login .container #login-row #login-column #login-box {
-    margin-top: 120px;
     max-width: 600px;
+<<<<<<< HEAD
     max-height: 400px;
     border: 1px solid #9C9C9C;
     background-color: #9d3c3c;
+=======
+    max-height: 350px;
+    background-color: #fff;
+>>>>>>> f48117e17e4d8b18a1df93c2e7355d4922813a20
   }
 
   #login .container #login-row #login-column #login-box #login-form {
@@ -29,7 +39,22 @@ body {
   #login .container #login-row #login-column #login-box #login-form #register-link {
     margin-top: -85px;
   }
+
+  #login .container #login-row #login-column #login-box #login-form button{
+    background: #fff;
+    font-weight: 600;
+    color: #9d3c3c;
+    border: 2px solid #9d3c3c;
+    border-radius: 5px;
+    transition: 0.6s;
+  }
+  #login .container #login-row #login-column #login-box #login-form button:hover{
+    background: #9d3c3c;
+    color: #fff;
+    transition: 0.3s;
+  }
   
   .text-info{
-    color: #FFFFFF!important;
+    color: #9d3c3c!important;
+    font-weight: 600;
   }
