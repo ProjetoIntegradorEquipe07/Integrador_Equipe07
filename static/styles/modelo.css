@@ -1,35 +1,89 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+.btn-add{
+  background: #28a745;
+  border-color: #28a745;
+  color: #ffffff;
+}
+.btn-add:hover{
+  background: #008745;
+  border-color: #008745;
+  color: #fff;
+}
+.btn-remove{
+  background: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+}
+.btn-remove:hover{
+  background: #fc3545;
+  border-color: #fc3545;
+  color: #ffffff;
+}
+.btn-edit{
+  background: #ffc107;
+  color: #ffffff;
+  border-color: #ffc107;
+}
+.btn-edit:hover{
+  background: #faa107;
+  border-color: #faa107;
+  color: #ffffff;
+}
+.btn-info{
+  background: #007bff;
+  border-color: #007bff;
+  color: #ffffff;
+}
+.btn-info:hover{
+  background: #004bff;
+  border-color: #004bff;
+  color: #ffffff;
+}
 header{
 
-  width: 150px;
-  padding: 5 5 5 5;
-  text-align: center;
-  float: right;  
-  
+  width: 100%;
+  padding: 5 30 5 5;
+  text-align: right;
+  background: #8c1c1c;
+  right: 0;
+  z-index: 999;
+}
+hr{
+  width: 100%;
+  height: 2px;
+  background: #9d3c3c;
+  margin: 0;
 }
 
 .sidebar-container {
-  position: fixed;
-  width: 220px;
-  height: 100%;
-  margin-bottom: 20px;  
   left: 0;
   overflow-x: hidden;
   overflow-y: hidden;  
-  background: #da0707;
+  background: #8c1c1c;
   color: #fff;
+  height: 100%;
 }
 
 .content-container {
   padding-top: 20px;
+  height: 100%;
+  position: relative;
 }
 
 .sidebar-logo {
-  padding: 10px 10px 10px 25px;
+  padding: 10px;
   font-size: 20px;
-  background-color: #FFFFFF;
+  background-color: #8c1c1c;
   vertical-align: middle;
-  margin-bottom: -20px;
-  
+  text-align: center;
+  display: block;
+  padding-bottom: 15px;
+}
+.sidebar-logo img{
+  width: 100%;
 }
 
 .sidebar-navigation {
@@ -41,18 +95,22 @@ header{
 
   
 }
-
+.sidebar-navigation ul{
+  padding-bottom: 20px;
+  cursor: pointer;
+}
 .sidebar-navigation li {
   background-color: transparent;
+  background: #9d3c3c;
   position: relative;
   display: inline-block;
-  width: 120%;
-  margin-right: 10px;
+  width: 100%;
   line-height: 20px;
+  margin-bottom: 1px;
 }
 
 .sidebar-navigation li a {
-  padding: 10px 15px 10px 30px;
+  padding: 10px 0px 10px 20px;
   display: block;
   color: #fff;
   
@@ -94,13 +152,87 @@ header{
   font-size: 12px;
   text-transform: uppercase;
   background-color: #8c1c1c;
-  padding: 10px 15px 10px 30px;
+  padding: 15px 0px 15px 40px;
+  font-weight: 600;
+  border-bottom: 1px solid #9d3c3c;
 }
 
 .sidebar-navigation .header::before {
   background-color: transparent;
 }
 
-.content-container {
-  padding-left: 220px;
+.sidebar-navigation .header h6{
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.paginas-padrao{
+  padding: 0 30px;
+}
+.paginas-padrao > h1{
+  padding: 25px 0 40px;
+  color: #3c3c3c;
+}
+.paginas-padrao > .home-div > .carousel{
+  box-shadow: 0px 0px 5px 2px rgb(0, 0, 0, .3);
+  padding: 15px;
+  border-radius: 2px;
+}
+
+.carousel-item{
+  width: 100%;
+  position: relative;
+}
+.carousel-item img{
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+}
+.p-user-on{
+  padding: 10px 0 20px 40px;
+  display: inline-block;
+}
+.p-button-close{
+  display: inline-block;
+  float: right;
+  padding: 10px 30px;
+}
+.p-button-close a{
+  color: white;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 0px;
+}
+.div-menu-bars{
+  z-index: 999;
+  padding: 10px 15px;
+  background: #8c1c1c;
+  width: 100%;
+  /* display: none; */
+}
+.div-menu-bars p{
+  padding: 0;
+}
+.menu-bars{
+  cursor: pointer;
+  color: #fff;
+}
+.display-desktop{
+  display: block;
+}
+.display-mobile{
+  display: none;
+}
+@media screen and (max-width: 600px){
+  .div-menu-bars{
+    display: flow-root;
+  }
+  .display-desktop{
+    display: none;
+  }
+  .diaplay-mobile{
+    display: block;
+  }
+  .sidebar-container{
+    display: none;
+  }
 }
