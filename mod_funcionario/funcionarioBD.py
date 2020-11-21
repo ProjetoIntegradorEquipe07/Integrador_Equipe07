@@ -117,18 +117,23 @@ class Funcionario():
                     self.id_funcionario = linha[0]
                     self.nome = linha[1]
                     self.grupo = linha[2]
-                c.close()
+                
                 return True
 
-            else:
-                c.close()
-                return False
+            
+            return False
 
             
             
 
         except Exception as e:
             raise Exception('Erro ao tentar validar login!', str(e))
+
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
 
     def validaMatriculaExistente(self):
         try:

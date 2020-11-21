@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from functools import wraps
 
 from mod_funcionario.funcionarioBD import Funcionario
+from mod_cliente.clienteBD import Cliente
 from funcoes import Funcoes, LOG
 
 bp_login = Blueprint('login', __name__, url_prefix="/", template_folder='templates')
@@ -43,39 +44,77 @@ def logout():
 def validaLogin():
     _nome = request.form['usuario']
     _senha = Funcoes.criptografaSenha(request.form['senha'])
+    _tipo = request.form['tipo_login']
     
+    if _tipo == '1':
+        funcionario = Funcionario()
 
-    funcionario = Funcionario()
-
-    funcionario.nome = _nome
-    funcionario.senha = _senha
+        funcionario.nome = _nome
+        funcionario.senha = _senha
 
     
-    try:
+        try:
 
-        if funcionario.selectLogin():
-            
+            if funcionario.selectLogin():
+                
+                session.clear()
+                session['usuario'] = funcionario.nome
+                session['grupo'] = funcionario.grupo
+                session['id'] = funcionario.id_funcionario
+
+                Funcoes.criaLOG('Login feito com sucesso!', LOG.info)
+
+                return jsonify(erro = False, nome = funcionario.nome)
+
+            else:
+                session['id'] = 0
+                Funcoes.criaLOG('Usuario ou senha incorretos', LOG.warning)
+                session.clear()
+                return jsonify(erro = True)
+        except Exception as e:
             session.clear()
-            session['usuario'] = funcionario.nome
-            session['grupo'] = funcionario.grupo
-            session['id'] = funcionario.id_funcionario
+            if len(e.args) > 1:
+                _mensagem, _mensagem_exception = e.args
+                Funcoes.criaLOG(_mensagem_exception, LOG.error)
+            else:
+                _mensagem = 'Erro'
+                _mensagem_exception = str(e)
+                Funcoes.criaLOG(_mensagem_exception, 'error')
+            return jsonify(erro_ex = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
-            Funcoes.criaLOG('Login feito com sucesso!', LOG.info)
+    else:
 
-            return jsonify(erro = False, nome = funcionario.nome)
+        cliente = Cliente()
 
-        else:
-            session['id'] = 0
-            Funcoes.criaLOG('Usuario ou senha incorretos', LOG.warning)
+        cliente.nome = _nome
+        cliente.senha = _senha
+
+    
+        try:
+
+            if cliente.selectLogin():
+                
+                session.clear()
+                session['usuario'] = cliente.nome
+                session['grupo'] = '3'
+                session['id'] = cliente.id_cliente
+
+                Funcoes.criaLOG('Login feito com sucesso!', LOG.info)
+
+                return jsonify(erro = False, nome = cliente.nome)
+
+            else:
+                session['id'] = 0
+                Funcoes.criaLOG('Usuario ou senha incorretos', LOG.warning)
+                session.clear()
+                return jsonify(erro = True)
+        except Exception as e:
             session.clear()
-            return jsonify(erro = True)
-    except Exception as e:
-        session.clear()
-        if len(e.args) > 1:
-            _mensagem, _mensagem_exception = e.args
-            Funcoes.criaLOG(_mensagem_exception, LOG.error)
-        else:
-            _mensagem = 'Erro'
-            _mensagem_exception = str(e)
-            Funcoes.criaLOG(_mensagem_exception, 'error')
-        return jsonify(erro_ex = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+            if len(e.args) > 1:
+                _mensagem, _mensagem_exception = e.args
+                Funcoes.criaLOG(_mensagem_exception, LOG.error)
+            else:
+                _mensagem = 'Erro'
+                _mensagem_exception = str(e)
+                Funcoes.criaLOG(_mensagem_exception, 'error')
+            return jsonify(erro_ex = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)

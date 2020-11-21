@@ -59,6 +59,7 @@
             </a>
           </li>
           {% endif %}
+          {% if session['grupo'] == 2 or session['grupo'] == 1: %}
           <li class="header">Comandas</li>
           <li>
             <a href="{{ url_for('comanda.formListaComandas') }}">
@@ -71,6 +72,7 @@
               <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
             </a>
           </li>
+          {% endif %}
         </ul>
       </div>
       
