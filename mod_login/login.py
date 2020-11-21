@@ -42,8 +42,8 @@ def logout():
 @bp_login.route("/login", methods=['POST'])
 def validaLogin():
     _nome = request.form['usuario']
-    #_senha = Funcoes.criptografaSenha(request.form['senha'])
-    _senha = request.form['senha']
+    _senha = Funcoes.criptografaSenha(request.form['senha'])
+    #_senha = request.form['senha']
     
 
     funcionario = Funcionario()
