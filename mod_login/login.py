@@ -96,7 +96,7 @@ def validaLogin():
                 
                 session.clear()
                 session['usuario'] = cliente.nome
-                session['grupo'] = '3'
+                session['grupo'] = 3
                 session['id'] = cliente.id_cliente
 
                 Funcoes.criaLOG('Login feito com sucesso!', LOG.info)

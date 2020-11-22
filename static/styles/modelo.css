@@ -65,6 +65,7 @@ hr{
   background: #8c1c1c;
   color: #fff;
   height: 100%;
+  
 }
 
 .content-container {
@@ -196,6 +197,7 @@ hr{
   display: inline-block;
   float: right;
   padding: 10px 30px;
+  
 }
 .p-button-close a{
   color: white;

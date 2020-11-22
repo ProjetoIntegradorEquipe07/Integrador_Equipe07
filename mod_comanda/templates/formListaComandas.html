@@ -33,12 +33,19 @@
           <form id="numeroComanda">
             <div class="form-group">
               <label for="numeroNovaComanda" class="col-form-label">Número da comanda:</label>
-              <input type="text" class="form-control" id="numeroNovaComanda">
+              <input type="text" required class="form-control" id="numeroNovaComanda">
               <div class="valid-feedback"></div>
               <div class="invalid-feedback">Comanda já aberta!</div>
-            </div>          
+            </div>
+            <div class="form-group">
+              <label for="cpf" class="col-form-label">CPF cliente(opcional):</label>
+              <input type="text" minlength="11" value="" maxlength="11" class="form-control" id="cpf">
+              <div class="valid-feedback"></div>
+              <div class="invalid-feedback">CPF não encontrado!</div>
+            </div>
+                      
             <div class="modal-footer">
-              <button type="button" class="btn btn-remove" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-remove" onclick="limpaCampos()" style="width: auto;" data-dismiss="modal">Fechar</button>
               <button type="submit" id="botaoSubmit" class="btn btn-add">Ok</button>
             </div>
           </form>
@@ -113,15 +120,25 @@
     $('#corpoTabelaProdutos').empty();
 
 }
+
+function limpaCampos(){
+  $('#numeroNovaComanda').val("").removeClass('is-valid is-invalid');
+  $('#cpf').val("").removeClass('is-valid is-invalid');
+  
+}
   
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   $('#numeroComanda').submit(function(e){
 
-    e.preventDefault()
+    e.preventDefault();
+
+    
 
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
       
-      comanda:$('#numeroNovaComanda').val()
+      comanda:$('#numeroNovaComanda').val(),
+      cpf:$('#cpf').val()
+      
       
       }, function(data){
 
@@ -139,7 +156,9 @@
                     function(isConfirm) {
                         
                     });
+          limpaCampos();
         }
+
         else{
 
           swal('',data.mensagem, 'error')
@@ -268,9 +287,36 @@
           
       })
   })
+  
+  $('#cpf').keyup(function(e){
+
+    if(e.target.value.length > 10){
+      
+      $.post($SCRIPT_ROOT + "{{ url_for('cliente.validaCPF') }}", {
+
+        valor:e.target.value
+      }, function(data){
+        
+        if(data.erro){
+          console.log(data.mensagem_exception);
+        }
+        else if (data.input_existe){
+          
+          $('#cpf').addClass('is-valid').removeClass('is-invalid');
+          $('#botaoSubmit').attr('disabled', false);
+        }
+        else{
+          $('#cpf').removeClass('is-valid').addClass('is-invalid');
+          $('#botaoSubmit').attr('disabled', true);
+        }
+      })
+    }
+  })
   $(document).ready(function(){
 
     validaSeInputExiste('#numeroNovaComanda','validaComanda',1);
+    
+    $('#cpf').mask('000.000.000-00');
   })
 
 
