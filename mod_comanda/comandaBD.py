@@ -58,9 +58,10 @@ class Comanda():
             banco = Banco()
 
             c = banco.conexao.cursor()
-
-            c.execute('INSERT INTO tb_comanda(comanda, data_hora, status_pagamento, status_comanda, funcionario_id) VALUES(%s, %s, %s, %s, %s)', (self.comanda, self.data_hora, self.status_pagamento, self.status_comanda, self.funcionario_id))
-
+            if (self.cliente_id):
+                c.execute('INSERT INTO tb_comanda(comanda, data_hora, status_pagamento, status_comanda, funcionario_id, cliente_id) VALUES(%s, %s, %s, %s, %s, %s)', (self.comanda, self.data_hora, self.status_pagamento, self.status_comanda, self.funcionario_id, self.cliente_id))
+            else:
+                c.execute('INSERT INTO tb_comanda(comanda, data_hora, status_pagamento, status_comanda, funcionario_id) VALUES(%s, %s, %s, %s, %s)', (self.comanda, self.data_hora, self.status_pagamento, self.status_comanda, self.funcionario_id))
             banco.conexao.commit()
             Funcoes.criaLOG('INSERT Nova Comanda', LOG.info)
 
@@ -150,7 +151,24 @@ class Comanda():
 
         except Exception as e:
              raise Exception('Erro ao buscar produtos das comandas', str(e))
+    
+    def selectProdutosPorIdComanda(self):
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor()
+
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR), tbpc.id_comanda_produto FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE id_comanda = %s', (self.id_comanda))
+
             
+
+            result = c.fetchall()
+            c.close()
+
+            return result
+
+        except Exception as e:
+             raise Exception('Erro ao buscar produtos das comandas', str(e))
     def selectRecebimentosPorTipo(self, tipo):
         banco = None
         c = None
@@ -267,7 +285,27 @@ class Comanda():
             if banco:
                 banco.conexao.close()
 
-        
+    def buscaComandasPorCliente(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+
+            c = banco.conexao.cursor(pymysql.cursors.DictCursor)
+
+            _sql = ("SELECT tbc.comanda as numero,tbc.id_comanda as id_comanda,DATE_FORMAT(tbc.data_hora,'%%d/%%m/%%Y') as data_hora, SUM(tbcp.quantidade * tbcp.valor_unitario) as valor, tbc.cliente_id, tbc.status_comanda as status_comanda FROM tb_comanda tbc INNER JOIN tb_comanda_produto tbcp ON tbc.id_comanda = tbcp.comanda_id INNER JOIN tb_cliente tbcli ON tbcli.id_cliente = tbc.cliente_id GROUP BY tbc.id_comanda HAVING tbc.cliente_id = %s")
+            _sql_data = (self.cliente_id)
+            c.execute(_sql, _sql_data)
+            result = c.fetchall()
+
+            return result
+        except Exception as e:
+            raise Exception('Erro ao buscar comandas por cliente', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()
     def recebeFiados(self,lista_comandas, valor_final, valor_total, desconto, data_hora, tipo, funcionario_id):
         banco = None
         c = None

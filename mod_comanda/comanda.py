@@ -98,6 +98,10 @@ def addComanda():
         comanda.status_pagamento = 0
         comanda.status_comanda = 0
         comanda.funcionario_id = session['id']
+        cliente = Cliente()
+        cliente.cpf = request.form['cpf'].replace('.','').replace('-','')
+        cliente.buscaClientePorCPF()
+        comanda.cliente_id = cliente.id_cliente
 
         _mensagem = comanda.insertNumeroComanda()
 
@@ -348,4 +352,30 @@ def recebeFiado():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
+@bp_comanda.route("/comandasCliente")
+@validaSessao
+def comandasCliente():    
+    _comanda = Comanda()
+    _comanda.cliente_id = session['id']
+    _comandas = _comanda.buscaComandasPorCliente()
+    return render_template('formListaComandasCliente.html', comandas = _comandas)
+    
+@bp_comanda.route("/buscaComandaProdutosPorId", methods = ['POST'])
+@validaSessao
+def buscaComandaProdutosPorId():
+    try:
+        _comanda = Comanda()
+        _comanda.id_comanda = request.form['id_comanda']
+        _produtos = _comanda.selectProdutosPorIdComanda()
+
+        return jsonify(erro = False, produtos = _produtos)
+    except Exception as e:
+        if len(e.args) > 1:
+            _mensagem, _mensagem_exception = e.args
+        else:
+            _mensagem = 'Erro no banco'
+            _mensagem_exception = e.args
         
+        return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+

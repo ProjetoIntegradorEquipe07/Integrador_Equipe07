@@ -15,6 +15,10 @@ body {
     width: 180px;
   }
 
+  #login-column{
+    height: 500px;
+  }
+
   #login .container #login-row #login-column{
     background: #fff;
     border-radius: 20px;

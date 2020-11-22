@@ -22,8 +22,7 @@
             <img src="{{ url_for('static', filename='imgs/pastelaria-logo-3.png') }}"  >
         </div>
         <hr>
-        <p class="p-user-on">Usuário: {{session['usuario']}}</p>
-        <p class="p-button-close display-desktop display-desktop"><a href="{{ url_for('login.logout') }}">Sair</a></p>
+        <p class="p-user-on">Usuário: {{session['usuario']}}</p>        
         <hr>
         <ul class="sidebar-navigation" >
           <ul class="header" id="principal"><h6>Principal <i class="fa fa-angle-down"></i></h6>
@@ -32,8 +31,15 @@
                 <i class="fa fa-home" aria-hidden="true"></i> Home
               </a>
             </li>
+            {% if session['grupo'] == 3: %}
+            <li class="itens-principal">
+              <a href="{{ url_for('comanda.comandasCliente') }}">
+                <i class="fas fa-clipboard-list"></i> Verificar consumo
+              </a>
+            </li>
+            {% endif %}
           </ul>          
-          {% if session['grupo'] == 1 %}
+          {% if session['grupo'] == 1: %}
           <ul class="header" id="administrador"><h6>Administrador <i class="fa fa-angle-down"></i></h6>
             <li class="itens-administrador"> 
               <a href="{{ url_for('comanda.dashboard') }}">
@@ -62,6 +68,7 @@
             </li>
           </ul>
           {% endif %}
+          {% if session['grupo'] == 1 or session['grupo'] == 2: %}
           <ul class="header" id="comandas"><h6>Comandas <i class="fa fa-angle-down"></i></h6>
             <li class="itens-comandas">
               <a href="{{ url_for('comanda.formListaComandas') }}">
@@ -73,6 +80,10 @@
                 <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
               </a>
             </li>
+            {% endif %}
+            <li><a href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt"></i> SAIR
+            </a></li>
           </ul>
         </ul>
       </div>
