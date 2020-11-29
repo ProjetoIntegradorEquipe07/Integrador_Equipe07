@@ -79,12 +79,14 @@
               <a href="{{ url_for('comanda.formListaFiados') }}">
                 <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> Receber Fiado
               </a>
-            </li>
-            {% endif %}
-            <li><a href="{{ url_for('login.logout') }}">
-              <i class="fas fa-sign-out-alt"></i> SAIR
-            </a></li>
+            </li>              
           </ul>
+          {% endif %}
+          
+          <li><a href="{{ url_for('login.logout') }}">
+            <i class="fas fa-sign-out-alt"></i> SAIR
+          </a></li>
+          
         </ul>
       </div>
       

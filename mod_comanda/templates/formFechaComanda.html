@@ -39,7 +39,7 @@
         <label for="senha">Senha Cliente:</label>
         <input type="password" id="senha"   name="senha" class="form-control col-5">
     </div>
-    <div class="form-group form-check">
+    <div id="inputComprovante" class="form-group form-check">
         <input type="checkbox" class="form-check-input" id="comprovante">
         <label class="form-check-label" for="comprovante">Gerar Comprovante</label>
       </div>
@@ -157,6 +157,7 @@
 
                 $('#inputDesconto').show();
                 $('#inputValorFinal').show();
+                $('#inputComprovante').show();
                 $('#inputCpf').attr('required', false).hide();
                 $('#inputSenha').attr('required', false).hide();
 
@@ -164,6 +165,7 @@
             else{
                 $('#inputDesconto').hide();
                 $('#inputValorFinal').hide();
+                $('#inputComprovante').hide();
                 $('#inputCpf').attr('required', true).show();
                 $('#inputSenha').attr('required', true).show();
             }
