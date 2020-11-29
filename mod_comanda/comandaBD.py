@@ -375,12 +375,15 @@ class Comanda():
                             tbr.desconto,
                             tbr.valor_total,
                             tbc.id_comanda,
+                            tbcli.nome,
                             tbc.comanda
                             FROM tb_recebimento tbr
                             INNER JOIN tb_comanda_recebimento tbcr
                             ON tbcr.recebimento_id = tbr.id_recebimento
                             INNER JOIN tb_comanda tbc
-                            ON tbcr.comanda_id = tbc.id_comanda			               
+                            ON tbcr.comanda_id = tbc.id_comanda	
+                            INNER JOIN tb_cliente tbcli
+                            ON tbcli.id_cliente = tbc.cliente_id		               
                             WHERE tbr.id_recebimento = %s
 
                         '''

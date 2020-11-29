@@ -387,10 +387,19 @@ def buscaComandaProdutosPorId():
 def geraPDFRecebimento():
 
     pdf = PDF()
-    print(pdf.pdfRecebimentoAVista(request.form['id_recebimento']))
+    pdf.pdfRecebimentoAVista(request.form['id_recebimento'])
+    
 
     send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
 
-    os.startfile('recebimento.pdf')
+    os.startfile('recebimento.pdf')#abre o PDF
 
     return jsonify(erro = False)
+
+@bp_comanda.route("/testaPDF")
+def testaPDF():
+    pdf = PDF()
+
+    pdf.pdfRecebimentoFiado(24)
+
+    return send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
