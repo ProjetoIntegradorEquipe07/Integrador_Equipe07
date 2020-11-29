@@ -324,7 +324,7 @@ class Comanda():
 
             banco.conexao.commit()
             Funcoes.criaLOG(f'Recebe Fiado, id_recebimento: {id_recebimento}', LOG.info)
-            return 'Fiado fechado com sucesso!'
+            return 'Fiado fechado com sucesso!', id_recebimento
         except Exception as e:
             Funcoes.criaLOG(str(e), LOG.error)
             raise Exception('Erro fecha comanda fiado banco', str(e))

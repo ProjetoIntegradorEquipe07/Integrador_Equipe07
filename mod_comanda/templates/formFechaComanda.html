@@ -88,7 +88,8 @@
                                                
                             $.post($SCRIPT_ROOT + "{{ url_for('comanda.geraPDFRecebimento') }}", {
 
-                                id_recebimento:data.id_recebimento
+                                id_recebimento:data.id_recebimento,
+                                tipo:1
                             },function(data){
 
                                 

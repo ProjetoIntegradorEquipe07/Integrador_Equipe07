@@ -340,8 +340,8 @@ def recebeFiado():
         
         
         _comanda_aux = Comanda()
-        _mensagem = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
-        return jsonify(erro = False, mensagem = _mensagem)
+        _mensagem, _id_recebimento = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
+        return jsonify(erro = False, mensagem = _mensagem, id_recebimento = _id_recebimento)
         
         
 
@@ -387,7 +387,10 @@ def buscaComandaProdutosPorId():
 def geraPDFRecebimento():
 
     pdf = PDF()
-    pdf.pdfRecebimentoAVista(request.form['id_recebimento'])
+    if request.form['tipo'] == 1:
+        pdf.pdfRecebimentoAVista(request.form['id_recebimento'])
+    else:
+        pdf.pdfRecebimentoFiado(request.form['id_recebimento'])
     
 
     send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
@@ -396,10 +399,4 @@ def geraPDFRecebimento():
 
     return jsonify(erro = False)
 
-@bp_comanda.route("/testaPDF")
-def testaPDF():
-    pdf = PDF()
 
-    pdf.pdfRecebimentoFiado(24)
-
-    return send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
