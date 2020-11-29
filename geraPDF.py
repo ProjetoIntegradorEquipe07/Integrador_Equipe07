@@ -76,8 +76,10 @@ class PDF(FPDF, HTMLMixin):
                     
         
         
-
-        pdf.output('recebimento.pdf', 'F')
+        try:
+            return pdf.output("recebimento.pdf")
+        except Exception as e:
+            print(str(e))
         
 
     

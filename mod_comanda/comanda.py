@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect, send_file
 import datetime
 import decimal
+import os
 
 from mod_login.login import validaSessao, validaGrupo
 from mod_comanda.comandaBD import Comanda
@@ -242,9 +243,9 @@ def fechaComandaAVista():
         _valor_final = request.form['valor_final']
         _funcionario_id = session['id']
         _valor_desconto = 0 if desconto == "" else desconto
-        _mensagem = _comanda.fechaComanda(_valor_final, _valor_total, _valor_desconto, datetime.datetime.now(),1, _funcionario_id)
+        _mensagem, _id_recebimento = _comanda.fechaComanda(_valor_final, _valor_total, _valor_desconto, datetime.datetime.now(),1, _funcionario_id)
 
-        return jsonify(erro = False, mensagem = _mensagem)
+        return jsonify(erro = False, mensagem = _mensagem, id_recebimento = _id_recebimento)
 
     except Exception as e:
         if len(e.args) > 1:
@@ -380,11 +381,16 @@ def buscaComandaProdutosPorId():
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
 
-@bp_comanda.route("/testaPDF")
-def testaPDF():
+
+@bp_comanda.route("/geraPDFRecebimento", methods = ['POST'])
+@validaSessao
+def geraPDFRecebimento():
+
     pdf = PDF()
+    print(pdf.pdfRecebimentoAVista(request.form['id_recebimento']))
 
-    pdf.pdfRecebimentoAVista(27)
+    send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
 
-    return send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
+    os.startfile('recebimento.pdf')
 
+    return jsonify(erro = False)
