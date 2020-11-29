@@ -24,7 +24,8 @@
             </div>
             <div class="form-group">
                 <label for="desconto" class="col-form-label">Desconto(R$):</label>
-                <input type="text" value="0" class="form-control" id="desconto">              
+                <input type="text" value="0" class="form-control" id="desconto">
+                <div id="msg_desconto" class="alert alert-danger">Desconto não pode ser maior que valor total!</div>              
               </div>
               <div class="form-group">
                 <label for="valor_final" class="col-form-label">Valor Final(R$):</label>
@@ -92,9 +93,23 @@
     
     $('#desconto').keyup(function(e){
 
-        let valorTotal = $('#valor_total_input').val();
-        let desconto = e.target.value;
-        $('#valor_final').val(valorTotal - desconto);
+        var valorTotal = parseFloat($('#valor_total_input').val());
+        let valorDesconto = parseFloat($('#desconto').val());
+        
+        if(valorDesconto > valorTotal){
+            $('#valor_final').val(valorTotal);
+            $('#msg_desconto').show();
+            $('#botaoSubmit').attr('disabled', true);
+        }
+        else if(!valorDesconto){
+            $('#valor_final').val(valorTotal);
+            $('#msg_desconto').hide();
+        }
+        else{
+            $('#valor_final').val(valorTotal - valorDesconto)
+            $('#msg_desconto').hide();
+            $('#botaoSubmit').attr('disabled', false);
+    }
     })
     
     $('#buscaCliente').submit(function(e){
@@ -274,7 +289,8 @@
         $('#msg_cliente').hide();
         $('#botao_fiado').hide();
         $('#mostra_valor').hide();
-        $('#msg_fiado').hide();        
+        $('#msg_fiado').hide();
+        $('#msg_desconto').hide();        
         $('#cpf_cliente').mask('000.000.000-00');
 
         permiteApenasValoresDecimais('#valor_total_input');

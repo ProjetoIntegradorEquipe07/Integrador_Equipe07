@@ -72,16 +72,22 @@
             <td id="data_hora"></td>
             <td id="valor_total"></td>
             <td id="opcoes">
-                <div class="text-center">
+              <div class="row justify-content-sm-center">
+                <div class="col-sm-4">
                     <form style=" float:left; margin-right: -10px;" action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
                         <input type="hidden" id="id_comanda_add" name="id_comanda">
                         <button title="Adicionar Produtos" type="submit" class="btn btn-warning"><i class="fas fa-plus"></i></button>
                     </form>
+                  </div>
+                  <div class="col-sm-4">
                     <form action="{{ url_for('comanda.formFechaComanda') }}" method="POST">
                         <input type="hidden" id="id_comanda_fecha" name="id_comanda">
                         <button title="Fechar Comanda" type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                    </form>                        
+                    </form>
+                  </div>
                 </div>         
+
+              </div>
             </td>
         </tr>
     </tbody>
@@ -193,8 +199,14 @@ function limpaCampos(){
                 $('#status_comanda').html('Fechada');
             }
 
-            $('#data_hora').html(data.comanda[3]);
-            $('#valor_total').html('R$ ' + data.comanda[4]);
+            $('#data_hora').html(data.comanda[3]);            
+            if(!data.comanda[4]){
+              $('#valor_total').html('R$ 0.00');
+            }
+            else{
+              $('#valor_total').html('R$ ' + data.comanda[4]);
+
+            }
             $('#tabelaProdutos').show();
 
             data.produtos.forEach(produto => {

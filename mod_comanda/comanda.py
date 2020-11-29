@@ -326,7 +326,8 @@ def recebeFiado():
         _id_comandas = request.form.getlist('id_comandas')[0].split(",")
         _valor_final = request.form['valor_final']
         _valor_total = request.form['valor_total']
-        _desconto = request.form['desconto']
+        desconto = request.form['desconto']
+        _valor_desconto  = 0 if desconto == "" else desconto
         _data_hora = datetime.datetime.now()
         _tipo = 2
         _funcionario_id = session['id']
@@ -340,7 +341,7 @@ def recebeFiado():
         
         
         _comanda_aux = Comanda()
-        _mensagem, _id_recebimento = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
+        _mensagem, _id_recebimento = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _valor_desconto, _data_hora, _tipo, _funcionario_id)
         return jsonify(erro = False, mensagem = _mensagem, id_recebimento = _id_recebimento)
         
         
