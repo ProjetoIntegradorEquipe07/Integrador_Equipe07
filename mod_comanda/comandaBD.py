@@ -369,9 +369,11 @@ class Comanda():
             c = banco.conexao.cursor(pymysql.cursors.DictCursor)
 
             _sql = '''SELECT tbr.valor_final, 
-                            tbr.data_hora,               
+                            DATE_FORMAT(tbr.data_hora, '%%d/%%m/%%Y') as data_hora,              
                             tbr.id_recebimento,                
                             tbr.tipo,
+                            tbr.desconto,
+                            tbr.valor_total,
                             tbc.id_comanda,
                             tbc.comanda
                             FROM tb_recebimento tbr

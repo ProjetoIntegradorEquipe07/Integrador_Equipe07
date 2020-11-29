@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect
+from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect, send_file
 import datetime
 import decimal
 
@@ -8,6 +8,7 @@ from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
 from mod_cliente.clienteBD import Cliente
 from funcoes import Funcoes
+from geraPDF import PDF
 
 
 
@@ -378,4 +379,12 @@ def buscaComandaProdutosPorId():
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
 
+
+@bp_comanda.route("/testaPDF")
+def testaPDF():
+    pdf = PDF()
+
+    pdf.pdfRecebimentoAVista(27)
+
+    return send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
 
