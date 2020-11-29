@@ -28,17 +28,22 @@
             {% else: %}
             <td>Admin</td>
             {% endif %}
-            <td>   
-                <div class="text-center">
-                    <form style=" float:left; margin-right: -50px;" action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST">
-                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
-                        <button title="Editar" type="submit" class="btn btn-edit"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form name="excluiUsuario">
-                        <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
-                        <button title="Excluir" type="submit" class="btn btn-remove"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                </div>             
+            <td>
+                <div class="row justify-content-sm-center">
+                    <div class="col-sm-4">
+                        <form style=" float:left; margin-right: -50px;" action="{{ url_for('funcionario.formEditFuncionario') }}" method="POST">
+                            <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                            <button title="Editar" type="submit" class="btn btn-edit"><i class="fas fa-edit"></i></button>
+                        </form>
+                    </div>
+                    <div class="col-sm-4">
+                        <form name="excluiUsuario">
+                            <input type="hidden" name="id_funcionario" value="{{ funcionario[0] }}">
+                            <button title="Excluir" type="submit" class="btn btn-remove"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                    </div>   
+                </div>   
             </td>
         </tr>
         {% endfor %}
