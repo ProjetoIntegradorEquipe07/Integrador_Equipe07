@@ -8,7 +8,7 @@ class Banco():
         password = 'root'
         db = 'pastelaria_db_equipe07_integrador'
 
-        # # MARCOS
+        # MARCOS
         # host = 'localhost'
         # user = 'root'
         # password = ''

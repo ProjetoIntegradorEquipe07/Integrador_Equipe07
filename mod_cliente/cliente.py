@@ -91,7 +91,6 @@ def deleteCliente():
 
 @bp_cliente.route('/validaCPF', methods=['POST'])
 @validaSessao
-@validaGrupo
 def validaCPF():
     try:
         _cliente = Cliente()

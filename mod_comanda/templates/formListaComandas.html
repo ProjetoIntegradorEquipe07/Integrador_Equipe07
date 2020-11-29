@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-2">
-        <button type="button" class="btn btn-primary mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
+        <button type="button" class="btn btn-add mb-5" data-toggle="modal" data-target="#novacomanda" data-whatever="@mdo">Nova comanda</button>
     </div>
     <div class="col-4">
         <form id="buscaComanda">
@@ -33,13 +33,20 @@
           <form id="numeroComanda">
             <div class="form-group">
               <label for="numeroNovaComanda" class="col-form-label">Número da comanda:</label>
-              <input type="text" class="form-control" id="numeroNovaComanda">
+              <input type="text" required class="form-control" id="numeroNovaComanda">
               <div class="valid-feedback"></div>
               <div class="invalid-feedback">Comanda já aberta!</div>
-            </div>          
+            </div>
+            <div class="form-group">
+              <label for="cpf" class="col-form-label">CPF cliente(opcional):</label>
+              <input type="text" minlength="11" value="" maxlength="11" class="form-control" id="cpf">
+              <div class="valid-feedback"></div>
+              <div class="invalid-feedback">CPF não encontrado!</div>
+            </div>
+                      
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" style="width: auto;" data-dismiss="modal">Fechar</button>
-              <button type="submit" id="botaoSubmit" class="btn btn-primary">Ok</button>
+              <button type="button" class="btn btn-remove" onclick="limpaCampos()" style="width: auto;" data-dismiss="modal">Fechar</button>
+              <button type="submit" id="botaoSubmit" class="btn btn-add">Ok</button>
             </div>
           </form>
         </div>
@@ -65,16 +72,22 @@
             <td id="data_hora"></td>
             <td id="valor_total"></td>
             <td id="opcoes">
-                <div class="text-center">
+              <div class="row justify-content-sm-center">
+                <div class="col-sm-4">
                     <form style=" float:left; margin-right: -10px;" action="{{ url_for('comanda.formAddProdutoComanda') }}" method="POST">
                         <input type="hidden" id="id_comanda_add" name="id_comanda">
                         <button title="Adicionar Produtos" type="submit" class="btn btn-warning"><i class="fas fa-plus"></i></button>
                     </form>
+                  </div>
+                  <div class="col-sm-4">
                     <form action="{{ url_for('comanda.formFechaComanda') }}" method="POST">
                         <input type="hidden" id="id_comanda_fecha" name="id_comanda">
                         <button title="Fechar Comanda" type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                    </form>                        
+                    </form>
+                  </div>
                 </div>         
+
+              </div>
             </td>
         </tr>
     </tbody>
@@ -113,15 +126,25 @@
     $('#corpoTabelaProdutos').empty();
 
 }
+
+function limpaCampos(){
+  $('#numeroNovaComanda').val("").removeClass('is-valid is-invalid');
+  $('#cpf').val("").removeClass('is-valid is-invalid');
+  
+}
   
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   $('#numeroComanda').submit(function(e){
 
-    e.preventDefault()
+    e.preventDefault();
+
+    
 
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.addComanda') }}",{
       
-      comanda:$('#numeroNovaComanda').val()
+      comanda:$('#numeroNovaComanda').val(),
+      cpf:$('#cpf').val()
+      
       
       }, function(data){
 
@@ -139,7 +162,9 @@
                     function(isConfirm) {
                         
                     });
+          limpaCampos();
         }
+
         else{
 
           swal('',data.mensagem, 'error')
@@ -174,8 +199,14 @@
                 $('#status_comanda').html('Fechada');
             }
 
-            $('#data_hora').html(data.comanda[3]);
-            $('#valor_total').html('R$ ' + data.comanda[4]);
+            $('#data_hora').html(data.comanda[3]);            
+            if(!data.comanda[4]){
+              $('#valor_total').html('R$ 0.00');
+            }
+            else{
+              $('#valor_total').html('R$ ' + data.comanda[4]);
+
+            }
             $('#tabelaProdutos').show();
 
             data.produtos.forEach(produto => {
@@ -268,9 +299,36 @@
           
       })
   })
+  
+  $('#cpf').keyup(function(e){
+
+    if(e.target.value.length > 10){
+      
+      $.post($SCRIPT_ROOT + "{{ url_for('cliente.validaCPF') }}", {
+
+        valor:e.target.value
+      }, function(data){
+        
+        if(data.erro){
+          console.log(data.mensagem_exception);
+        }
+        else if (data.input_existe){
+          
+          $('#cpf').addClass('is-valid').removeClass('is-invalid');
+          $('#botaoSubmit').attr('disabled', false);
+        }
+        else{
+          $('#cpf').removeClass('is-valid').addClass('is-invalid');
+          $('#botaoSubmit').attr('disabled', true);
+        }
+      })
+    }
+  })
   $(document).ready(function(){
 
     validaSeInputExiste('#numeroNovaComanda','validaComanda',1);
+    
+    $('#cpf').mask('000.000.000-00');
   })
 
 

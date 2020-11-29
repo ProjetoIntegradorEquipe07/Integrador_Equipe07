@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<a href="{{ url_for('produto.formProduto') }}"><button type="button" class="btn btn-danger mb-5"><i class="fas fa-plus-square"> Novo Produto</i></button></a>
+<a href="{{ url_for('produto.formProduto') }}"><button type="button" class="btn btn-add mb-5"><i class="fas fa-plus-square"> Novo Produto</i></button></a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -15,7 +15,7 @@
             <th>Descrição</th>
             <th>Valor Unitário</th>
             <th>Imagem</th>
-            <th>Opções</th>
+            <th width='15%'>Opções</th>
         </tr>
     </thead>
     <tbody>
@@ -25,17 +25,23 @@
             <td>{{ produto[1] }}</td>
             <td>{{ produto[2] }}</td>
             <td>{{ produto[4] }}</td>
-            <td><img src="{{ produto[3] }}" alt="{{ produto[1] }}" width="100"></td>
+            <td><img src="{{ produto[3] }}" alt="{{ produto[1] }}" width="40" height="40" object-fit="cover" overflow="hidden"></td>
             <td>
-                <div class="text-center">
-                    <form style=" clear: both; float:left; margin-right: -2px; margin-left: -10px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
-                        <input type="hidden" name="id_produto" value="{{ produto[0] }}">
-                        <button title="Editar" type="submit" class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form name="excluiProduto">
-                        <input type="hidden" name="id_produto" value="{{ produto[0] }}">
-                        <button title="Excluir" type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                    </form>
+                <div class="row justify-content-sm-center">
+                    <div class="col-sm-4">
+                        <form style=" clear: both; float:left; margin-right: -2px; margin-left: -10px;" action="{{ url_for('produto.formEditProduto') }}" method="POST">
+                            <input type="hidden" name="id_produto" value="{{ produto[0] }}">
+                            <button title="Editar" type="submit" class="btn btn-edit"><i class="fas fa-edit"></i></button>
+                        </form>
+                    </div>
+                    <div class="col-sm-4">
+                        <form name="excluiProduto">
+                            <input type="hidden" name="id_produto" value="{{ produto[0] }}">
+                            <button title="Excluir" type="submit" class="btn btn-remove"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+                    </div>
+
                 </div>
             </td>
         </tr>

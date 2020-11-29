@@ -178,4 +178,32 @@ class Cliente():
             if banco:
                 banco.conexao.close()
         
-        
+    def selectLogin(self):
+        banco = None
+        c = None
+        try:
+            banco = Banco()
+            c = banco.conexao.cursor()
+
+            _sql = 'SELECT id_cliente, nome FROM tb_cliente WHERE nome = %s AND senha = %s'
+            _sql_data = (self.nome, self.senha)
+
+            c.execute(_sql, _sql_data)
+
+            result = c.fetchall()
+            if len(result) > 0:
+                for linha in result:                    
+                    self.id_cliente = linha[0]
+                    self.nome = linha[1]                    
+                
+                return True
+
+                         
+            return False
+        except Exception as e:
+            raise Exception('Erro ao validar login de Cliente', str(e))
+        finally:
+            if c:
+                c.close()
+            if banco:
+                banco.conexao.close()

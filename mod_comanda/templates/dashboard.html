@@ -24,7 +24,7 @@
   </div>
 </div>
 
-  <div class="row" id="comandas">   
+  <div class="row" id="comandas_dashboard">   
 
   </div>
 
@@ -39,7 +39,7 @@
 <script>
 
   $('#comandasAbertas').click(function(){
-    $('#comandas').empty();
+    $('#comandas_dashboard').empty();
 
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasPorStatus') }}",{
       status_comanda:0
@@ -49,7 +49,7 @@
 
           data.comandas.forEach(comanda => {
             let data = new Date(comanda[2]).toLocaleDateString();
-            $('#comandas').append(`
+            $('#comandas_dashboard').append(`
             <div class="col-3 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
@@ -69,11 +69,15 @@
             
           });
         }
+        else{
+
+          console.log(data.mensagem_exception);
+        }
       })
   })
 
   $('#recebimentosAVista').click(function(){
-    $('#comandas').empty();
+    $('#comandas_dashboard').empty();
     
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaRecebimentosPorTipo') }}",{
       tipo:1
@@ -85,7 +89,7 @@
             
             let data = new Date(comanda[5]).toLocaleDateString();
             
-            $('#comandas').append(`
+            $('#comandas_dashboard').append(`
             <div class="col-3 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
@@ -107,12 +111,15 @@
             
           });
         }
+        else{
+          console.log(data.mensagem_exception);
+        }
       })
 
   })
 
   $('#recebimentosFiado').click(function(){
-    $('#comandas').empty();
+    $('#comandas_dashboard').empty();
     
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaRecebimentosPorTipo') }}",{
       tipo:2
@@ -124,7 +131,7 @@
             
             let data = new Date(comanda[5]).toLocaleDateString();
             
-            $('#comandas').append(`
+            $('#comandas_dashboard').append(`
             <div class="col-3 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
@@ -151,7 +158,7 @@
   })
 
   $('#comandas_em_atraso').click(function(){
-    $('#comandas').empty();
+    $('#comandas_dashboard').empty();
 
     $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandasEmAtraso') }}",{     
       
@@ -166,7 +173,7 @@
             let mes = data.getMonth() + 1;
             let ano = data.getFullYear();
             
-            $('#comandas').append(`
+            $('#comandas_dashboard').append(`
             <div class="col-4 ">
             <div class="card mb-2 ml-2 mr-2" style="width:300px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
