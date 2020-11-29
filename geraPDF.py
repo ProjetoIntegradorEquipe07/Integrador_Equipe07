@@ -22,16 +22,16 @@ class PDF(FPDF, HTMLMixin):
     def pdfRecebimentoAVista(self, id_recebimento):
 
         pdf = PDF()
-        pdf = PDF('L', 'mm', 'A4') # L paisagem, P retrato
+        pdf = PDF('P', 'mm', 'A4') # L paisagem, P retrato
         pdf.set_author("Pastelaria do Zé")
         pdf.set_title('Recebimento a Vista')
         pdf.alias_nb_pages() # mostra o numero da pagina no rodapé
         pdf.add_page()
         # mostra o cabeçalho
         pdf.set_font('arial', 'b', 12)
-        pdf.cell(280, 5, 'Recebimento', 0, 1, 'C', 0)
+        pdf.cell(190, 5, 'Recebimento', 0, 1, 'C', 0)
         pdf.set_font('arial', '', 6)
-        pdf.cell(280, 4, "Emitido em: " + str(datetime.now()), 0, 1, 'R')
+        pdf.cell(200, 4, "Emitido em: " + str(datetime.now()), 0, 1, 'R')
         pdf.ln(5)
         # monta tabela para mostrar os dados
         pdf.set_font('arial', 'B', 10)
@@ -40,30 +40,39 @@ class PDF(FPDF, HTMLMixin):
 
         
         if recebimento:
+            pdf.set_x(100)
             for dado in recebimento:            
-                pdf.cell(10, 5, 'ID Recebimento: ' + str(id_recebimento), 0, 1, 'L')
+                pdf.cell(10, 5, 'ID Recebimento: ' + str(id_recebimento), 0, 1, 'C')
                 pdf.ln(2)
-                pdf.cell(55, 5, 'Número Comanda: ' + str(dado['comanda']), 0, 1, 'L')
+                pdf.set_x(79)
+                pdf.cell(55, 5, 'Número Comanda: ' + str(dado['comanda']), 0, 1, 'C')
                 pdf.ln(2)
-                pdf.cell(30, 5, 'Data: ' + str(dado['data_hora']), 0, 1, 'L')
+                pdf.set_x(87)
+                pdf.cell(30, 5, 'Data: ' + str(dado['data_hora']), 0, 1, 'C')
                 pdf.ln(2)
-                pdf.cell(10, 5, 'Produtos: ', 0, 1,'L')
+                pdf.set_x(92)
+                pdf.cell(10, 5, 'Produtos: ', 0, 1,'C')
                 pdf.ln(2)
-                pdf.cell(40, 5, 'Nome', 0, 0, 'L')
-                pdf.cell(25, 5, 'Quantidade', 0, 0, 'L')
-                pdf.cell(30, 5, 'Valor Unitário', 0, 1, 'L')
+                pdf.set_x(45)
+                pdf.cell(50, 5, 'Nome', 0, 0, 'C')
+                pdf.cell(25, 5, 'Quantidade', 0, 0, 'C')
+                pdf.cell(30, 5, 'Valor Unitário', 0, 1, 'C')
                 comanda.id_comanda = dado['id_comanda']
                 produtos = comanda.selectProdutosPorIdComanda()
                 for produto in produtos:
-                    pdf.cell(50,5, str(produto[0]), 0, 0, 'L')
-                    pdf.cell(20, 5, str(produto[1]), 0, 0)
-                    pdf.cell(30, 5,'R$ ' + str(produto[2]), 0, 1)
+                    pdf.set_x(55)
+                    pdf.cell(50,5, str(produto[0]), 'B T', 0)
+                    pdf.cell(20, 5, str(produto[1]), 'B T', 0)
+                    pdf.cell(30, 5,'R$ ' + str(produto[2]), 'B T', 1)
                 pdf.ln(2)
-                pdf.cell(30, 5, 'Valor Total R$ ' + str(dado['valor_total']), 0, 1, 'L')
+                pdf.set_x(90)
+                pdf.cell(30, 5, 'Valor Total R$ ' + str(dado['valor_total']), 0, 1, 'C')
                 pdf.ln(2)
-                pdf.cell(30, 5, 'Desconto: R$ ' + str(dado['desconto']), 0, 1, 'L')
-                pdf.ln(2)                
-                pdf.cell(30, 5, 'Valor: R$ ' + str(dado['valor_final']), 0, 1, 'L')
+                pdf.set_x(88.7)
+                pdf.cell(30, 5, 'Desconto: R$ ' + str(dado['desconto']), 0, 1, 'C')
+                pdf.ln(2)
+                pdf.set_x(86)                
+                pdf.cell(30, 5, 'Valor: R$ ' + str(dado['valor_final']), 0, 1, 'C')
                     
         
         
