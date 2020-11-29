@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect
+from flask import Blueprint, render_template, request, url_for, jsonify, session, json, redirect, send_file
 import datetime
 import decimal
+import os
 
 from mod_login.login import validaSessao, validaGrupo
 from mod_comanda.comandaBD import Comanda
@@ -8,6 +9,7 @@ from mod_comanda.comandaProdutoBD import ComandaProduto
 from mod_produto.produtoBD import Produto
 from mod_cliente.clienteBD import Cliente
 from funcoes import Funcoes
+from geraPDF import PDF
 
 
 
@@ -241,9 +243,9 @@ def fechaComandaAVista():
         _valor_final = request.form['valor_final']
         _funcionario_id = session['id']
         _valor_desconto = 0 if desconto == "" else desconto
-        _mensagem = _comanda.fechaComanda(_valor_final, _valor_total, _valor_desconto, datetime.datetime.now(),1, _funcionario_id)
+        _mensagem, _id_recebimento = _comanda.fechaComanda(_valor_final, _valor_total, _valor_desconto, datetime.datetime.now(),1, _funcionario_id)
 
-        return jsonify(erro = False, mensagem = _mensagem)
+        return jsonify(erro = False, mensagem = _mensagem, id_recebimento = _id_recebimento)
 
     except Exception as e:
         if len(e.args) > 1:
@@ -338,8 +340,8 @@ def recebeFiado():
         
         
         _comanda_aux = Comanda()
-        _mensagem = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
-        return jsonify(erro = False, mensagem = _mensagem)
+        _mensagem, _id_recebimento = _comanda_aux.recebeFiados(_lista_comandas, _valor_final, _valor_total, _desconto, _data_hora, _tipo, _funcionario_id)
+        return jsonify(erro = False, mensagem = _mensagem, id_recebimento = _id_recebimento)
         
         
 
@@ -377,5 +379,24 @@ def buscaComandaProdutosPorId():
             _mensagem_exception = e.args
         
         return jsonify(erro = True, mensagem = _mensagem, mensagem_exception = _mensagem_exception)
+
+
+
+@bp_comanda.route("/geraPDFRecebimento", methods = ['POST'])
+@validaSessao
+def geraPDFRecebimento():
+
+    pdf = PDF()
+    if request.form['tipo'] == 1:
+        pdf.pdfRecebimentoAVista(request.form['id_recebimento'])
+    else:
+        pdf.pdfRecebimentoFiado(request.form['id_recebimento'])
+    
+
+    send_file('recebimento.pdf', attachment_filename='recebimento.pdf')
+
+    os.startfile('recebimento.pdf')#abre o PDF
+
+    return jsonify(erro = False)
 
 
