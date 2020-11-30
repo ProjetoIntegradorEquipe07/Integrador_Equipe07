@@ -19,6 +19,11 @@
 **[Levantamento de Requisitos](./Engenharia_de_Software/Levantamento_de_Requisitos.docx)**
 
 **[Histórias de Usuário](./Engenharia_de_Software/Historias_de_usuario.docx)**
+
+**[Diagrama de Classe](./Engenharia_de_Software/Diagrama_De_Classe.pdf)**
+
+**[Diagrama de Caso de Uso](./Engenharia_de_Software/Diagrama_Caso_de_Uso.pdf)**
+
 ### Documentação - User Experience
 
 &nbsp;&nbsp;**[Protótipo das Telas no Adobe XD](./UX/Prototipo\Pastelaria\do\ZE.xd)**
@@ -44,9 +49,9 @@
 <p>Verifique se apareceu (Integrador_Equipe07) antes do caminho do projeto, Ex: </p>
 
 `(Integrador_Equipe07) C:\Projeto Integrador\Integrador_Equipe07>`
-<p>Agora instalaremos o Flask: </p>
+<p>Agora instalaremos o as dependências: </p>
 
-`pip install flask`<br>
+`pip install -r requirements.txt`<br>
 
 <p>Se pedir para atualizar, faça o seguinte comando:</p>
 
