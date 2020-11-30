@@ -12,7 +12,7 @@
     </div>
     <div class="col-4">
         <form id="buscaComanda">
-            <input type="text" id="comanda" placeholder="Nº Comanda">
+            <input type="text" id="comanda" autofocus placeholder="Nº Comanda">
             <button type="submit" class="btn btn-info"><i class="fas fa-search"></i></button>
         </form>
         <div id="msg_comanda" class="alert alert-danger">Comanda não encontrada!</div>
@@ -98,6 +98,7 @@
                 <th>Produto</th>
                 <th>Quantidade</th>
                 <th>Valor Unitário</th>
+                <th>Imagem</th>
                 <th>Opções</th>                
             </tr>
         </thead>
@@ -210,12 +211,13 @@ function limpaCampos(){
             $('#tabelaProdutos').show();
 
             data.produtos.forEach(produto => {
-                
+                console.log(produto);
                 $('#corpoTabelaProdutos').append(`
                 <tr>                    
                     <td>${produto[0]}</td>
                     <td>${produto[1]}</td>
                     <td>R$ ${produto[2]}</td>
+                    <td><img src="${produto[4]}" width="50"></td>
                     <td> 
                       <form name='deletaProdutoComanda' id='deletaProdutoComanda'>
                         <input type='hidden' value='${produto[3]}' name='id_comanda_produto' id='id_comanda_produto'>
