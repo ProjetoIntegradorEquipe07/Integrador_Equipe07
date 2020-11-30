@@ -1,4 +1,5 @@
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename = 'bootstrap-4.5.2-dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename = 'styles/login.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'sweet-alert/sweetalert.css') }}">    
@@ -6,13 +7,25 @@
 </head>
 <body>
     <div id="login">
-        <div class="container">            
-            <img src="{{ url_for('static', filename='imgs/logo.png') }}">                 
-            <div id="login-row" class="row justify-content-center align-items-center">
+        <div class="container" style="height: 100vh;">            
+            <div id="login-row" class="row justify-content-center align-items-center" style="height: 100%;">
                 <div id="login-column" class="col-md-6">
+                    <img src="{{ url_for('static', filename='imgs/logo-login.png') }}"> 
                     <div id="login-box" class="col-md-12">                        
-                        <form id="login-form" class="form">
-                            <h3 class="text-center text-info texto">Login</h3>
+                        <form id="login-form" class="form">                            
+                            
+                            
+                            <h4 class="text-center text-info texto">Login</h4>
+                            <div class="text-center">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tipoLogin" id="login_funcionario" value="1" checked>
+                                    <label class="form-check-label" style="color: #9d3c3c;" for="tipoLogin">Funcionário</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tipoLogin" id="login_cliente" value="2">
+                                    <label class="form-check-label" style="color: #9d3c3c;"  for="login_cliente">Cliente</label>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="usuario" class="text-info" style="color: white;">Usuário:</label><br>
                                 <input type="text" placeholder="Digite o nome" name="usuario" id="usuario" class="form-control" required autofocus>
@@ -50,11 +63,15 @@
         $('#login-form').submit(function(e){
 
             e.preventDefault();
-           
+            var tipo_login = 1;
+            if($('#login_cliente').is(':checked')){
+                tipo_login = 2;
+            }
             $.post($SCRIPT_ROOT + "{{ url_for('login.validaLogin') }}", {
 
                 usuario:$('#usuario').val(),
-                senha: $('#senha').val()
+                senha: $('#senha').val(),
+                tipo_login:tipo_login
             }, function(data){
 
                 if(data.erro_ex){
@@ -76,7 +93,7 @@
                     setTimeout(function(){
 
                         window.location.replace($SCRIPT_ROOT + "{{ url_for('home.home') }}");
-                    }, 2000)
+                    }, 1000)
 
                 }
                 else{

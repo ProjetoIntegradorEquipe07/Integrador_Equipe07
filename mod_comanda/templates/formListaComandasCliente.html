@@ -1,0 +1,88 @@
+{% extends 'modelo.html' %}
+{% block title %}Comandas do cliente{% endblock %}
+
+{% block content %}
+<div class="row">
+{% for comanda in comandas: %}
+<!-- Modal para mostrar os produtos da comanda -->
+<div class="modal fade" id="mostraProdutosComanda" tabindex="-1" role="dialog" aria-labelledby="mostraProdutosComanda" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mostraProdutosComanda">Produtos comanda</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+              <thead>
+                  <th>Produto</th>
+                  <th>Valor unitário(R$)</th>
+                  <th>Quantidade</th>
+              </thead>
+              <tbody id="tabelaProdutosComanda"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="col-3 ">
+    <div class="card mb-2 ml-2 mr-2" style="width:200px">    
+    <div class="text-center" style="background-color: #8c1c1c; clear: both;">
+      <p class="card-title mt-2" style="color: white;"><b>Nº Comanda: {{comanda['numero']}} </b></p>
+    </div>
+    <div class="card-body">        
+        {% if comanda['status_comanda'] == 0: %}                  
+        <p class="card-text">Status: <span style="color: green;">Aberta</span> </p>
+        {% else: %}
+        <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>
+        {% endif %}
+        <p class="card-text" id="dataComanda">Data: {{comanda['data_hora']}} </p>             
+      <p class="card-text" id="valorComanda">Valor total: R$  {{comanda['valor']}} </p>
+      
+    
+    <button type="button" value="{{ comanda['id_comanda'] }}" id="procuraProdutos" class="btn btn-success" data-toggle="modal" data-target="#mostraProdutosComanda" data-whatever="@mdo">Mostrar produtos</button>
+
+        
+    </div>
+  </div>      
+
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $("[id='procuraProdutos']").click(function(e){
+
+        let id_comanda = e.target.value;
+        $('#tabelaProdutosComanda').empty();
+        
+        $.post($SCRIPT_ROOT + "{{ url_for('comanda.buscaComandaProdutosPorId') }}", {
+
+            id_comanda:id_comanda
+        }, function(data){
+
+            if(!data.erro){
+
+                data.produtos.forEach(produto => {
+                    
+                    $('#tabelaProdutosComanda').append(`
+                        <tr>
+                            <td>${produto[0]}</td>
+                            <td>${produto[2]}</td>
+                            <td>${produto[1]}</td>
+                        </tr>
+                    
+                    `)
+                });
+            }
+            else{
+                console.log(data.mensagem_exception);
+            }
+        })
+    })
+</script>
+{% endblock %}
