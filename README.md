@@ -26,7 +26,7 @@
 
 ### Documentação - User Experience
 
-&nbsp;&nbsp;**[Protótipo das Telas no Adobe XD](./UX/Prototipo\Pastelaria\do\ZE.xd)**
+&nbsp;&nbsp;**[Protótipo das Telas no Adobe XD](https://xd.adobe.com/view/36d4d1b3-7229-4b67-b60e-7fde57943669-6387/)**
 
 &nbsp;&nbsp;**[Questionário com usuarios](./UX/Formulario_questionario_com_Usuarios.docx)**
 
