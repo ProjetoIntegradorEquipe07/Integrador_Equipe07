@@ -34,6 +34,12 @@
 
 &nbsp;&nbsp;**[Escala SUS](./UX/Escala_SUS.xlsx)**
 
+&nbsp;&nbsp;**[Mapa de Stakeholders](./UX/mapa_stakeholders.jpg)**
+
+&nbsp;&nbsp;**[Fluxo do Usuário](./UX/Fluxo_Usuario.png)**
+
+&nbsp;&nbsp;**[Questionário com Stakeholders](./UX/questionario_de_stakeholder_clientes.docx)**
+
 <p>Para baixar o repositório faça o comando abaixo no prompt de comando:</p> 
 
 <p>OBS: Escolha a pasta que deseja salvar o projeto antes!</p> 
