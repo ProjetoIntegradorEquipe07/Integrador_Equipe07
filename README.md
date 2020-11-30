@@ -32,6 +32,8 @@
 
 &nbsp;&nbsp;**[Persona](./UX/Persona_pastelaria.docx)**
 
+&nbsp;&nbsp;**[Escala SUS](./UX/Escala_SUS.xlsx)**
+
 <p>Para baixar o repositório faça o comando abaixo no prompt de comando:</p> 
 
 <p>OBS: Escolha a pasta que deseja salvar o projeto antes!</p> 
