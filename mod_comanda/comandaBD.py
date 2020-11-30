@@ -93,7 +93,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute("SELECT id_comanda , comanda, status_comanda, data_hora,  CONVERT(SUM(valor_unitario*quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda  WHERE comanda = %s AND status_comanda = %s",(self.comanda, self.status_comanda))
+            c.execute("SELECT id_comanda , comanda, status_comanda, DATE_FORMAT(data_hora, '%%d/%%m/%%Y'),  CONVERT(SUM(valor_unitario*quantidade), CHAR) FROM tb_comanda LEFT JOIN tb_comanda_produto ON comanda_id = id_comanda  WHERE comanda = %s AND status_comanda = %s",(self.comanda, self.status_comanda))
 
             result = c.fetchone()
 
@@ -140,7 +140,7 @@ class Comanda():
 
             c = banco.conexao.cursor()
 
-            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR), tbpc.id_comanda_produto FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
+            c.execute('SELECT nome, quantidade, CONVERT(tbp.valor_unitario, CHAR), tbpc.id_comanda_produto, CONVERT(foto USING utf8) FROM tb_produto tbp LEFT JOIN tb_comanda_produto tbpc ON id_produto = produto_id INNER JOIN tb_comanda ON id_comanda = comanda_id WHERE comanda = %s AND status_comanda = %s', (self.comanda, self.status_comanda))
 
             
 
