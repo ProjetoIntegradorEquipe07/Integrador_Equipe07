@@ -40,6 +40,8 @@
 
 &nbsp;&nbsp;**[Questionário com Stakeholders](./UX/questionario_de_stakeholder_clientes.docx)**
 
+&nbsp;&nbsp;**[Mapa de Empatia](./UX/Mapa_de_empatia.png)**
+
 <p>Para baixar o repositório faça o comando abaixo no prompt de comando:</p> 
 
 <p>OBS: Escolha a pasta que deseja salvar o projeto antes!</p> 
@@ -57,7 +59,7 @@
 <p>Verifique se apareceu (Integrador_Equipe07) antes do caminho do projeto, Ex: </p>
 
 `(Integrador_Equipe07) C:\Projeto Integrador\Integrador_Equipe07>`
-<p>Agora instalaremos o as dependências: </p>
+<p>Agora instalaremos as dependências: </p>
 
 `pip install -r requirements.txt`<br>
 
@@ -65,7 +67,7 @@
 
 `scripts\python.exe -m pip install --upgrade pip`
 
-<p>Pronto seu ambiente virtual foi criado</p>
+<p>Pronto, seu ambiente virtual foi criado</p>
 
 <p>Dentro da pasta do projeto faça os seguintes comandos antes de começar a desenvolver:</p> 
 
