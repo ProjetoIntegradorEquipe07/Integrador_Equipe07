@@ -88,7 +88,7 @@ class Produto():
             c.execute('DELETE FROM tb_produto WHERE id_produto = %s',(self.id_produto))
 
             banco.conexao.commit()
-            Funcoes.criaLOG(f'DELETE PRODUTO, id_produto: {sele.id_produto}', LOG.info)
+            Funcoes.criaLOG(f'DELETE PRODUTO, id_produto: {self.id_produto}', LOG.info)
             c.close()
 
             return 'Produto excluído com sucesso'

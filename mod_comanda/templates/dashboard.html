@@ -9,14 +9,13 @@
 <div class="container">
   <div class="row" style="margin-bottom: 10px;">
     
-    <div class="col-2">      
-        <button type="button" id="comandasAbertas" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>   
-      
+    <div class="col-3">      
+      <button type="button"  id="comandasAbertas" class="btn btn-success">Comandas Abertas [{{ comandas_abertas[0] }}]</button>         
   </div>
-  <div class="col-2">
+  <div class="col-3">
     <button type="button" id="recebimentosAVista" class="btn btn-info">Recebimentos a vista [{{ recebimentos_a_vista[0] }}]</button>
   </div>
-  <div class="col-2">
+  <div class="col-3">
     <button type="button" id="recebimentosFiado" class="btn btn-warning">Recebimentos Fiado [{{ recebimentos_fiado[0] }}]</button>
   </div>
   <div class="col-3">
@@ -50,7 +49,7 @@
           data.comandas.forEach(comanda => {
             let data = new Date(comanda[2]).toLocaleDateString();
             $('#comandas_dashboard').append(`
-            <div class="col-3 ">
+            <div class="col-4 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
               <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
@@ -90,10 +89,10 @@
             let data = new Date(comanda[5]).toLocaleDateString();
             
             $('#comandas_dashboard').append(`
-            <div class="col-3 ">
+            <div class="col-4 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
-              <p class="card-title mt-2" style="color: white;"><b>Nº Comanda:  ${comanda[1]} </b></p>
+              <p class="card-title mt-2" style="color: white;"><b>Nº Recebimento:  ${comanda[1]} </b></p>
             </div>
             <div class="card-body">             
               <p class="card-text">Status: <span style="color: red;">Fechada</span> </p>          
@@ -132,7 +131,7 @@
             let data = new Date(comanda[5]).toLocaleDateString();
             
             $('#comandas_dashboard').append(`
-            <div class="col-3 ">
+            <div class="col-4 ">
             <div class="card mb-2 ml-2 mr-2" style="width:200px">    
             <div class="text-center" style="background-color: #8c1c1c; clear: both;">
               <p class="card-title mt-2" style="color: white;"><b>Nº Recebimento:  ${comanda[1]} </b></p>
